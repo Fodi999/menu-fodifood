@@ -3,10 +3,12 @@
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
 
 export default function Home() {
   const { t, i18n } = useTranslation(["ns1", "ns2"]);
   const [isWelcomeHidden, setIsWelcomeHidden] = useState(false);
+  const router = useRouter();
 
   const toggleLanguage = () => {
     const nextLanguage =
@@ -20,6 +22,10 @@ export default function Home() {
 
   const handleCardClick = () => {
     setIsWelcomeHidden(true);
+  };
+
+  const handleNavigate = (num: number) => {
+    router.push(`/card${num}`);
   };
 
   const images = ["/00031.jpg", "/00030.jpg"]; // Массив с путями к изображениям
@@ -78,7 +84,7 @@ export default function Home() {
               </p>
               {/* Кнопка "Далее" */}
               <button
-                onClick={() => alert(`Navigating to Card ${num}`)}
+                onClick={() => handleNavigate(num)}
                 className="mt-4 px-4 py-2 bg-indigo-500 text-white font-medium rounded-lg hover:bg-indigo-600 transition duration-300 self-start shadow"
               >
                 {t("ns2:nextButton", { defaultValue: "Далее" })}
