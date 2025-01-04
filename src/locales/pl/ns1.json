@@ -1,4 +1,45 @@
 {
-    "welcome": "Witamy w Menu-Fodifood"
+  "pages": [
+    {
+      "title": "Fomin Dmitry Szef",
+      "description": "O mnie: Zajmuję się zawodowo jedzeniem od 20 lat, pracowałem w różnych krajach, widziałem wiele technologii, jak pracować i tworzyć nowe produkty.\n\nW tym blogu dowiesz się, jak tworzyć nowe produkty, jakie wyposażenie jest potrzebne, jakie nowoczesne technologie powinien studiować szef kuchni, aby stać się nie tylko szefem kuchni, ale także dobrym menedżerem swojego biznesu.\n\nTen blog jest napisany dla tych, którzy są gotowi odkrywać pyszne kombinacje smaków. Chcę opowiedzieć i nauczyć Cię gotować nowe potrawy, które wymyślam i gotuję, aby Cię zaskoczyć, a także dzielić się pomysłami i smakami.",
+      "image": "/00031.jpg",
+      "buttonText": "Kontakt"
+    },
+    {
+      "title": "Portfolio Prac",
+      "description": "Poznaj moje kreatywne prace i projekty, które powstały w ciągu wielu lat mistrzostwa kulinarnego. Od klasycznych dań po nowoczesną kuchnię eksperymentalną – zainspiruj się!",
+      "image": "/00030.jpg",
+      "buttonText": "Zobacz portfolio"
+    },
+    {
+      "title": "Skontaktuj się",
+      "description": "Masz pytania lub chcesz nawiązać współpracę? Połączmy siły i stwórzmy coś niesamowitego. Jestem otwarty na dyskusje i partnerstwa!",
+      "image": "/00029.jpg",
+      "buttonText": "Połącz się"
+    }
+  ],
+  "recipesSections": [
+    "01. Jak wybrać produkty?",
+    "02. Jak stworzyć menu?",
+    "03. Podstawowe wyposażenie",
+    "04. Nowoczesne techniki gotowania",
+    "05. Zarządzanie biznesem dla szefów kuchni"
+  ],
+  "siteMetadata": {
+    "title": "Fomin Dmitry Szef",
+    "description": "Odkryj kulinarny świat Fomina Dmitrija, profesjonalnego szefa kuchni z 20-letnim doświadczeniem.",
+    "contactAlert": "Formularz kontaktowy już wkrótce!",
+    "languageSwitchAlert": "Przełączanie języka już wkrótce!"
+  },
+  "buttonLabels": {
+    "home": "Strona główna",
+    "blog": "Blog",
+    "contact": "Kontakt",
+    "language": "Język",
+    "myRecipes": "Moje przepisy",
+    "close": "Zamknij",
+    "continueReading": "Czytaj dalej",
+    "showLess": "Pokaż mniej"
   }
-  
+}

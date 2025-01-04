@@ -1,5 +1,48 @@
 {
-    "welcome": "Welcome to Menu-Fodifood"
+  "pages": [
+    {
+      "title": "Fomin Dmitry Chef",
+      "description": "About me: I have been professionally involved in food for 20 years, I have worked in different countries, I have seen many technologies on how to work and create new products.\n\nIn this Blog you will learn how to create new products, what equipment is needed, what modern technologies a chef should study to become not just a Chef but also a good manager of his Business.\n\nThis Blog is written for those who are ready to discover delicious combinations of flavors. I want to tell and teach you how to cook new dishes that I come up with and cook in order to surprise you, and share ideas and flavors with you.",
+      "image": "/00031.jpg",
+      "buttonText": "Contact"
+    },
+    {
+      "title": "Portfolio Showcase",
+      "description": "Explore my creative works and projects that span over years of culinary mastery. From classic dishes to modern experimental cuisine, get inspired!",
+      "image": "/00030.jpg",
+      "buttonText": "View Portfolio"
+    },
+    {
+      "title": "Get in Touch",
+      "description": "Have questions or want to collaborate? Let’s connect and create something amazing together. I’m open to discussions and partnerships!",
+      "image": "/00029.jpg",
+      "buttonText": "Connect"
+    }
+  ],
+  "recipesSections": [
+    "01. How to choose products?",
+    "02. How to make a menu?",
+    "03. Equipment essentials",
+    "04. Modern cooking techniques",
+    "05. Business management for chefs"
+  ],
+  "siteMetadata": {
+    "title": "Fomin Dmitry Chef",
+    "description": "Explore the culinary world of Fomin Dmitry, a professional chef with 20 years of experience.",
+    "contactAlert": "Contact form coming soon!",
+    "languageSwitchAlert": "Language switch coming soon!"
+  },
+  "buttonLabels": {
+    "home": "Home",
+    "blog": "Blog",
+    "contact": "Contact",
+    "language": "Language",
+    "myRecipes": "My Recipes",
+    "close": "Close",
+    "continueReading": "Continue reading",
+    "showLess": "Show less"
   }
+}
+
 
   
