@@ -1,45 +1,113 @@
 {
-  "pages": [
+  "hero": {
+    "title": "FODI SUSHI",
+    "subtitle": "Dostawa Premium Sushi",
+    "description": "Najświeższe składniki, tradycyjne przepisy i szybka dostawa prosto do Twoich drzwi",
+    "orderButton": "Zamów teraz",
+    "viewMenuButton": "Zobacz menu"
+  },
+  "menu": {
+    "title": "Nasze menu",
+    "categories": ["Wszystko", "Rolki", "Sushi", "Zestawy", "Napoje"]
+  },
+  "products": [
     {
-      "title": "Fomin Dmitry Szef",
-      "description": "O mnie: Zajmuję się zawodowo jedzeniem od 20 lat, pracowałem w różnych krajach, widziałem wiele technologii, jak pracować i tworzyć nowe produkty.\n\nW tym blogu dowiesz się, jak tworzyć nowe produkty, jakie wyposażenie jest potrzebne, jakie nowoczesne technologie powinien studiować szef kuchni, aby stać się nie tylko szefem kuchni, ale także dobrym menedżerem swojego biznesu.\n\nTen blog jest napisany dla tych, którzy są gotowi odkrywać pyszne kombinacje smaków. Chcę opowiedzieć i nauczyć Cię gotować nowe potrawy, które wymyślam i gotuję, aby Cię zaskoczyć, a także dzielić się pomysłami i smakami.",
+      "id": 1,
+      "name": "California Roll",
+      "category": "Rolki",
+      "description": "Krab, awokado, ogórek, kawior tobiko",
+      "price": 450,
       "image": "/00031.jpg",
-      "buttonText": "Kontakt"
+      "weight": "250g"
     },
     {
-      "title": "Portfolio Prac",
-      "description": "Poznaj moje kreatywne prace i projekty, które powstały w ciągu wielu lat mistrzostwa kulinarnego. Od klasycznych dań po nowoczesną kuchnię eksperymentalną – zainspiruj się!",
+      "id": 2,
+      "name": "Philadelphia Roll",
+      "category": "Rolki",
+      "description": "Łosoś, ser kremowy, ogórek",
+      "price": 520,
       "image": "/00030.jpg",
-      "buttonText": "Zobacz portfolio"
+      "weight": "280g"
     },
     {
-      "title": "Skontaktuj się",
-      "description": "Masz pytania lub chcesz nawiązać współpracę? Połączmy siły i stwórzmy coś niesamowitego. Jestem otwarty na dyskusje i partnerstwa!",
+      "id": 3,
+      "name": "Dragon Roll",
+      "category": "Rolki",
+      "description": "Węgorz, awokado, krewetka tempura",
+      "price": 680,
       "image": "/00029.jpg",
-      "buttonText": "Połącz się"
+      "weight": "300g"
+    },
+    {
+      "id": 4,
+      "name": "Zestaw Premium",
+      "category": "Zestawy",
+      "description": "30 szt: California, Philadelphia, Spicy Tuna",
+      "price": 1850,
+      "image": "/00031.jpg",
+      "weight": "850g"
+    },
+    {
+      "id": 5,
+      "name": "Nigiri z łososiem",
+      "category": "Sushi",
+      "description": "Świeży łosoś na poduszce ryżowej",
+      "price": 180,
+      "image": "/00030.jpg",
+      "weight": "40g"
+    },
+    {
+      "id": 6,
+      "name": "Nigiri z tuńczykiem",
+      "category": "Sushi",
+      "description": "Wyborowy tuńczyk na poduszce ryżowej",
+      "price": 220,
+      "image": "/00029.jpg",
+      "weight": "40g"
     }
   ],
-  "recipesSections": [
-    "01. Jak wybrać produkty?",
-    "02. Jak stworzyć menu?",
-    "03. Podstawowe wyposażenie",
-    "04. Nowoczesne techniki gotowania",
-    "05. Zarządzanie biznesem dla szefów kuchni"
-  ],
+  "cart": {
+    "title": "Koszyk",
+    "empty": "Twój koszyk jest pusty",
+    "total": "Suma",
+    "checkout": "Zamów",
+    "continueShopping": "Kontynuuj zakupy",
+    "addToCart": "Dodaj do koszyka",
+    "remove": "Usuń",
+    "quantity": "Ilość"
+  },
+  "order": {
+    "title": "Zamówienie",
+    "name": "Twoje imię",
+    "phone": "Telefon",
+    "address": "Adres dostawy",
+    "comment": "Komentarz do zamówienia",
+    "submit": "Potwierdź zamówienie",
+    "success": "Zamówienie złożone pomyślnie! Skontaktujemy się wkrótce.",
+    "deliveryTime": "Dostawa: 40-60 minut",
+    "minOrder": "Minimalne zamówienie: 500₽"
+  },
   "siteMetadata": {
-    "title": "Fomin Dmitry Szef",
-    "description": "Odkryj kulinarny świat Fomina Dmitrija, profesjonalnego szefa kuchni z 20-letnim doświadczeniem.",
-    "contactAlert": "Formularz kontaktowy już wkrótce!",
-    "languageSwitchAlert": "Przełączanie języka już wkrótce!"
+    "title": "FODI SUSHI - Dostawa sushi",
+    "description": "Dostawa premium sushi i rolek. Świeże składniki, szybka dostawa.",
+    "contactAlert": "Zadzwoń: +7 (999) 123-45-67",
+    "deliveryInfo": "Darmowa dostawa od 1000₽"
   },
   "buttonLabels": {
     "home": "Strona główna",
-    "blog": "Blog",
+    "menu": "Menu",
+    "about": "O nas",
     "contact": "Kontakt",
     "language": "Język",
-    "myRecipes": "Moje przepisy",
+    "cart": "Koszyk",
     "close": "Zamknij",
-    "continueReading": "Czytaj dalej",
-    "showLess": "Pokaż mniej"
+    "viewDetails": "Szczegóły",
+    "orderNow": "Zamów teraz"
+  },
+  "footer": {
+    "workingHours": "Godziny pracy: 10:00 - 23:00",
+    "phone": "+7 (999) 123-45-67",
+    "email": "info@fodisushi.ru",
+    "social": "Obserwuj nas"
   }
 }

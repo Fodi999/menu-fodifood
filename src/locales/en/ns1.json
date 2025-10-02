@@ -1,48 +1,113 @@
 {
-  "pages": [
+  "hero": {
+    "title": "FODI SUSHI",
+    "subtitle": "Premium Sushi Delivery",
+    "description": "Freshest ingredients, traditional recipes and fast delivery right to your door",
+    "orderButton": "Order Now",
+    "viewMenuButton": "View Menu"
+  },
+  "menu": {
+    "title": "Our Menu",
+    "categories": ["All", "Rolls", "Sushi", "Sets", "Drinks"]
+  },
+  "products": [
     {
-      "title": "Fomin Dmitry Chef",
-      "description": "About me: I have been professionally involved in food for 20 years, I have worked in different countries, I have seen many technologies on how to work and create new products.\n\nIn this Blog you will learn how to create new products, what equipment is needed, what modern technologies a chef should study to become not just a Chef but also a good manager of his Business.\n\nThis Blog is written for those who are ready to discover delicious combinations of flavors. I want to tell and teach you how to cook new dishes that I come up with and cook in order to surprise you, and share ideas and flavors with you.",
+      "id": 1,
+      "name": "California Roll",
+      "category": "Rolls",
+      "description": "Crab, avocado, cucumber, tobiko caviar",
+      "price": 450,
       "image": "/00031.jpg",
-      "buttonText": "Contact"
+      "weight": "250g"
     },
     {
-      "title": "Portfolio Showcase",
-      "description": "Explore my creative works and projects that span over years of culinary mastery. From classic dishes to modern experimental cuisine, get inspired!",
+      "id": 2,
+      "name": "Philadelphia Roll",
+      "category": "Rolls",
+      "description": "Salmon, cream cheese, cucumber",
+      "price": 520,
       "image": "/00030.jpg",
-      "buttonText": "View Portfolio"
+      "weight": "280g"
     },
     {
-      "title": "Get in Touch",
-      "description": "Have questions or want to collaborate? Let’s connect and create something amazing together. I’m open to discussions and partnerships!",
+      "id": 3,
+      "name": "Dragon Roll",
+      "category": "Rolls",
+      "description": "Eel, avocado, tempura shrimp",
+      "price": 680,
       "image": "/00029.jpg",
-      "buttonText": "Connect"
+      "weight": "300g"
+    },
+    {
+      "id": 4,
+      "name": "Premium Set",
+      "category": "Sets",
+      "description": "30 pcs: California, Philadelphia, Spicy Tuna",
+      "price": 1850,
+      "image": "/00031.jpg",
+      "weight": "850g"
+    },
+    {
+      "id": 5,
+      "name": "Salmon Nigiri",
+      "category": "Sushi",
+      "description": "Fresh salmon on rice bed",
+      "price": 180,
+      "image": "/00030.jpg",
+      "weight": "40g"
+    },
+    {
+      "id": 6,
+      "name": "Tuna Nigiri",
+      "category": "Sushi",
+      "description": "Premium tuna on rice bed",
+      "price": 220,
+      "image": "/00029.jpg",
+      "weight": "40g"
     }
   ],
-  "recipesSections": [
-    "01. How to choose products?",
-    "02. How to make a menu?",
-    "03. Equipment essentials",
-    "04. Modern cooking techniques",
-    "05. Business management for chefs"
-  ],
+  "cart": {
+    "title": "Cart",
+    "empty": "Your cart is empty",
+    "total": "Total",
+    "checkout": "Checkout",
+    "continueShopping": "Continue Shopping",
+    "addToCart": "Add to Cart",
+    "remove": "Remove",
+    "quantity": "Quantity"
+  },
+  "order": {
+    "title": "Checkout",
+    "name": "Your Name",
+    "phone": "Phone",
+    "address": "Delivery Address",
+    "comment": "Order Comment",
+    "submit": "Confirm Order",
+    "success": "Order placed successfully! We will contact you shortly.",
+    "deliveryTime": "Delivery: 40-60 minutes",
+    "minOrder": "Minimum order: 500₽"
+  },
   "siteMetadata": {
-    "title": "Fomin Dmitry Chef",
-    "description": "Explore the culinary world of Fomin Dmitry, a professional chef with 20 years of experience.",
-    "contactAlert": "Contact form coming soon!",
-    "languageSwitchAlert": "Language switch coming soon!"
+    "title": "FODI SUSHI - Sushi Delivery",
+    "description": "Premium sushi and rolls delivery. Fresh ingredients, fast delivery.",
+    "contactAlert": "Call us: +7 (999) 123-45-67",
+    "deliveryInfo": "Free delivery from 1000₽"
   },
   "buttonLabels": {
     "home": "Home",
-    "blog": "Blog",
+    "menu": "Menu",
+    "about": "About",
     "contact": "Contact",
     "language": "Language",
-    "myRecipes": "My Recipes",
+    "cart": "Cart",
     "close": "Close",
-    "continueReading": "Continue reading",
-    "showLess": "Show less"
+    "viewDetails": "Details",
+    "orderNow": "Order Now"
+  },
+  "footer": {
+    "workingHours": "Working hours: 10:00 - 23:00",
+    "phone": "+7 (999) 123-45-67",
+    "email": "info@fodisushi.ru",
+    "social": "Follow us"
   }
 }
-
-
-  
