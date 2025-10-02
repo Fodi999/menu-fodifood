@@ -41,8 +41,25 @@ export default function CartDrawer({
     comment: "",
   });
 
-  const cartLabels = t("cart", { returnObjects: true }) as any;
-  const orderLabels = t("order", { returnObjects: true }) as any;
+  const cartLabels = t("cart", { returnObjects: true }) as {
+    title: string;
+    empty: string;
+    total: string;
+    checkout: string;
+    continueShopping: string;
+    remove: string;
+  };
+  
+  const orderLabels = t("order", { returnObjects: true }) as {
+    title: string;
+    name: string;
+    phone: string;
+    address: string;
+    comment: string;
+    submit: string;
+    success: string;
+    deliveryTime: string;
+  };
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
