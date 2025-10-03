@@ -2,7 +2,7 @@
 
 import Head from "next/head";
 import Header from "./components/Header";
-import MainContent from "./components/MainContent";
+import MainContentDynamic from "./components/MainContentDynamic";
 import CartDrawer from "./components/CartDrawer";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import { useState } from "react";
@@ -68,7 +68,7 @@ export default function Home() {
       </Head>
       <div className="relative w-full min-h-screen bg-gray-900 text-white">
         <Header cartItemsCount={totalItems} onCartClick={toggleCart} />
-        <MainContent onAddToCart={addToCart} />
+        <MainContentDynamic onAddToCart={addToCart} />
         {showCart && (
           <CartDrawer
             items={cartItems}

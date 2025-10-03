@@ -2,7 +2,9 @@
 
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import { ShoppingCart } from "lucide-react";
+import { ShoppingCart, User, LogIn } from "lucide-react";
+import { useSession } from "next-auth/react";
+import Link from "next/link";
 
 interface HeaderProps {
   cartItemsCount: number;
@@ -11,17 +13,18 @@ interface HeaderProps {
 
 export default function Header({ cartItemsCount, onCartClick }: HeaderProps) {
   const { t } = useTranslation("ns1");
+  const { data: session } = useSession();
 
   return (
     <header className="fixed top-0 left-0 w-full bg-gray-900/95 backdrop-blur-sm z-50 shadow-lg">
       <div className="max-w-7xl mx-auto flex justify-between items-center px-6 py-4">
-        <div className="flex items-center space-x-4">
+        <Link href="/" className="flex items-center space-x-4">
           <Image src="/svg%201.svg" alt="Logo" width={40} height={40} />
           <div className="text-xl font-bold">
             <span className="text-orange-500">FODI</span>{" "}
             <span className="text-white">SUSHI</span>
           </div>
-        </div>
+        </Link>
         <nav className="flex items-center space-x-6 text-sm">
           <a
             href="#menu"
@@ -41,6 +44,35 @@ export default function Header({ cartItemsCount, onCartClick }: HeaderProps) {
           >
             {t("buttonLabels.contact")}
           </a>
+          
+          {session?.user ? (
+            <>
+              <Link
+                href="/profile"
+                className="px-4 py-2 text-white rounded-full transition hover:text-orange-500 flex items-center space-x-2"
+              >
+                <User size={18} />
+                <span>{session.user.name || "Профиль"}</span>
+              </Link>
+              {session.user.role === "admin" && (
+                <Link
+                  href="/admin"
+                  className="px-4 py-2 bg-purple-500 text-white rounded-full transition hover:bg-purple-600 flex items-center space-x-2"
+                >
+                  <span>⚙️ Админка</span>
+                </Link>
+              )}
+            </>
+          ) : (
+            <Link
+              href="/auth/signin"
+              className="px-4 py-2 text-white rounded-full transition hover:text-orange-500 flex items-center space-x-2"
+            >
+              <LogIn size={18} />
+              <span>Войти</span>
+            </Link>
+          )}
+          
           <button
             onClick={onCartClick}
             className="relative px-4 py-2 bg-orange-500 text-white rounded-full transition hover:bg-orange-600 flex items-center space-x-2"
