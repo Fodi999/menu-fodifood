@@ -59,20 +59,27 @@ export default function MainContentDynamic({ onAddToCart }: MainContentDynamicPr
     try {
       const res = await fetch("/api/products");
       const data = await res.json();
-      setProducts(data);
+      // Проверяем, что data это массив
+      if (Array.isArray(data)) {
+        setProducts(data);
+      } else {
+        console.error("Products data is not an array:", data);
+        setProducts([]);
+      }
     } catch (error) {
       console.error("Error fetching products:", error);
+      setProducts([]);
     } finally {
       setLoading(false);
     }
   };
 
-  const categories = ["All", ...Array.from(new Set(products.map(p => p.category)))];
+  const categories = ["All", ...Array.from(new Set((products || []).map(p => p.category)))];
 
   const filteredProducts =
     selectedCategory === "All"
-      ? products
-      : products.filter((p) => p.category === selectedCategory);
+      ? products || []
+      : (products || []).filter((p) => p.category === selectedCategory);
 
   const handleAddToCart = (product: Product) => {
     onAddToCart({
