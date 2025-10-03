@@ -3,6 +3,7 @@
 import { useState } from "react";
 import { useRouter } from "next/navigation";
 import { signIn } from "next-auth/react";
+import Link from "next/link";
 
 export default function SignUpPage() {
   const router = useRouter();
@@ -62,8 +63,6 @@ export default function SignUpPage() {
         router.push("/profile");
         router.refresh();
       }
-    } catch (error) {
-      setError("Произошла ошибка при регистрации");
     } finally {
       setLoading(false);
     }
@@ -158,19 +157,19 @@ export default function SignUpPage() {
         <div className="mt-6 text-center">
           <p className="text-gray-400">
             Уже есть аккаунт?{" "}
-            <a
+            <Link
               href="/auth/signin"
               className="text-orange-500 hover:text-orange-400 font-medium"
             >
               Войти
-            </a>
+            </Link>
           </p>
         </div>
 
         <div className="mt-4 text-center">
-          <a href="/" className="text-sm text-gray-500 hover:text-gray-400">
+          <Link href="/" className="text-sm text-gray-500 hover:text-gray-400">
             ← Вернуться на главную
-          </a>
+          </Link>
         </div>
       </div>
     </div>

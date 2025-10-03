@@ -2,7 +2,8 @@ import { auth } from "@/auth";
 import { redirect } from "next/navigation";
 import { signOut } from "@/auth";
 import { prisma } from "@/lib/prisma";
-import { KeyRound, User, Calendar, ShoppingBag, ArrowLeft } from "lucide-react";
+import { KeyRound } from "lucide-react";
+import Link from "next/link";
 
 export default async function ProfilePage() {
   const session = await auth();
@@ -93,12 +94,12 @@ export default async function ProfilePage() {
                 <KeyRound className="w-5 h-5 text-orange-500" />
                 <p className="text-orange-500 font-semibold">Панель администратора</p>
               </div>
-              <a
+              <Link
                 href="/admin"
                 className="mt-2 inline-block px-4 py-2 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition"
               >
                 Перейти в админ-панель
-              </a>
+              </Link>
             </div>
           )}
 
@@ -134,12 +135,12 @@ export default async function ProfilePage() {
           </div>
 
           <div className="mt-8 text-center">
-            <a
+            <Link
               href="/"
               className="inline-block px-6 py-3 bg-orange-500 text-white rounded-lg hover:bg-orange-600 transition"
             >
               Вернуться в меню
-            </a>
+            </Link>
           </div>
         </div>
       </div>

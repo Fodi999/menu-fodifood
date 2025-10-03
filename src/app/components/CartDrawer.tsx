@@ -6,7 +6,7 @@ import Image from "next/image";
 import { useState } from "react";
 
 interface Product {
-  id: number;
+  id: string;
   name: string;
   category: string;
   description: string;
@@ -22,8 +22,8 @@ interface CartItem extends Product {
 interface CartDrawerProps {
   items: CartItem[];
   onClose: () => void;
-  onUpdateQuantity: (id: number, quantity: number) => void;
-  onRemove: (id: number) => void;
+  onUpdateQuantity: (id: string, quantity: number) => void;
+  onRemove: (id: string) => void;
 }
 
 export default function CartDrawer({

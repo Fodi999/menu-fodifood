@@ -4,6 +4,26 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { BarChart3, Home, Package, ShoppingCart, Users } from "lucide-react";
 
+type RecentOrder = {
+  id: string;
+  userId: string;
+  status: string;
+  total: { toString: () => string };
+  createdAt: Date;
+  user: {
+    id: string;
+    name: string | null;
+    email: string;
+  };
+  items: Array<{
+    id: string;
+    product: {
+      id: string;
+      name: string;
+    };
+  }>;
+};
+
 export default async function AdminPage() {
   const session = await auth();
 
@@ -129,7 +149,7 @@ export default async function AdminPage() {
                   </tr>
                 </thead>
                 <tbody>
-                  {recentOrders.map((order: any) => (
+                  {recentOrders.map((order: RecentOrder) => (
                     <tr key={order.id} className="border-b border-gray-700/50 hover:bg-gray-700/30">
                       <td className="py-3 px-4 text-sm">#{order.id.slice(0, 8)}</td>
                       <td className="py-3 px-4">

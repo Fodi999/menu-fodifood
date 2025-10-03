@@ -3,6 +3,17 @@ import { redirect } from "next/navigation";
 import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 
+type UserWithCount = {
+  id: string;
+  name: string | null;
+  email: string;
+  role: string;
+  createdAt: Date;
+  _count: {
+    orders: number;
+  };
+};
+
 export default async function AdminUsersPage() {
   const session = await auth();
 
@@ -48,7 +59,7 @@ export default async function AdminUsersPage() {
                 </tr>
               </thead>
               <tbody>
-                {users.map((user: any) => (
+                {users.map((user: UserWithCount) => (
                   <tr key={user.id} className="border-b border-gray-700 hover:bg-gray-700/30">
                     <td className="py-4 px-6">
                       <div>

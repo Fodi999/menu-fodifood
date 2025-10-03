@@ -4,6 +4,31 @@ import { prisma } from "@/lib/prisma";
 import Link from "next/link";
 import { ShoppingCart, ArrowLeft } from "lucide-react";
 
+type OrderWithRelations = {
+  id: string;
+  userId: string;
+  status: string;
+  total: { toString: () => string };
+  address: string;
+  phone: string;
+  comment: string | null;
+  createdAt: Date;
+  user: {
+    id: string;
+    name: string | null;
+    email: string;
+  };
+  items: Array<{
+    id: string;
+    quantity: number;
+    price: { toString: () => string };
+    product: {
+      id: string;
+      name: string;
+    };
+  }>;
+};
+
 export default async function AdminOrdersPage() {
   const session = await auth();
 
@@ -46,7 +71,7 @@ export default async function AdminOrdersPage() {
           </div>
         ) : (
           <div className="space-y-6">
-            {orders.map((order: any) => (
+            {orders.map((order: OrderWithRelations) => (
               <div key={order.id} className="bg-gray-800 rounded-lg shadow-xl p-6">
                 <div className="flex justify-between items-start mb-4">
                   <div>
@@ -92,7 +117,7 @@ export default async function AdminOrdersPage() {
                 <div className="border-t border-gray-700 pt-4">
                   <h4 className="font-semibold text-orange-500 mb-3">Состав заказа</h4>
                   <div className="space-y-2">
-                    {order.items.map((item: any) => (
+                    {order.items.map((item: OrderWithRelations['items'][0]) => (
                       <div
                         key={item.id}
                         className="flex justify-between items-center bg-gray-700/50 p-3 rounded"

@@ -16,7 +16,15 @@ interface Product {
 }
 
 interface MainContentDynamicProps {
-  onAddToCart: (product: any) => void;
+  onAddToCart: (product: {
+    id: string;
+    name: string;
+    category: string;
+    description: string;
+    price: number;
+    image: string;
+    weight: string;
+  }) => void;
 }
 
 export default function MainContentDynamic({ onAddToCart }: MainContentDynamicProps) {
