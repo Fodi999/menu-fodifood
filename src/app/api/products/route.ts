@@ -10,7 +10,17 @@ export async function GET() {
     return NextResponse.json(products);
   } catch (error) {
     console.error("Error fetching products:", error);
-    return NextResponse.json({ error: "Failed to fetch products" }, { status: 500 });
+    
+    // Возвращаем детальную информацию об ошибке
+    const errorMessage = error instanceof Error ? error.message : "Unknown error";
+    return NextResponse.json(
+      { 
+        error: "Failed to fetch products",
+        details: errorMessage,
+        timestamp: new Date().toISOString()
+      }, 
+      { status: 500 }
+    );
   }
 }
 
