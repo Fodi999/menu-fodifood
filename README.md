@@ -27,29 +27,53 @@
 npm install
 ```
 
+### Настройка переменных окружения
+
+#### Локально (файл `.env` в корне проекта)
+
+1. Создайте файл `.env` в корне проекта:
+
+```bash
+touch .env
+```
+
+2. Добавьте переменные окружения:
+
+```env
+# Database (используйте строку подключения из Neon)
+DATABASE_URL="postgresql://neondb_owner:пароль@ep-soft-mud-agon8wu3-pooler.c-2.eu-central-1.aws.neon.tech/neondb?connect_timeout=15&sslmode=require"
+
+# NextAuth
+NEXTAUTH_URL="http://localhost:3000"
+NEXTAUTH_SECRET="ваш_сгенерированный_секрет"
+```
+
+3. Сгенерируйте `NEXTAUTH_SECRET`:
+
+```bash
+openssl rand -base64 32
+```
+
+Скопируйте результат и вставьте в `.env` как значение `NEXTAUTH_SECRET`.
+
+**Примечание:** 
+- Для локальной разработки можно использовать ту же базу данных из Neon
+- Или настроить локальный PostgreSQL: `postgresql://user:password@localhost:5432/fodisushi`
+- `.env` файл уже добавлен в `.gitignore` и не попадёт в Git
+
 ### Настройка базы данных
 
-1. Скопируйте `.env.example` в `.env`:
-```bash
-cp .env.example .env
-```
-
-2. Укажите URL вашей PostgreSQL базы данных в `.env`:
-```env
-DATABASE_URL="postgresql://user:password@localhost:5432/fodi_sushi"
-```
-
-3. Сгенерируйте Prisma Client:
+1. Сгенерируйте Prisma Client:
 ```bash
 npx prisma generate
 ```
 
-4. Примените миграции (создание таблиц):
+2. Примените миграции (создание таблиц):
 ```bash
 npx prisma migrate dev --name init
 ```
 
-5. (Опционально) Откройте Prisma Studio для просмотра данных:
+3. (Опционально) Откройте Prisma Studio для просмотра данных:
 ```bash
 npx prisma studio
 ```
@@ -72,6 +96,42 @@ npm run dev
 npm run build
 npm start
 ```
+
+## 🚀 Быстрый старт для деплоя на Vercel
+
+### 1. Настройка Neon Database
+1. Зарегистрируйтесь на [Neon](https://neon.tech)
+2. Создайте новый проект PostgreSQL
+3. Скопируйте `DATABASE_URL` (Prisma connection string)
+
+### 2. Настройка Vercel Environment Variables
+```bash
+NEXTAUTH_URL=https://menu-fodifood.vercel.app
+NEXTAUTH_SECRET=j+fkqjtR1vl6b6WzE+UISqGX211x6VMNcH0Vil/S/nw=
+DATABASE_URL=postgresql://[ваша строка подключения из Neon]
+```
+
+### 3. Применение миграций
+```bash
+# Установите DATABASE_URL от Neon
+export DATABASE_URL="postgresql://[строка из Neon]"
+
+# Используйте наш скрипт
+./deploy-db.sh
+
+# Или вручную
+npx prisma migrate deploy
+npx prisma db seed  # опционально - тестовые данные
+```
+
+### 4. Деплой
+```bash
+git push  # Vercel автоматически задеплоит
+# или
+vercel --prod
+```
+
+📖 **Подробная инструкция**: см. [DEPLOYMENT.md](./DEPLOYMENT.md)
 
 ## 🛠️ Технологический стек
 
