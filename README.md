@@ -3,9 +3,11 @@
 Современный веб-сайт для заказа и доставки премиальных суши и роллов, построенный на Next.js 15 с поддержкой мультиязычности.
 
 ![FODI SUSHI](https://img.shields.io/badge/FODI-SUSHI-orange?style=for-the-badge)
-![Next.js](https://img.shields.io/badge/Next.js-15.1.3-black?style=for-the-badge&logo=next.js)
+![Next.js](https://img.shields.io/badge/Next.js-15.5.4-black?style=for-the-badge&logo=next.js)
+![React](https://img.shields.io/badge/React-19.2.0-61dafb?style=for-the-badge&logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
-![Tailwind CSS](https://img.shields.io/badge/Tailwind-CSS-38bdf8?style=for-the-badge&logo=tailwindcss)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0_beta-38bdf8?style=for-the-badge&logo=tailwindcss)
+![Turbopack](https://img.shields.io/badge/Turbopack-Enabled-5a67d8?style=for-the-badge)
 
 ## ✨ Основные возможности
 
@@ -25,6 +27,33 @@
 npm install
 ```
 
+### Настройка базы данных
+
+1. Скопируйте `.env.example` в `.env`:
+```bash
+cp .env.example .env
+```
+
+2. Укажите URL вашей PostgreSQL базы данных в `.env`:
+```env
+DATABASE_URL="postgresql://user:password@localhost:5432/fodi_sushi"
+```
+
+3. Сгенерируйте Prisma Client:
+```bash
+npx prisma generate
+```
+
+4. Примените миграции (создание таблиц):
+```bash
+npx prisma migrate dev --name init
+```
+
+5. (Опционально) Откройте Prisma Studio для просмотра данных:
+```bash
+npx prisma studio
+```
+
 ### Запуск в режиме разработки
 
 ```bash
@@ -32,6 +61,10 @@ npm run dev
 ```
 
 Откройте [http://localhost:3000](http://localhost:3000) в браузере.
+
+### Проверка подключения к БД
+
+Откройте [http://localhost:3000/api/health](http://localhost:3000/api/health) - должен вернуться `{ ok: true }`.
 
 ### Сборка для продакшена
 
@@ -42,12 +75,15 @@ npm start
 
 ## 🛠️ Технологический стек
 
-- **Framework:** Next.js 15.1.3 (с Turbopack)
-- **Язык:** TypeScript
-- **Стили:** Tailwind CSS
-- **Интернационализация:** i18next, react-i18next
+- **Framework:** Next.js 15.5.4 (с Turbopack)
+- **UI Library:** React 19.2.0
+- **Язык:** TypeScript 5.x
+- **Стили:** Tailwind CSS 4.0 (beta)
+- **База данных:** PostgreSQL с Prisma ORM
+- **Интернационализация:** i18next 24.x, react-i18next 15.x
 - **Иконки:** Lucide React
 - **Изображения:** Next.js Image Optimization
+- **Сборка:** Turbopack (в dev режиме)
 
 ## 📁 Структура проекта
 
@@ -152,6 +188,35 @@ npm run lint
 - 📱 Мобильных телефонов (320px+)
 - 💻 Планшетов (768px+)
 - 🖥️ Десктопов (1024px+)
+
+## 🔌 API Endpoints
+
+### Проверка здоровья
+- `GET /api/health` - Проверка подключения к базе данных
+
+### Продукты
+- `GET /api/products` - Получить все продукты
+- `POST /api/products` - Создать новый продукт
+
+### Модели базы данных
+
+#### User
+Пользователи системы с ролями (user/admin)
+
+#### Product
+Продукты (роллы, суши, сеты) с ценами, описаниями и категориями
+
+#### Order
+Заказы пользователей со статусами и адресами доставки
+
+#### Ingredient & StockItem
+Ингредиенты и складские остатки для управления запасами
+
+#### TechCard
+Технологические карты приготовления блюд
+
+#### ChatMessage
+Сообщения чата поддержки
 
 ## 📄 Лицензия
 

@@ -1,0 +1,106 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+enum Role {
+  user
+  admin
+}
+
+model User {
+  id        String        @id @default(cuid())
+  email     String        @unique
+  name      String?
+  password  String?
+  role      Role          @default(user)
+  createdAt DateTime      @default(now())
+  orders    Order[]
+  messages  ChatMessage[]
+}
+
+model Product {
+  id          String              @id @default(cuid())
+  name        String
+  description String?
+  price       Decimal             @db.Decimal(10, 2)
+  imageUrl    String?
+  weight      String?
+  category    String
+  createdAt   DateTime            @default(now())
+  techCard    TechCard?
+  orderItems  OrderItem[]
+  ingredients ProductIngredient[]
+}
+
+model Ingredient {
+  id         String              @id @default(cuid())
+  name       String
+  unit       String
+  createdAt  DateTime            @default(now())
+  stockItems StockItem[]
+  products   ProductIngredient[]
+}
+
+model StockItem {
+  id           String     @id @default(cuid())
+  ingredientId String
+  quantity     Float
+  updatedAt    DateTime   @updatedAt
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+}
+
+model ProductIngredient {
+  productId    String
+  ingredientId String
+  amount       Float
+  unit         String
+  product      Product    @relation(fields: [productId], references: [id])
+  ingredient   Ingredient @relation(fields: [ingredientId], references: [id])
+
+  @@id([productId, ingredientId])
+}
+
+model TechCard {
+  id        String  @id @default(cuid())
+  productId String  @unique
+  steps     Json?
+  imageUrl  String?
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model Order {
+  id        String      @id @default(cuid())
+  userId    String
+  status    String      @default("pending")
+  total     Decimal     @db.Decimal(10, 2)
+  address   String
+  phone     String
+  comment   String?
+  createdAt DateTime    @default(now())
+  user      User        @relation(fields: [userId], references: [id])
+  items     OrderItem[]
+}
+
+model OrderItem {
+  id        String  @id @default(cuid())
+  orderId   String
+  productId String
+  quantity  Int     @default(1)
+  price     Decimal @db.Decimal(10, 2)
+  order     Order   @relation(fields: [orderId], references: [id])
+  product   Product @relation(fields: [productId], references: [id])
+}
+
+model ChatMessage {
+  id          String   @id @default(cuid())
+  userId      String
+  isFromAdmin Boolean  @default(false)
+  content     String
+  createdAt   DateTime @default(now())
+  user        User     @relation(fields: [userId], references: [id])
+}
