@@ -7,7 +7,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "db:seed": "tsx prisma/seed.ts"
+    "db:seed": "tsx prisma/seed.ts",
+    "translations:check": "node scripts/check-translations.js"
   },
   "prisma": {
     "seed": "tsx prisma/seed.ts"
