@@ -39,6 +39,9 @@ export default function SignInPage() {
         console.log("✅ Sign in successful!");
         setSuccess("Вход выполнен успешно! Перенаправление...");
         
+        // Ждём немного, чтобы сессия точно сохранилась
+        await new Promise(resolve => setTimeout(resolve, 1000));
+        
         // Получаем сессию для проверки роли
         const response = await fetch("/api/auth/session");
         const session = await response.json();
@@ -50,9 +53,7 @@ export default function SignInPage() {
         console.log(`🔄 Redirecting to: ${redirectPath}`);
         
         // Используем window.location для полной перезагрузки и обновления сессии
-        setTimeout(() => {
-          window.location.href = redirectPath;
-        }, 800);
+        window.location.href = redirectPath;
       }
     } catch (err) {
       console.error("💥 Unexpected error:", err);
