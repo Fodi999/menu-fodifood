@@ -4,6 +4,7 @@ import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
+import Image from "next/image";
 import { Package, ArrowLeft, Plus, Edit2, Trash2, Loader2 } from "lucide-react";
 
 type Product = {
@@ -358,10 +359,12 @@ export default function AdminProductsPage() {
                     <tr key={product.id} className="hover:bg-gray-700/50 transition">
                       <td className="px-6 py-4">
                         {product.imageUrl ? (
-                          <img
+                          <Image
                             src={product.imageUrl}
                             alt={product.name}
-                            className="w-16 h-16 object-cover rounded"
+                            width={64}
+                            height={64}
+                            className="object-cover rounded"
                           />
                         ) : (
                           <div className="w-16 h-16 bg-gray-600 rounded flex items-center justify-center">
