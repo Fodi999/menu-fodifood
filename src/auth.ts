@@ -35,6 +35,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
+          console.log('❌ Login attempt without credentials');
           return null;
         }
 
@@ -43,6 +44,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         });
 
         if (!user || !user.password) {
+          console.log(`❌ User not found: ${credentials.email}`);
           return null;
         }
 
@@ -52,9 +54,12 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
         );
 
         if (!isPasswordValid) {
+          console.log(`❌ Failed login attempt for: ${credentials.email}`);
           return null;
         }
 
+        console.log(`✅ Successful login: ${user.email} (${user.role})`);
+        
         return {
           id: user.id,
           email: user.email,
@@ -69,6 +74,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (user) {
         token.role = user.role;
         token.id = user.id as string;
+        console.log(`🔑 JWT created for: ${user.email} (role: ${user.role})`);
       }
       return token;
     },
@@ -76,6 +82,7 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
       if (session.user) {
         session.user.role = token.role as "user" | "admin";
         session.user.id = token.id as string;
+        console.log(`👤 Session loaded for: ${session.user.email} (role: ${session.user.role})`);
       }
       return session;
     },
