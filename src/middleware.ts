@@ -3,8 +3,8 @@ import type { NextRequest } from "next/server";
 
 // Простая функция для проверки JWT токена от Go API
 function getAuthToken(request: NextRequest) {
-  // Проверяем токен в cookie
-  const tokenCookie = request.cookies.get('auth_token');
+  // Проверяем токен в cookie (единый ключ "token")
+  const tokenCookie = request.cookies.get('token');
   if (tokenCookie) {
     return tokenCookie.value;
   }

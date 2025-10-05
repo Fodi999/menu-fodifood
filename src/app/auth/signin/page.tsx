@@ -50,27 +50,32 @@ function SignInForm() {
         return;
       }
 
-      console.log("✅ Login successful");
+      console.log("✅ Login successful", data);
       
-      // Сохраняем токен в localStorage
+      // Сохраняем токен в localStorage и cookies (используем единый ключ "token")
       if (data.token) {
-        localStorage.setItem("auth_token", data.token);
+        console.log("💾 Saving token to localStorage and cookies");
+        localStorage.setItem("token", data.token);
+        document.cookie = `token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
         localStorage.setItem("user", JSON.stringify(data.user));
+        console.log("✅ Token and user saved");
       }
 
       // Показываем успех
       setSuccess("Вход выполнен! Перенаправление...");
+      setLoading(false);
 
       // Определяем куда редиректить
       const callbackUrl = searchParams.get('callbackUrl') || 
                          (data.user?.role === 'admin' ? '/admin' : '/profile');
       
-      console.log(`🎯 Redirecting to: ${callbackUrl}`);
+      console.log(`🎯 Will redirect to: ${callbackUrl}`);
       
-      // Небольшая задержка для показа сообщения
+      // Используем window.location для гарантированного редиректа
       setTimeout(() => {
-        router.push(callbackUrl);
-      }, 500);
+        console.log(`🚀 Redirecting now to: ${callbackUrl}`);
+        window.location.href = callbackUrl;
+      }, 1000);
 
     } catch (err) {
       console.error("💥 Unexpected error:", err);

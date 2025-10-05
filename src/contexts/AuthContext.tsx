@@ -42,15 +42,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      const response = await fetch(`${API_URL}/api/auth/me`, {
+      const response = await fetch(`${API_URL}/api/user/profile`, {
         headers: {
           Authorization: `Bearer ${token}`,
         },
       });
 
       if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
+        const userData = await response.json();
+        setUser(userData);
       } else {
         // Токен невалидный - удаляем
         localStorage.removeItem("token");
@@ -81,8 +81,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const data = await response.json();
     
-    // Сохраняем токен
+    // Сохраняем токен в localStorage и cookies
     localStorage.setItem("token", data.token);
+    document.cookie = `token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
     
     // Устанавливаем пользователя
     setUser(data.user);
@@ -90,7 +91,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Регистрация
   const signup = async (email: string, password: string, name?: string) => {
-    const response = await fetch(`${API_URL}/api/auth/signup`, {
+    const response = await fetch(`${API_URL}/api/auth/register`, {
       method: "POST",
       headers: {
         "Content-Type": "application/json",
@@ -105,8 +106,9 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const data = await response.json();
     
-    // Сохраняем токен
+    // Сохраняем токен в localStorage и cookies
     localStorage.setItem("token", data.token);
+    document.cookie = `token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
     
     // Устанавливаем пользователя
     setUser(data.user);
@@ -115,6 +117,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Выход
   const logout = async () => {
     localStorage.removeItem("token");
+    document.cookie = "token=; path=/; max-age=0";
     setUser(null);
   };
 

@@ -82,9 +82,10 @@ export default function SignUpPage() {
 
       console.log("✅ Auto-login successful");
       
-      // Сохраняем токен
+      // Сохраняем токен в localStorage и cookies (используем единый ключ "token")
       if (loginData.token) {
-        localStorage.setItem("auth_token", loginData.token);
+        localStorage.setItem("token", loginData.token);
+        document.cookie = `token=${loginData.token}; path=/; max-age=86400; SameSite=Lax`;
         localStorage.setItem("user", JSON.stringify(loginData.user));
       }
 

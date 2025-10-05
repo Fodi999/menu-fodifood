@@ -61,7 +61,8 @@ export default function AdminPage() {
         }
         
         if (ordersRes.ok) {
-          setRecentOrders(await ordersRes.json());
+          const ordersData = await ordersRes.json();
+          setRecentOrders(ordersData || []);
         }
       } catch (error) {
         console.error("Failed to fetch admin data:", error);
@@ -172,7 +173,7 @@ export default function AdminPage() {
 
         <div className="bg-gray-800 p-6 rounded-lg">
           <h3 className="text-2xl font-semibold mb-6">Последние заказы</h3>
-          {recentOrders.length === 0 ? (
+          {!recentOrders || recentOrders.length === 0 ? (
             <p className="text-gray-400">Нет заказов</p>
           ) : (
             <div className="space-y-4">

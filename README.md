@@ -1,13 +1,20 @@
 # 🍣 FODI SUSHI - Интернет-магазин доставки суши
 
-Современный веб-сайт для заказа и доставки премиальных суши и роллов, построенный на Next.js 15 с поддержкой мультиязычности.
+Современный веб-сайт для заказа и доставки премиальных суши и роллов, построенный на Next.js 15 с поддержкой мультиязычности и Go backend.
 
 ![FODI SUSHI](https://img.shields.io/badge/FODI-SUSHI-orange?style=for-the-badge)
 ![Next.js](https://img.shields.io/badge/Next.js-15.5.4-black?style=for-the-badge&logo=next.js)
 ![React](https://img.shields.io/badge/React-19.2.0-61dafb?style=for-the-badge&logo=react)
 ![TypeScript](https://img.shields.io/badge/TypeScript-5.0-blue?style=for-the-badge&logo=typescript)
 ![Tailwind CSS](https://img.shields.io/badge/Tailwind-4.0_beta-38bdf8?style=for-the-badge&logo=tailwindcss)
-![Turbopack](https://img.shields.io/badge/Turbopack-Enabled-5a67d8?style=for-the-badge)
+![Go](https://img.shields.io/badge/Go-1.21-00ADD8?style=for-the-badge&logo=go)
+![PostgreSQL](https://img.shields.io/badge/PostgreSQL-Neon-336791?style=for-the-badge&logo=postgresql)
+
+## 🌐 Production URLs
+
+- **Frontend:** https://menu-fodifood.vercel.app
+- **Backend API:** https://irrelevant-nellie-fodi999-aefe2c9f.koyeb.app
+- **Database:** Neon PostgreSQL (Serverless)
 
 ## ✨ Основные возможности
 
@@ -15,10 +22,11 @@
 - 🛒 **Корзина покупок** - добавление товаров, управление количеством
 - 📝 **Форма заказа** - оформление заказа с указанием данных доставки
 - 🌐 **Мультиязычность** - поддержка 3 языков (EN, RU, PL) с 111+ переводами
-- 🔐 **Аутентификация** - вход, регистрация через NextAuth.js v5
+- 🔐 **Аутентификация** - вход, регистрация через Go Backend (JWT)
 - 👤 **Личный кабинет** - история заказов, управление профилем
 - 🔧 **Админ-панель** - управление пользователями, заказами, товарами
-- � **База данных** - Prisma ORM + PostgreSQL (Neon)
+- 💾 **База данных** - Prisma ORM + PostgreSQL (Neon)
+- 🔌 **Go Backend API** - REST API на Go с JWT авторизацией
 - �📱 **Адаптивный дизайн** - идеально работает на всех устройствах
 - 🎨 **Современный UI/UX** - темная тема с иконками lucide-react
 - ⚡ **Быстрая сборка** - Turbopack для мгновенной разработки
@@ -138,15 +146,27 @@ vercel --prod
 
 ## 🛠️ Технологический стек
 
+### Frontend
 - **Framework:** Next.js 15.5.4 (с Turbopack)
 - **UI Library:** React 19.2.0
 - **Язык:** TypeScript 5.x
 - **Стили:** Tailwind CSS 4.0 (beta)
-- **База данных:** PostgreSQL с Prisma ORM
 - **Интернационализация:** i18next 24.x, react-i18next 15.x
 - **Иконки:** Lucide React
 - **Изображения:** Next.js Image Optimization
+
+### Backend
+- **Язык:** Go 1.21+
+- **Router:** gorilla/mux
+- **Аутентификация:** JWT (golang-jwt/jwt)
+- **Хеширование:** bcrypt
+- **База данных:** PostgreSQL с Prisma ORM
+- **CORS:** rs/cors
+
+### Инфраструктура
 - **Сборка:** Turbopack (в dev режиме)
+- **Деплой Frontend:** Vercel
+- **База данных:** Neon (PostgreSQL)
 
 ## 📁 Структура проекта
 

@@ -37,8 +37,10 @@ export default function ProfilePage() {
     const fetchProfile = async () => {
       try {
         const token = localStorage.getItem("token");
+        console.log("🔍 Fetching profile with token:", token ? "exists" : "missing");
+        
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/profile`,
+          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/user/profile`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -46,8 +48,11 @@ export default function ProfilePage() {
           }
         );
 
+        console.log("📡 Profile response status:", response.status);
+
         if (response.ok) {
           const data = await response.json();
+          console.log("✅ Profile data:", data);
           setProfile(data);
         }
       } catch (error) {

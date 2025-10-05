@@ -48,4 +48,15 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Development logs and PIDs
+backend.log
+frontend.log
+.backend.pid
+.frontend.pid
+
+# Archive of old documentation
+archive/
+keep-docs.txt
+
 /src/generated/prisma
+/backend
