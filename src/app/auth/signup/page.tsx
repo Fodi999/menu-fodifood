@@ -14,11 +14,13 @@ export default function SignUpPage() {
     confirmPassword: "",
   });
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
 
     if (formData.password !== formData.confirmPassword) {
       setError("Пароли не совпадают");
@@ -47,8 +49,14 @@ export default function SignUpPage() {
 
       if (!response.ok) {
         setError(data.error || "Ошибка при регистрации");
+        setLoading(false);
         return;
       }
+
+      console.log("✅ Registration successful, logging in...");
+
+      // Показываем успех
+      setSuccess("Регистрация успешна! Выполняется вход...");
 
       // Автоматический вход после регистрации
       const result = await signIn("credentials", {
@@ -58,12 +66,21 @@ export default function SignUpPage() {
       });
 
       if (result?.error) {
-        setError("Регистрация успешна, но не удалось выполнить вход");
+        console.error("❌ Auto-login failed:", result.error);
+        setError("Регистрация успешна, но не удалось выполнить вход. Попробуйте войти вручную.");
+        setLoading(false);
       } else {
+        console.log("✅ Auto-login successful, redirecting to profile...");
+        
+        // Даём время NextAuth сохранить сессию
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Мягкий переход без перезагрузки (SPA-навигация)
         router.push("/profile");
-        router.refresh();
       }
-    } finally {
+    } catch (err) {
+      console.error("💥 Registration error:", err);
+      setError("Произошла ошибка при регистрации");
       setLoading(false);
     }
   };
@@ -75,10 +92,16 @@ export default function SignUpPage() {
           Регистрация в FODI SUSHI
         </h1>
 
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit} className="space-y-6" noValidate>
           {error && (
             <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded">
               {error}
+            </div>
+          )}
+
+          {success && (
+            <div className="bg-green-500/10 border border-green-500 text-green-500 px-4 py-3 rounded">
+              {success}
             </div>
           )}
 
