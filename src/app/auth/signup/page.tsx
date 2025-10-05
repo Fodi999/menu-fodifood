@@ -62,21 +62,23 @@ export default function SignUpPage() {
       const result = await signIn("credentials", {
         email: formData.email,
         password: formData.password,
-        redirect: false,
+        redirect: false, // Сначала проверим результат
       });
 
       if (result?.error) {
         console.error("❌ Auto-login failed:", result.error);
         setError("Регистрация успешна, но не удалось выполнить вход. Попробуйте войти вручную.");
         setLoading(false);
-      } else {
+      } else if (result?.ok) {
         console.log("✅ Auto-login successful, redirecting to profile...");
         
-        // Даём время NextAuth сохранить сессию
-        await new Promise(resolve => setTimeout(resolve, 500));
-        
-        // Мягкий переход без перезагрузки (SPA-навигация)
-        router.push("/profile");
+        // Используем window.location для полной перезагрузки с новой сессией
+        // Это гарантирует, что сервер получит обновлённые cookies
+        window.location.href = "/profile";
+      } else {
+        console.error("❌ Unexpected result:", result);
+        setError("Произошла неизвестная ошибка. Попробуйте войти вручную.");
+        setLoading(false);
       }
     } catch (err) {
       console.error("💥 Registration error:", err);
