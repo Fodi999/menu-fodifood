@@ -18,7 +18,7 @@ interface UserProfile {
   email: string;
   name: string | null;
   role: string;
-  orders: Order[];
+  orders?: Order[];
 }
 
 export default function ProfilePage() {
@@ -133,7 +133,7 @@ export default function ProfilePage() {
                 <div>
                   <span className="text-gray-400">Всего заказов:</span>
                   <p className="text-2xl font-bold text-orange-500">
-                    {profile.orders.length}
+                    {profile.orders?.length || 0}
                   </p>
                 </div>
               </div>
@@ -153,7 +153,7 @@ export default function ProfilePage() {
 
           <div className="bg-gray-700 p-6 rounded-lg">
             <h3 className="text-lg font-semibold mb-4">Последние заказы</h3>
-            {profile.orders.length === 0 ? (
+            {!profile.orders || profile.orders.length === 0 ? (
               <p className="text-gray-400">У вас пока нет заказов</p>
             ) : (
               <div className="space-y-4">
