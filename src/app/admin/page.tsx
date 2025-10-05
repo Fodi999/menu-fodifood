@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { BarChart3, Home, Package, ShoppingCart, Users } from "lucide-react";
+import { BarChart3, Home, Package, ShoppingCart, Users, Package2 } from "lucide-react";
 
 interface Stats {
   totalUsers: number;
@@ -168,6 +168,15 @@ export default function AdminPage() {
             <Package className="w-12 h-12 text-purple-500 mb-4 group-hover:scale-110 transition" />
             <h3 className="text-xl font-semibold mb-2">Товары</h3>
             <p className="text-gray-400">Управление каталогом товаров</p>
+          </Link>
+
+          <Link
+            href="/admin/ingredients"
+            className="bg-gray-800 hover:bg-gray-700 p-6 rounded-lg transition group"
+          >
+            <Package2 className="w-12 h-12 text-orange-500 mb-4 group-hover:scale-110 transition" />
+            <h3 className="text-xl font-semibold mb-2">Склад сырья</h3>
+            <p className="text-gray-400">Управление ингредиентами и запасами</p>
           </Link>
         </div>
 
