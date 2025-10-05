@@ -10,10 +10,7 @@ type Ingredient = {
   id: string;
   name: string;
   unit: string; // "g" | "ml" | "pcs"
-  currentStock: number;
-  minStock: number;
-  maxStock: number;
-  costPerUnit: number;
+  category?: string | null;
   supplier?: string | null;
   bruttoWeight?: number | null;
   nettoWeight?: number | null;
@@ -26,6 +23,7 @@ type Ingredient = {
 type IngredientFormData = {
   name: string;
   unit: string;
+  category: string;
   supplier: string;
   bruttoWeight: string;
   nettoWeight: string;
@@ -44,6 +42,7 @@ export default function AdminIngredientsPage() {
   const [formData, setFormData] = useState<IngredientFormData>({
     name: "",
     unit: "g",
+    category: "",
     supplier: "",
     bruttoWeight: "",
     nettoWeight: "",
@@ -55,6 +54,18 @@ export default function AdminIngredientsPage() {
     { value: "g", label: "Граммы (г)" },
     { value: "ml", label: "Миллилитры (мл)" },
     { value: "pcs", label: "Штуки (шт)" },
+  ];
+
+  const categories = [
+    { value: "fish", label: "🐟 Рыба" },
+    { value: "seafood", label: "🦐 Морепродукты" },
+    { value: "vegetables", label: "🥬 Овощи" },
+    { value: "rice", label: "🍚 Рис" },
+    { value: "nori", label: "🌿 Нори и водоросли" },
+    { value: "sauces", label: "🥫 Соусы" },
+    { value: "spices", label: "🧂 Специи" },
+    { value: "cheese", label: "🧀 Сыр" },
+    { value: "other", label: "📦 Прочее" },
   ];
 
   // Автоматический расчёт процента отхода или нетто
@@ -159,6 +170,7 @@ export default function AdminIngredientsPage() {
         body: JSON.stringify({
           name: formData.name,
           unit: formData.unit,
+          category: formData.category || null,
           supplier: formData.supplier || null,
           bruttoWeight: formData.bruttoWeight ? parseFloat(formData.bruttoWeight) : null,
           nettoWeight: formData.nettoWeight ? parseFloat(formData.nettoWeight) : null,
@@ -178,6 +190,7 @@ export default function AdminIngredientsPage() {
       setFormData({
         name: "",
         unit: "g",
+        category: "",
         supplier: "",
         bruttoWeight: "",
         nettoWeight: "",
@@ -197,6 +210,7 @@ export default function AdminIngredientsPage() {
     setFormData({
       name: ingredient.name,
       unit: ingredient.unit,
+      category: ingredient.category || "",
       supplier: ingredient.supplier || "",
       bruttoWeight: ingredient.bruttoWeight?.toString() || "",
       nettoWeight: ingredient.nettoWeight?.toString() || "",
@@ -239,6 +253,7 @@ export default function AdminIngredientsPage() {
     setFormData({
       name: "",
       unit: "g",
+      category: "",
       supplier: "",
       bruttoWeight: "",
       nettoWeight: "",
@@ -247,19 +262,29 @@ export default function AdminIngredientsPage() {
     });
   };
 
-  const getStockStatus = (ingredient: Ingredient) => {
-    if (ingredient.currentStock <= ingredient.minStock) {
-      return { color: "text-red-500", bg: "bg-red-500/20", label: "Критический уровень" };
-    } else if (ingredient.currentStock <= ingredient.minStock * 2) {
-      return { color: "text-yellow-500", bg: "bg-yellow-500/20", label: "Низкий запас" };
+  // Статус на основе срока годности
+  const getExpiryStatus = (expiryDays: number | null | undefined) => {
+    if (!expiryDays) {
+      return { color: "text-gray-400", bg: "bg-gray-500/20", label: "Не указан" };
+    }
+    if (expiryDays <= 3) {
+      return { color: "text-red-500", bg: "bg-red-500/20", label: "Срочно использовать" };
+    } else if (expiryDays <= 7) {
+      return { color: "text-yellow-500", bg: "bg-yellow-500/20", label: "Скоро истекает" };
     } else {
-      return { color: "text-green-500", bg: "bg-green-500/20", label: "В наличии" };
+      return { color: "text-green-500", bg: "bg-green-500/20", label: "Свежий" };
     }
   };
 
   const getUnitLabel = (unit: string) => {
     const unitObj = units.find((u) => u.value === unit);
     return unitObj?.label.split(" ")[1] || unit;
+  };
+
+  const getCategoryLabel = (category: string | null | undefined) => {
+    if (!category) return "Не указана";
+    const categoryObj = categories.find((c) => c.value === category);
+    return categoryObj?.label || category;
   };
 
   if (authLoading || loading) {
@@ -343,15 +368,34 @@ export default function AdminIngredientsPage() {
                 </div>
               </div>
 
-              <div>
-                <label className="block text-sm font-medium mb-2">Поставщик</label>
-                <input
-                  type="text"
-                  value={formData.supplier}
-                  onChange={(e) => setFormData({ ...formData, supplier: e.target.value })}
-                  className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
-                  placeholder="ООО Рыбный Двор"
-                />
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                  <label className="block text-sm font-medium mb-2">Категория</label>
+                  <select
+                    value={formData.category}
+                    onChange={(e) => setFormData({ ...formData, category: e.target.value })}
+                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
+                  >
+                    <option value="">Не выбрана</option>
+                    {categories.map((cat) => (
+                      <option key={cat.value} value={cat.value}>
+                        {cat.label}
+                      </option>
+                    ))}
+                  </select>
+                  <p className="text-xs text-gray-400 mt-1">Для удобства поиска и фильтрации</p>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-medium mb-2">Поставщик</label>
+                  <input
+                    type="text"
+                    value={formData.supplier}
+                    onChange={(e) => setFormData({ ...formData, supplier: e.target.value })}
+                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
+                    placeholder="ООО Рыбный Двор"
+                  />
+                </div>
               </div>
 
               {/* Секция учёта отходов */}
@@ -551,9 +595,11 @@ export default function AdminIngredientsPage() {
                 <thead className="bg-gray-700">
                   <tr>
                     <th className="px-6 py-4 text-left text-sm font-semibold">Название</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Запас</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Мин/Макс</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Стоимость</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Категория</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Брутто</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Нетто</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">% отхода</th>
+                    <th className="px-6 py-4 text-left text-sm font-semibold">Срок годности</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold">Поставщик</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold">Статус</th>
                     <th className="px-6 py-4 text-center text-sm font-semibold">Действия</th>
@@ -561,26 +607,48 @@ export default function AdminIngredientsPage() {
                 </thead>
                 <tbody className="divide-y divide-gray-700">
                   {ingredients.map((ingredient) => {
-                    const status = getStockStatus(ingredient);
+                    const status = getExpiryStatus(ingredient.expiryDays);
+                    const expiryDate = ingredient.expiryDays 
+                      ? new Date(Date.now() + ingredient.expiryDays * 24 * 60 * 60 * 1000).toLocaleDateString('ru-RU')
+                      : null;
+                    const categoryLabel = ingredient.category 
+                      ? categories.find(c => c.value === ingredient.category)?.label || ingredient.category
+                      : null;
+                    
                     return (
                       <tr key={ingredient.id} className="hover:bg-gray-700/50 transition">
                         <td className="px-6 py-4">
                           <p className="font-medium">{ingredient.name}</p>
                         </td>
+                        <td className="px-6 py-4 text-gray-400">
+                          <p className="text-sm">{categoryLabel || "—"}</p>
+                        </td>
                         <td className="px-6 py-4">
                           <p className="font-semibold">
-                            {ingredient.currentStock} {getUnitLabel(ingredient.unit)}
+                            {ingredient.bruttoWeight ? `${ingredient.bruttoWeight.toFixed(2)} ${getUnitLabel(ingredient.unit)}` : "—"}
+                          </p>
+                        </td>
+                        <td className="px-6 py-4">
+                          <p className="font-semibold text-green-400">
+                            {ingredient.nettoWeight ? `${ingredient.nettoWeight.toFixed(2)} ${getUnitLabel(ingredient.unit)}` : "—"}
                           </p>
                         </td>
                         <td className="px-6 py-4 text-gray-400">
                           <p className="text-sm">
-                            {ingredient.minStock} / {ingredient.maxStock} {getUnitLabel(ingredient.unit)}
+                            {ingredient.wastePercentage ? `${ingredient.wastePercentage.toFixed(1)}%` : "—"}
                           </p>
                         </td>
                         <td className="px-6 py-4">
-                          <p className="font-medium text-orange-500">
-                            {ingredient.costPerUnit} ₽/{getUnitLabel(ingredient.unit)}
-                          </p>
+                          {ingredient.expiryDays ? (
+                            <div>
+                              <p className="text-sm font-medium">{ingredient.expiryDays} дн.</p>
+                              {expiryDate && (
+                                <p className="text-xs text-gray-400 mt-1">до {expiryDate}</p>
+                              )}
+                            </div>
+                          ) : (
+                            <p className="text-gray-500">—</p>
+                          )}
                         </td>
                         <td className="px-6 py-4 text-gray-400">
                           {ingredient.supplier || "—"}
@@ -623,15 +691,15 @@ export default function AdminIngredientsPage() {
             <p className="text-2xl font-bold text-orange-500">{ingredients.length}</p>
           </div>
           <div className="bg-gray-800 p-4 rounded-lg">
-            <p className="text-gray-400 text-sm">Критический уровень</p>
+            <p className="text-gray-400 text-sm">Срочно использовать (≤3 дня)</p>
             <p className="text-2xl font-bold text-red-500">
-              {ingredients.filter((i) => i.currentStock <= i.minStock).length}
+              {ingredients.filter((i) => i.expiryDays && i.expiryDays <= 3).length}
             </p>
           </div>
           <div className="bg-gray-800 p-4 rounded-lg">
-            <p className="text-gray-400 text-sm">Низкий запас</p>
+            <p className="text-gray-400 text-sm">Скоро истекает (≤7 дней)</p>
             <p className="text-2xl font-bold text-yellow-500">
-              {ingredients.filter((i) => i.currentStock > i.minStock && i.currentStock <= i.minStock * 2).length}
+              {ingredients.filter((i) => i.expiryDays && i.expiryDays > 3 && i.expiryDays <= 7).length}
             </p>
           </div>
         </div>

@@ -82,6 +82,8 @@ model StockItem {
   expiryDays      Int?
   nettoWeight     Float?
   wastePercentage Float?
+  supplier        String?
+  category        String?
   Ingredient      Ingredient @relation(fields: [ingredientId], references: [id])
 }
 
