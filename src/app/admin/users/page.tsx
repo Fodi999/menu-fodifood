@@ -8,11 +8,10 @@ import { Users, ArrowLeft, Loader2 } from "lucide-react";
 
 type User = {
   id: string;
-  name: string | null;
+  name: string;
   email: string;
   role: string;
   createdAt: string;
-  ordersCount: number;
 };
 
 export default function AdminUsersPage() {
@@ -51,12 +50,43 @@ export default function AdminUsersPage() {
       }
 
       const data = await response.json();
-      setUsers(data.users || []);
+      console.log("📊 Users data:", data);
+      // Go API возвращает массив напрямую, не в объекте
+      setUsers(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Error fetching users:", err);
       setError("Не удалось загрузить пользователей");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const handleDeleteUser = async (userId: string, userEmail: string) => {
+    if (!confirm(`Вы уверены, что хотите удалить пользователя ${userEmail}?`)) {
+      return;
+    }
+
+    try {
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/users/${userId}`,
+        {
+          method: "DELETE",
+          headers: {
+            Authorization: `Bearer ${localStorage.getItem("token")}`,
+          },
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to delete user");
+      }
+
+      // Обновляем список пользователей
+      setUsers(users.filter((u) => u.id !== userId));
+      alert(`Пользователь ${userEmail} успешно удалён`);
+    } catch (err) {
+      console.error("Error deleting user:", err);
+      alert("Не удалось удалить пользователя");
     }
   };
 
@@ -109,15 +139,14 @@ export default function AdminUsersPage() {
                     <th className="px-6 py-4 text-left text-sm font-semibold">Имя</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold">Email</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold">Роль</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Заказов</th>
                     <th className="px-6 py-4 text-left text-sm font-semibold">Дата регистрации</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Действия</th>
+                    <th className="px-6 py-4 text-center text-sm font-semibold">Действия</th>
                   </tr>
                 </thead>
                 <tbody className="divide-y divide-gray-700">
                   {users.map((u) => (
                     <tr key={u.id} className="hover:bg-gray-700/50 transition">
-                      <td className="px-6 py-4 text-sm text-gray-400">
+                      <td className="px-6 py-4 text-sm text-gray-400 font-mono">
                         {u.id.slice(0, 8)}...
                       </td>
                       <td className="px-6 py-4">
@@ -137,16 +166,28 @@ export default function AdminUsersPage() {
                           {u.role}
                         </span>
                       </td>
-                      <td className="px-6 py-4 text-gray-300">
-                        {u.ordersCount || 0}
-                      </td>
                       <td className="px-6 py-4 text-sm text-gray-400">
-                        {new Date(u.createdAt).toLocaleDateString("ru-RU")}
+                        {new Date(u.createdAt).toLocaleDateString("ru-RU", {
+                          year: "numeric",
+                          month: "long",
+                          day: "numeric",
+                        })}
                       </td>
                       <td className="px-6 py-4">
-                        <button className="px-3 py-1 bg-blue-500 text-white rounded hover:bg-blue-600 transition text-sm">
-                          Изменить
-                        </button>
+                        <div className="flex justify-center gap-2">
+                          <button
+                            onClick={() => handleDeleteUser(u.id, u.email)}
+                            disabled={u.role === "admin"}
+                            className={`px-4 py-2 rounded text-sm font-medium transition ${
+                              u.role === "admin"
+                                ? "bg-gray-600 text-gray-400 cursor-not-allowed"
+                                : "bg-red-500 text-white hover:bg-red-600"
+                            }`}
+                            title={u.role === "admin" ? "Нельзя удалить администратора" : "Удалить пользователя"}
+                          >
+                            Удалить
+                          </button>
+                        </div>
                       </td>
                     </tr>
                   ))}
