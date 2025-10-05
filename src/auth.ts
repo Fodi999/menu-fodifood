@@ -8,11 +8,24 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
   adapter: PrismaAdapter(prisma),
   session: {
     strategy: "jwt",
+    maxAge: 30 * 24 * 60 * 60, // 30 days
   },
   pages: {
     signIn: "/auth/signin",
     error: "/auth/error",
   },
+  cookies: {
+    sessionToken: {
+      name: `next-auth.session-token`,
+      options: {
+        httpOnly: true,
+        sameSite: 'lax',
+        path: '/',
+        secure: process.env.NODE_ENV === 'production', // true на Vercel (HTTPS)
+      },
+    },
+  },
+  trustHost: true, // Важно для Vercel!
   providers: [
     CredentialsProvider({
       name: "credentials",
