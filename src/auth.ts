@@ -59,6 +59,30 @@ export const { handlers, signIn, signOut, auth } = NextAuth({
     }),
   ],
   callbacks: {
+    async redirect({ url, baseUrl }) {
+      // Полный контроль над редиректом после входа
+      console.log(`🔀 Redirect callback: url=${url}, baseUrl=${baseUrl}`);
+      
+      // Если это редирект после входа и NextAuth хочет отправить на /auth/signin - игнорируем
+      if (url === `${baseUrl}/auth/signin` || url === '/auth/signin') {
+        console.log(`⚠️ Prevented redirect to signin, using /profile instead`);
+        return `${baseUrl}/profile`;
+      }
+      
+      // Если это относительный URL, делаем его абсолютным
+      if (url.startsWith('/')) {
+        return `${baseUrl}${url}`;
+      }
+      
+      // Если URL принадлежит нашему домену, разрешаем редирект
+      if (url.startsWith(baseUrl)) {
+        return url;
+      }
+      
+      // Внешние редиректы игнорируем, возвращаем базовый URL
+      console.log(`⚠️ External redirect blocked: ${url}`);
+      return baseUrl;
+    },
     async jwt({ token, user }) {
       if (user) {
         token.role = user.role;

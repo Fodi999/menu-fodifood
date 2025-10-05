@@ -1,9 +1,9 @@
 "use client";
 
-import { signIn, useSession } from "next-auth/react";
-import { useState } from "react";
+import { signIn } from "next-auth/react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
+import { useSearchParams } from "next/navigation";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -11,8 +11,16 @@ export default function SignInPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
-  const router = useRouter();
-  const { update } = useSession();
+  const searchParams = useSearchParams();
+
+  // Проверяем ошибки из URL (NextAuth передаёт их при redirect: true)
+  useEffect(() => {
+    const urlError = searchParams.get('error');
+    if (urlError) {
+      console.error("❌ Auth error from URL:", urlError);
+      setError("Неверный email или пароль");
+    }
+  }, [searchParams]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -23,42 +31,21 @@ export default function SignInPage() {
     try {
       console.log("🔐 Attempting sign in...");
       
-      const result = await signIn("credentials", {
+      // Определяем callbackUrl на основе того, что есть в URL или дефолтный
+      const urlParams = new URLSearchParams(window.location.search);
+      const callbackUrl = urlParams.get('callbackUrl') || '/profile';
+      
+      console.log(`🎯 Using callback URL: ${callbackUrl}`);
+      
+      // С redirect: true функция не возвращает результат, а сразу делает редирект
+      await signIn("credentials", {
         email,
         password,
-        redirect: false,
+        callbackUrl, // NextAuth теперь использует наш redirect callback
+        redirect: true, // Разрешаем NextAuth делать редирект через redirect callback
       });
 
-      console.log("📊 Sign in result:", result);
-
-      if (result?.error) {
-        console.error("❌ Sign in error:", result.error);
-        setError("Неверный email или пароль");
-        setLoading(false);
-        return;
-      }
-
-      if (result?.ok) {
-        console.log("✅ Sign in successful!");
-        setSuccess("Вход выполнен успешно! Перенаправление...");
-        
-        // Обновляем сессию на клиенте
-        await update();
-        
-        // Получаем обновлённую сессию для проверки роли
-        const response = await fetch("/api/auth/session");
-        const session = await response.json();
-        
-        console.log("👤 Session after login:", session);
-        
-        // Определяем куда редиректить
-        const redirectPath = session?.user?.role === "admin" ? "/admin" : "/profile";
-        console.log(`🔄 Redirecting to: ${redirectPath}`);
-        
-        // Используем Next.js router для SPA-навигации
-        router.push(redirectPath);
-        router.refresh();
-      }
+      // Этот код не выполнится при успешном входе (будет редирект)
     } catch (err) {
       console.error("💥 Unexpected error:", err);
       setError("Произошла ошибка при входе");
