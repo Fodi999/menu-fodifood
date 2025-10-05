@@ -49,12 +49,11 @@ export default function SignInPage() {
         
         // Определяем куда редиректить
         const redirectPath = session?.user?.role === "admin" ? "/admin" : "/profile";
-        console.log(`� Redirecting to: ${redirectPath}`);
+        console.log(`🔄 Redirecting to: ${redirectPath}`);
         
-        // Небольшая задержка для показа сообщения
+        // Используем window.location для полной перезагрузки и обновления сессии
         setTimeout(() => {
-          router.push(redirectPath);
-          router.refresh();
+          window.location.href = redirectPath;
         }, 800);
       }
     } catch (err) {
