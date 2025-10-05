@@ -1,18 +1,11 @@
 import { NextResponse } from "next/server";
 import { auth } from "@/auth";
-import { getToken } from "next-auth/jwt";
 import { cookies } from "next/headers";
 
-export async function GET(request: Request) {
+export async function GET() {
   try {
     // Проверяем сессию через auth()
     const session = await auth();
-    
-    // Проверяем токен напрямую
-    const token = await getToken({ 
-      req: request as any,
-      secret: process.env.NEXTAUTH_SECRET 
-    });
 
     // Проверяем cookies
     const cookieStore = await cookies();
@@ -32,16 +25,6 @@ export async function GET(request: Request) {
           role: session.user?.role,
         },
         expires: session.expires,
-      } : null,
-      
-      // JWT Token
-      token: token ? {
-        email: token.email,
-        role: token.role,
-        sub: token.sub,
-        iat: token.iat,
-        exp: token.exp,
-        jti: token.jti,
       } : null,
       
       // Cookie
@@ -65,7 +48,6 @@ export async function GET(request: Request) {
       // Статус
       status: {
         authenticated: !!session,
-        hasToken: !!token,
         hasCookie: !!sessionCookie,
       }
     }, { 
