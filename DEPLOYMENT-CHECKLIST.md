@@ -70,7 +70,7 @@ JWT_SECRET=8yRloNcHhkIkS4ogtQB+6tUxT1kc3HXwDZHE3runafI=
 ### Backend API Endpoints ✅
 ```bash
 # Health check
-curl https://irrelevant-nellie-fodi999-aefe2c9f.koyeb.app/
+curl https://irrelevant-nellie-fodi999-aefe2c9f.koyeb.app/api/health
 
 # Register
 curl -X POST https://irrelevant-nellie-fodi999-aefe2c9f.koyeb.app/api/auth/register \
@@ -95,7 +95,7 @@ curl -X POST https://irrelevant-nellie-fodi999-aefe2c9f.koyeb.app/api/auth/login
 ## 📝 TODO (Опционально)
 
 ### Функциональность
-- [ ] Добавить endpoint `/health` в Go backend для health checks
+- [x] Добавить endpoint `/health` в Go backend для health checks (✅ DONE)
 - [ ] Реализовать полный CRUD для заказов
 - [ ] Добавить управление продуктами через админку
 - [ ] Интеграция с платёжными системами

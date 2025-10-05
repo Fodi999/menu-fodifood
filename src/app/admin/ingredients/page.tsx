@@ -15,6 +15,10 @@ type Ingredient = {
   maxStock: number;
   costPerUnit: number;
   supplier?: string | null;
+  bruttoWeight?: number | null;
+  nettoWeight?: number | null;
+  wastePercentage?: number | null;
+  expiryDays?: number | null;
   createdAt: string;
   updatedAt: string;
 };
@@ -22,11 +26,11 @@ type Ingredient = {
 type IngredientFormData = {
   name: string;
   unit: string;
-  currentStock: string;
-  minStock: string;
-  maxStock: string;
-  costPerUnit: string;
   supplier: string;
+  bruttoWeight: string;
+  nettoWeight: string;
+  wastePercentage: string;
+  expiryDays: string;
 };
 
 export default function AdminIngredientsPage() {
@@ -40,11 +44,11 @@ export default function AdminIngredientsPage() {
   const [formData, setFormData] = useState<IngredientFormData>({
     name: "",
     unit: "g",
-    currentStock: "0",
-    minStock: "10",
-    maxStock: "1000",
-    costPerUnit: "0",
     supplier: "",
+    bruttoWeight: "",
+    nettoWeight: "",
+    wastePercentage: "",
+    expiryDays: "7",
   });
 
   const units = [
@@ -52,6 +56,49 @@ export default function AdminIngredientsPage() {
     { value: "ml", label: "Миллилитры (мл)" },
     { value: "pcs", label: "Штуки (шт)" },
   ];
+
+  // Автоматический расчёт процента отхода или нетто
+  const calculateWaste = (brutto: string, netto: string, wastePercent: string, field: 'netto' | 'waste') => {
+    const bruttoNum = parseFloat(brutto);
+    const nettoNum = parseFloat(netto);
+    const wasteNum = parseFloat(wastePercent);
+
+    if (field === 'netto' && bruttoNum > 0 && wasteNum >= 0 && wasteNum <= 100) {
+      // Рассчитываем нетто: нетто = брутто - (брутто * отход%)
+      const calculatedNetto = bruttoNum - (bruttoNum * wasteNum / 100);
+      return calculatedNetto.toFixed(2);
+    } else if (field === 'waste' && bruttoNum > 0 && nettoNum > 0 && nettoNum <= bruttoNum) {
+      // Рассчитываем процент отхода: отход% = ((брутто - нетто) / брутто) * 100
+      const calculatedWaste = ((bruttoNum - nettoNum) / bruttoNum) * 100;
+      return calculatedWaste.toFixed(2);
+    }
+    return '';
+  };
+
+  // Вычисление даты истечения срока годности
+  const getExpiryDate = (days: string): string => {
+    if (!days || parseInt(days) <= 0) return 'не указано';
+    
+    const expiryDate = new Date();
+    expiryDate.setDate(expiryDate.getDate() + parseInt(days));
+    
+    return expiryDate.toLocaleDateString('ru-RU', {
+      day: '2-digit',
+      month: '2-digit',
+      year: 'numeric'
+    });
+  };
+
+  // Вычисление процента выхода продукта
+  const getYieldPercent = (brutto: string, netto: string): number => {
+    const bruttoNum = parseFloat(brutto);
+    const nettoNum = parseFloat(netto);
+    
+    if (bruttoNum > 0 && nettoNum > 0) {
+      return (nettoNum / bruttoNum) * 100;
+    }
+    return 0;
+  };
 
   useEffect(() => {
     if (!authLoading && (!user || user.role !== "admin")) {
@@ -112,11 +159,11 @@ export default function AdminIngredientsPage() {
         body: JSON.stringify({
           name: formData.name,
           unit: formData.unit,
-          currentStock: parseFloat(formData.currentStock),
-          minStock: parseFloat(formData.minStock),
-          maxStock: parseFloat(formData.maxStock),
-          costPerUnit: parseFloat(formData.costPerUnit),
           supplier: formData.supplier || null,
+          bruttoWeight: formData.bruttoWeight ? parseFloat(formData.bruttoWeight) : null,
+          nettoWeight: formData.nettoWeight ? parseFloat(formData.nettoWeight) : null,
+          wastePercentage: formData.wastePercentage ? parseFloat(formData.wastePercentage) : null,
+          expiryDays: formData.expiryDays ? parseInt(formData.expiryDays) : null,
         }),
       });
 
@@ -131,11 +178,11 @@ export default function AdminIngredientsPage() {
       setFormData({
         name: "",
         unit: "g",
-        currentStock: "0",
-        minStock: "10",
-        maxStock: "1000",
-        costPerUnit: "0",
         supplier: "",
+        bruttoWeight: "",
+        nettoWeight: "",
+        wastePercentage: "",
+        expiryDays: "7",
       });
 
       alert(editingIngredient ? "Ингредиент обновлён!" : "Ингредиент добавлен!");
@@ -150,11 +197,11 @@ export default function AdminIngredientsPage() {
     setFormData({
       name: ingredient.name,
       unit: ingredient.unit,
-      currentStock: ingredient.currentStock.toString(),
-      minStock: ingredient.minStock.toString(),
-      maxStock: ingredient.maxStock.toString(),
-      costPerUnit: ingredient.costPerUnit.toString(),
       supplier: ingredient.supplier || "",
+      bruttoWeight: ingredient.bruttoWeight?.toString() || "",
+      nettoWeight: ingredient.nettoWeight?.toString() || "",
+      wastePercentage: ingredient.wastePercentage?.toString() || "",
+      expiryDays: ingredient.expiryDays?.toString() || "7",
     });
     setShowForm(true);
   };
@@ -192,11 +239,11 @@ export default function AdminIngredientsPage() {
     setFormData({
       name: "",
       unit: "g",
-      currentStock: "0",
-      minStock: "10",
-      maxStock: "1000",
-      costPerUnit: "0",
       supplier: "",
+      bruttoWeight: "",
+      nettoWeight: "",
+      wastePercentage: "",
+      expiryDays: "7",
     });
   };
 
@@ -294,54 +341,6 @@ export default function AdminIngredientsPage() {
                     ))}
                   </select>
                 </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Текущий запас *</label>
-                  <input
-                    type="number"
-                    required
-                    step="0.01"
-                    value={formData.currentStock}
-                    onChange={(e) => setFormData({ ...formData, currentStock: e.target.value })}
-                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Минимальный запас *</label>
-                  <input
-                    type="number"
-                    required
-                    step="0.01"
-                    value={formData.minStock}
-                    onChange={(e) => setFormData({ ...formData, minStock: e.target.value })}
-                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Максимальный запас *</label>
-                  <input
-                    type="number"
-                    required
-                    step="0.01"
-                    value={formData.maxStock}
-                    onChange={(e) => setFormData({ ...formData, maxStock: e.target.value })}
-                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
-                  />
-                </div>
-
-                <div>
-                  <label className="block text-sm font-medium mb-2">Стоимость за единицу (₽) *</label>
-                  <input
-                    type="number"
-                    required
-                    step="0.01"
-                    value={formData.costPerUnit}
-                    onChange={(e) => setFormData({ ...formData, costPerUnit: e.target.value })}
-                    className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
-                  />
-                </div>
               </div>
 
               <div>
@@ -353,6 +352,165 @@ export default function AdminIngredientsPage() {
                   className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
                   placeholder="ООО Рыбный Двор"
                 />
+              </div>
+
+              {/* Секция учёта отходов */}
+              <div className="border-t border-gray-700 pt-4 mt-4">
+                <h3 className="text-lg font-semibold mb-2 text-orange-400">📊 Учёт отходов (Брутто/Нетто)</h3>
+                <p className="text-xs text-gray-400 mb-4">
+                  💡 Введите брутто и либо процент отхода, либо нетто — остальное пересчитается автоматически
+                </p>
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Вес брутто ({getUnitLabel(formData.unit)})
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={formData.bruttoWeight}
+                      onChange={(e) => {
+                        const newBrutto = e.target.value;
+                        setFormData({ ...formData, bruttoWeight: newBrutto });
+                        // Автопересчёт нетто если задан процент отхода
+                        if (formData.wastePercentage) {
+                          const calculatedNetto = calculateWaste(newBrutto, formData.nettoWeight, formData.wastePercentage, 'netto');
+                          if (calculatedNetto) {
+                            setFormData(prev => ({ ...prev, bruttoWeight: newBrutto, nettoWeight: calculatedNetto }));
+                          }
+                        }
+                      }}
+                      onBlur={(e) => {
+                        // Форматирование при потере фокуса
+                        if (e.target.value) {
+                          const formatted = parseFloat(e.target.value).toFixed(2);
+                          setFormData(prev => ({ ...prev, bruttoWeight: formatted }));
+                        }
+                      }}
+                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
+                      placeholder="1000.00"
+                    />
+                    <p className="text-xs text-gray-400 mt-1">Вес с отходами (неочищенный)</p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Процент отхода (%)
+                    </label>
+                    <input
+                      type="number"
+                      step="0.1"
+                      min="0"
+                      max="100"
+                      value={formData.wastePercentage}
+                      onChange={(e) => {
+                        const newWaste = e.target.value;
+                        setFormData({ ...formData, wastePercentage: newWaste });
+                        // Автопересчёт нетто если задан брутто
+                        if (formData.bruttoWeight) {
+                          const calculatedNetto = calculateWaste(formData.bruttoWeight, formData.nettoWeight, newWaste, 'netto');
+                          if (calculatedNetto) {
+                            setFormData(prev => ({ ...prev, wastePercentage: newWaste, nettoWeight: calculatedNetto }));
+                          }
+                        }
+                      }}
+                      onBlur={(e) => {
+                        // Форматирование при потере фокуса
+                        if (e.target.value) {
+                          const formatted = parseFloat(e.target.value).toFixed(1);
+                          setFormData(prev => ({ ...prev, wastePercentage: formatted }));
+                        }
+                      }}
+                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
+                      placeholder="15.0"
+                    />
+                    <p className="text-xs text-gray-400 mt-1">% потерь при обработке (0-100%)</p>
+                  </div>
+
+                  <div>
+                    <label className="block text-sm font-medium mb-2">
+                      Вес нетто ({getUnitLabel(formData.unit)})
+                    </label>
+                    <input
+                      type="number"
+                      step="0.01"
+                      min="0"
+                      value={formData.nettoWeight}
+                      onChange={(e) => {
+                        const newNetto = e.target.value;
+                        setFormData({ ...formData, nettoWeight: newNetto });
+                        // Автопересчёт процента отхода если задан брутто
+                        if (formData.bruttoWeight) {
+                          const calculatedWaste = calculateWaste(formData.bruttoWeight, newNetto, formData.wastePercentage, 'waste');
+                          if (calculatedWaste) {
+                            setFormData(prev => ({ ...prev, nettoWeight: newNetto, wastePercentage: calculatedWaste }));
+                          }
+                        }
+                      }}
+                      onBlur={(e) => {
+                        // Форматирование при потере фокуса
+                        if (e.target.value) {
+                          const formatted = parseFloat(e.target.value).toFixed(2);
+                          setFormData(prev => ({ ...prev, nettoWeight: formatted }));
+                        }
+                      }}
+                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
+                      placeholder="850.00"
+                    />
+                    <p className="text-xs text-gray-400 mt-1">Чистый вес продукта (очищенный)</p>
+                  </div>
+                </div>
+
+                {formData.bruttoWeight && formData.nettoWeight && (
+                  <div className="mt-3 p-3 bg-green-500/10 border border-green-500/30 rounded-lg">
+                    <p className="text-sm text-green-400">
+                      ✅ Выход продукта: <span className="font-bold">
+                        {getYieldPercent(formData.bruttoWeight, formData.nettoWeight).toFixed(1)}%
+                      </span> | 
+                      🗑️ Потери: <span className="font-bold">
+                        {formData.wastePercentage || '0'}%
+                      </span> | 
+                      📦 Чистый вес: <span className="font-bold">
+                        {parseFloat(formData.nettoWeight).toFixed(2)} {getUnitLabel(formData.unit)}
+                      </span>
+                    </p>
+                  </div>
+                )}
+              </div>
+
+              {/* Секция срока годности */}
+              <div className="border-t border-gray-700 pt-4">
+                <h3 className="text-lg font-semibold mb-4 text-orange-400">📅 Срок годности</h3>
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                  <div>
+                    <label className="block text-sm font-medium mb-2">Срок годности (дней)</label>
+                    <input
+                      type="number"
+                      min="1"
+                      step="1"
+                      value={formData.expiryDays}
+                      onChange={(e) => setFormData({ ...formData, expiryDays: e.target.value })}
+                      className="w-full px-4 py-2 bg-gray-700 border border-gray-600 rounded-lg focus:outline-none focus:border-orange-500"
+                      placeholder="7"
+                    />
+                    <p className="text-xs text-gray-400 mt-1">Количество дней до истечения срока</p>
+                  </div>
+                  <div className="flex items-center">
+                    <div className="p-3 bg-blue-500/10 border border-blue-500/30 rounded-lg w-full">
+                      <p className="text-sm text-blue-400">
+                        ⏰ Использовать до: <span className="font-bold">
+                          {getExpiryDate(formData.expiryDays)}
+                        </span>
+                      </p>
+                      {formData.expiryDays && parseInt(formData.expiryDays) > 0 && (
+                        <p className="text-xs text-gray-400 mt-1">
+                          Срок хранения: {formData.expiryDays} {parseInt(formData.expiryDays) === 1 ? 'день' : parseInt(formData.expiryDays) < 5 ? 'дня' : 'дней'}
+                        </p>
+                      )}
+                    </div>
+                  </div>
+                </div>
               </div>
 
               <div className="flex gap-3">
