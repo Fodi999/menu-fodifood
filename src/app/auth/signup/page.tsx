@@ -1,10 +1,11 @@
 "use client";
 
 import { useState } from "react";
-import { signIn } from "next-auth/react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 
 export default function SignUpPage() {
+  const router = useRouter();
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -33,7 +34,10 @@ export default function SignUpPage() {
     setLoading(true);
 
     try {
-      const response = await fetch("/api/auth/register", {
+      console.log("📝 Attempting registration...");
+      
+      // Регистрация через Go API
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/auth/register`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -46,7 +50,8 @@ export default function SignUpPage() {
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Ошибка при регистрации");
+        console.error("❌ Registration failed:", data);
+        setError(data.error || data.message || "Ошибка при регистрации");
         setLoading(false);
         return;
       }
@@ -57,30 +62,40 @@ export default function SignUpPage() {
       setSuccess("Регистрация успешна! Выполняется вход...");
 
       // Автоматический вход после регистрации
-      const result = await signIn("credentials", {
-        email: formData.email,
-        password: formData.password,
-        redirect: false, // Сначала проверим результат
+      const loginResponse = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/auth/login`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          email: formData.email,
+          password: formData.password,
+        }),
       });
 
-      if (result?.error) {
-        console.error("❌ Auto-login failed:", result.error);
+      const loginData = await loginResponse.json();
+
+      if (!loginResponse.ok) {
+        console.error("❌ Auto-login failed:", loginData);
         setError("Регистрация успешна, но не удалось выполнить вход. Попробуйте войти вручную.");
         setLoading(false);
-      } else if (result?.ok) {
-        console.log("✅ Auto-login successful, redirecting to profile...");
-        
-        // Используем window.location для полной перезагрузки с новой сессией
-        // Это гарантирует, что сервер получит обновлённые cookies
-        window.location.href = "/profile";
-      } else {
-        console.error("❌ Unexpected result:", result);
-        setError("Произошла неизвестная ошибка. Попробуйте войти вручную.");
-        setLoading(false);
+        return;
       }
+
+      console.log("✅ Auto-login successful");
+      
+      // Сохраняем токен
+      if (loginData.token) {
+        localStorage.setItem("auth_token", loginData.token);
+        localStorage.setItem("user", JSON.stringify(loginData.user));
+      }
+
+      // Редирект на профиль
+      setTimeout(() => {
+        router.push("/profile");
+      }, 500);
+
     } catch (err) {
       console.error("💥 Registration error:", err);
-      setError("Произошла ошибка при регистрации");
+      setError("Произошла ошибка при регистрации. Проверьте подключение к серверу.");
       setLoading(false);
     }
   };

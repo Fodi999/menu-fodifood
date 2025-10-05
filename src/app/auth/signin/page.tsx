@@ -1,11 +1,12 @@
 "use client";
 
-import { signIn } from "next-auth/react";
 import { useState, useEffect, Suspense } from "react";
 import Link from "next/link";
 import { useSearchParams } from "next/navigation";
+import { useRouter } from "next/navigation";
 
 function SignInForm() {
+  const router = useRouter();
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
@@ -13,7 +14,7 @@ function SignInForm() {
   const [loading, setLoading] = useState(false);
   const searchParams = useSearchParams();
 
-  // Проверяем ошибки из URL (NextAuth передаёт их при redirect: true)
+  // Проверяем ошибки из URL
   useEffect(() => {
     const urlError = searchParams.get('error');
     if (urlError) {
@@ -31,24 +32,49 @@ function SignInForm() {
     try {
       console.log("🔐 Attempting sign in...");
       
-      // Определяем callbackUrl на основе того, что есть в URL или дефолтный
-      const urlParams = new URLSearchParams(window.location.search);
-      const callbackUrl = urlParams.get('callbackUrl') || '/profile';
-      
-      console.log(`🎯 Using callback URL: ${callbackUrl}`);
-      
-      // С redirect: true функция не возвращает результат, а сразу делает редирект
-      await signIn("credentials", {
-        email,
-        password,
-        callbackUrl, // NextAuth теперь использует наш redirect callback
-        redirect: true, // Разрешаем NextAuth делать редирект через redirect callback
+      // Вызов Go API для входа
+      const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080'}/api/auth/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify({ email, password }),
       });
 
-      // Этот код не выполнится при успешном входе (будет редирект)
+      const data = await response.json();
+
+      if (!response.ok) {
+        console.error("❌ Login failed:", data);
+        setError(data.error || data.message || "Неверный email или пароль");
+        setLoading(false);
+        return;
+      }
+
+      console.log("✅ Login successful");
+      
+      // Сохраняем токен в localStorage
+      if (data.token) {
+        localStorage.setItem("auth_token", data.token);
+        localStorage.setItem("user", JSON.stringify(data.user));
+      }
+
+      // Показываем успех
+      setSuccess("Вход выполнен! Перенаправление...");
+
+      // Определяем куда редиректить
+      const callbackUrl = searchParams.get('callbackUrl') || 
+                         (data.user?.role === 'admin' ? '/admin' : '/profile');
+      
+      console.log(`🎯 Redirecting to: ${callbackUrl}`);
+      
+      // Небольшая задержка для показа сообщения
+      setTimeout(() => {
+        router.push(callbackUrl);
+      }, 500);
+
     } catch (err) {
       console.error("💥 Unexpected error:", err);
-      setError("Произошла ошибка при входе");
+      setError("Произошла ошибка при входе. Проверьте подключение к серверу.");
       setLoading(false);
     }
   };

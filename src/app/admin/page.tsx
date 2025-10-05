@@ -1,189 +1,205 @@
-import { auth } from "@/auth";
-import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
+"use client";
+
+import { useAuth } from "@/contexts/AuthContext";
+import { useRouter } from "next/navigation";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { BarChart3, Home, Package, ShoppingCart, Users } from "lucide-react";
 
-type RecentOrder = {
+interface Stats {
+  totalUsers: number;
+  totalOrders: number;
+  totalProducts: number;
+  totalRevenue: number;
+}
+
+interface RecentOrder {
   id: string;
-  userId: string;
   status: string;
-  total: { toString: () => string };
-  createdAt: Date;
+  total: number;
+  createdAt: string;
   user: {
-    id: string;
     name: string | null;
     email: string;
   };
-  items: Array<{
-    id: string;
-    product: {
-      id: string;
-      name: string;
+}
+
+export default function AdminPage() {
+  const { user, loading } = useAuth();
+  const router = useRouter();
+  const [stats, setStats] = useState<Stats>({
+    totalUsers: 0,
+    totalOrders: 0,
+    totalProducts: 0,
+    totalRevenue: 0,
+  });
+  const [recentOrders, setRecentOrders] = useState<RecentOrder[]>([]);
+  const [loadingData, setLoadingData] = useState(true);
+
+  useEffect(() => {
+    if (!loading && (!user || user.role !== "admin")) {
+      router.push("/");
+    }
+  }, [user, loading, router]);
+
+  useEffect(() => {
+    const fetchAdminData = async () => {
+      try {
+        const token = localStorage.getItem("token");
+        
+        const [statsRes, ordersRes] = await Promise.all([
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/stats`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+          fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/orders/recent`, {
+            headers: { Authorization: `Bearer ${token}` },
+          }),
+        ]);
+
+        if (statsRes.ok) {
+          setStats(await statsRes.json());
+        }
+        
+        if (ordersRes.ok) {
+          setRecentOrders(await ordersRes.json());
+        }
+      } catch (error) {
+        console.error("Failed to fetch admin data:", error);
+      } finally {
+        setLoadingData(false);
+      }
     };
-  }>;
-};
 
-export default async function AdminPage() {
-  const session = await auth();
+    if (user?.role === "admin") {
+      fetchAdminData();
+    }
+  }, [user]);
 
-  if (!session?.user || session.user.role !== "admin") {
-    redirect("/auth/signin");
+  if (loading || loadingData) {
+    return (
+      <div className="min-h-screen bg-gray-900 text-white flex items-center justify-center">
+        <div className="text-xl">Загрузка...</div>
+      </div>
+    );
   }
 
-  const stats = await prisma.$transaction([
-    prisma.user.count(),
-    prisma.product.count(),
-    prisma.order.count(),
-    prisma.order.aggregate({
-      _sum: {
-        total: true,
-      },
-    }),
-  ]);
-
-  const [totalUsers, totalProducts, totalOrders, orderSum] = stats;
-  const totalRevenue = orderSum._sum.total || 0;
-
-  const recentOrders = await prisma.order.findMany({
-    take: 10,
-    orderBy: { createdAt: "desc" },
-    include: {
-      user: true,
-      items: {
-        include: {
-          product: true,
-        },
-      },
-    },
-  });
+  if (!user || user.role !== "admin") {
+    return null;
+  }
 
   return (
     <div className="min-h-screen bg-gray-900 text-white py-20">
       <div className="max-w-7xl mx-auto px-6">
         <div className="flex justify-between items-center mb-8">
-          <div className="flex items-center gap-3">
-            <BarChart3 className="w-8 h-8 text-orange-500" />
-            <h1 className="text-4xl font-bold text-orange-500">
-              Панель администратора
-            </h1>
-          </div>
+          <h1 className="text-4xl font-bold text-orange-500">
+            Админ-панель FODI SUSHI
+          </h1>
           <Link
             href="/"
-            className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition"
+            className="flex items-center gap-2 px-4 py-2 bg-gray-800 hover:bg-gray-700 rounded-lg transition"
           >
-            <Home className="w-4 h-4" />
+            <Home className="w-5 h-5" />
             На главную
           </Link>
         </div>
 
-        {/* Статистика */}
-        <div className="grid grid-cols-1 md:grid-cols-4 gap-6 mb-8">
-          <div className="bg-gradient-to-br from-blue-500 to-blue-700 p-6 rounded-lg shadow-xl">
-            <p className="text-sm text-blue-100 mb-2">Всего пользователей</p>
-            <p className="text-4xl font-bold">{totalUsers}</p>
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+          <div className="bg-gradient-to-br from-blue-600 to-blue-700 p-6 rounded-lg shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <Users className="w-10 h-10 text-white/80" />
+              <BarChart3 className="w-6 h-6 text-white/60" />
+            </div>
+            <p className="text-white/80 text-sm mb-1">Всего пользователей</p>
+            <p className="text-4xl font-bold">{stats.totalUsers}</p>
           </div>
 
-          <div className="bg-gradient-to-br from-green-500 to-green-700 p-6 rounded-lg shadow-xl">
-            <p className="text-sm text-green-100 mb-2">Продукты в меню</p>
-            <p className="text-4xl font-bold">{totalProducts}</p>
+          <div className="bg-gradient-to-br from-green-600 to-green-700 p-6 rounded-lg shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <ShoppingCart className="w-10 h-10 text-white/80" />
+              <BarChart3 className="w-6 h-6 text-white/60" />
+            </div>
+            <p className="text-white/80 text-sm mb-1">Всего заказов</p>
+            <p className="text-4xl font-bold">{stats.totalOrders}</p>
           </div>
 
-          <div className="bg-gradient-to-br from-purple-500 to-purple-700 p-6 rounded-lg shadow-xl">
-            <p className="text-sm text-purple-100 mb-2">Всего заказов</p>
-            <p className="text-4xl font-bold">{totalOrders}</p>
+          <div className="bg-gradient-to-br from-purple-600 to-purple-700 p-6 rounded-lg shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <Package className="w-10 h-10 text-white/80" />
+              <BarChart3 className="w-6 h-6 text-white/60" />
+            </div>
+            <p className="text-white/80 text-sm mb-1">Товаров</p>
+            <p className="text-4xl font-bold">{stats.totalProducts}</p>
           </div>
 
-          <div className="bg-gradient-to-br from-orange-500 to-orange-700 p-6 rounded-lg shadow-xl">
-            <p className="text-sm text-orange-100 mb-2">Общая выручка</p>
-            <p className="text-4xl font-bold">{Number(totalRevenue).toFixed(0)}₽</p>
+          <div className="bg-gradient-to-br from-orange-600 to-orange-700 p-6 rounded-lg shadow-xl">
+            <div className="flex items-center justify-between mb-4">
+              <BarChart3 className="w-10 h-10 text-white/80" />
+              <BarChart3 className="w-6 h-6 text-white/60" />
+            </div>
+            <p className="text-white/80 text-sm mb-1">Выручка</p>
+            <p className="text-4xl font-bold">{stats.totalRevenue} ₽</p>
           </div>
         </div>
 
-        {/* Быстрые действия */}
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 mb-8">
           <Link
-            href="/admin/products"
-            className="bg-gray-800 p-6 rounded-lg shadow-xl hover:bg-gray-700 transition"
+            href="/admin/users"
+            className="bg-gray-800 hover:bg-gray-700 p-6 rounded-lg transition group"
           >
-            <Package className="w-10 h-10 text-orange-500 mb-3" />
-            <h3 className="text-xl font-semibold mb-2">Управление продуктами</h3>
-            <p className="text-gray-400">Добавление, редактирование и удаление товаров</p>
+            <Users className="w-12 h-12 text-blue-500 mb-4 group-hover:scale-110 transition" />
+            <h3 className="text-xl font-semibold mb-2">Пользователи</h3>
+            <p className="text-gray-400">Управление пользователями системы</p>
           </Link>
 
           <Link
             href="/admin/orders"
-            className="bg-gray-800 p-6 rounded-lg shadow-xl hover:bg-gray-700 transition"
+            className="bg-gray-800 hover:bg-gray-700 p-6 rounded-lg transition group"
           >
-            <ShoppingCart className="w-10 h-10 text-blue-500 mb-3" />
+            <ShoppingCart className="w-12 h-12 text-green-500 mb-4 group-hover:scale-110 transition" />
             <h3 className="text-xl font-semibold mb-2">Заказы</h3>
-            <p className="text-gray-400">Управление заказами и статусами</p>
+            <p className="text-gray-400">Просмотр и управление заказами</p>
           </Link>
 
           <Link
-            href="/admin/users"
-            className="bg-gray-800 p-6 rounded-lg shadow-xl hover:bg-gray-700 transition"
+            href="/admin/products"
+            className="bg-gray-800 hover:bg-gray-700 p-6 rounded-lg transition group"
           >
-            <Users className="w-10 h-10 text-green-500 mb-3" />
-            <h3 className="text-xl font-semibold mb-2">Пользователи</h3>
-            <p className="text-gray-400">Управление пользователями</p>
+            <Package className="w-12 h-12 text-purple-500 mb-4 group-hover:scale-110 transition" />
+            <h3 className="text-xl font-semibold mb-2">Товары</h3>
+            <p className="text-gray-400">Управление каталогом товаров</p>
           </Link>
         </div>
 
-        {/* Последние заказы */}
-        <div className="bg-gray-800 rounded-lg shadow-xl p-6">
-          <h2 className="text-2xl font-bold mb-6">Последние заказы</h2>
+        <div className="bg-gray-800 p-6 rounded-lg">
+          <h3 className="text-2xl font-semibold mb-6">Последние заказы</h3>
           {recentOrders.length === 0 ? (
-            <p className="text-gray-400 text-center py-8">Заказов пока нет</p>
+            <p className="text-gray-400">Нет заказов</p>
           ) : (
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead>
-                  <tr className="border-b border-gray-700">
-                    <th className="text-left py-3 px-4">ID</th>
-                    <th className="text-left py-3 px-4">Клиент</th>
-                    <th className="text-left py-3 px-4">Товары</th>
-                    <th className="text-left py-3 px-4">Сумма</th>
-                    <th className="text-left py-3 px-4">Статус</th>
-                    <th className="text-left py-3 px-4">Дата</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {recentOrders.map((order: RecentOrder) => (
-                    <tr key={order.id} className="border-b border-gray-700/50 hover:bg-gray-700/30">
-                      <td className="py-3 px-4 text-sm">#{order.id.slice(0, 8)}</td>
-                      <td className="py-3 px-4">
-                        <div>
-                          <p className="font-medium">{order.user.name || "Гость"}</p>
-                          <p className="text-sm text-gray-400">{order.user.email}</p>
-                        </div>
-                      </td>
-                      <td className="py-3 px-4 text-sm">
-                        {order.items.length} товар(ов)
-                      </td>
-                      <td className="py-3 px-4 font-semibold text-orange-500">
-                        {Number(order.total).toFixed(0)}₽
-                      </td>
-                      <td className="py-3 px-4">
-                        <span
-                          className={`px-3 py-1 rounded-full text-xs font-semibold ${
-                            order.status === "delivered"
-                              ? "bg-green-500/20 text-green-400"
-                              : order.status === "cancelled"
-                              ? "bg-red-500/20 text-red-400"
-                              : "bg-yellow-500/20 text-yellow-400"
-                          }`}
-                        >
-                          {order.status}
-                        </span>
-                      </td>
-                      <td className="py-3 px-4 text-sm text-gray-400">
-                        {new Date(order.createdAt).toLocaleDateString("ru-RU")}
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
+            <div className="space-y-4">
+              {recentOrders.map((order) => (
+                <div
+                  key={order.id}
+                  className="bg-gray-700 p-4 rounded-lg flex justify-between items-center"
+                >
+                  <div>
+                    <p className="font-medium">
+                      Заказ #{order.id.slice(0, 8)}
+                    </p>
+                    <p className="text-sm text-gray-400">
+                      {order.user.name || order.user.email}
+                    </p>
+                    <p className="text-xs text-gray-500">
+                      {new Date(order.createdAt).toLocaleDateString("ru-RU")}
+                    </p>
+                  </div>
+                  <div className="text-right">
+                    <p className="text-lg font-bold text-orange-500">
+                      {order.total} ₽
+                    </p>
+                    <p className="text-sm text-gray-400">{order.status}</p>
+                  </div>
+                </div>
+              ))}
             </div>
           )}
         </div>
