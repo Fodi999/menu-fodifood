@@ -13,7 +13,7 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="antialiased bg-gray-100 text-gray-900">
-        <SessionProvider>
+        <SessionProvider refetchInterval={5 * 60} refetchOnWindowFocus={true}>
           <I18nextProvider i18n={i18n}>{children}</I18nextProvider>
         </SessionProvider>
       </body>

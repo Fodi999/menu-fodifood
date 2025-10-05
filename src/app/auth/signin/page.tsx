@@ -1,8 +1,9 @@
 "use client";
 
-import { signIn } from "next-auth/react";
+import { signIn, useSession } from "next-auth/react";
 import { useState } from "react";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 
 export default function SignInPage() {
   const [email, setEmail] = useState("");
@@ -10,6 +11,8 @@ export default function SignInPage() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
+  const router = useRouter();
+  const { update } = useSession();
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -39,10 +42,10 @@ export default function SignInPage() {
         console.log("✅ Sign in successful!");
         setSuccess("Вход выполнен успешно! Перенаправление...");
         
-        // Ждём немного, чтобы сессия точно сохранилась
-        await new Promise(resolve => setTimeout(resolve, 1000));
+        // Обновляем сессию на клиенте
+        await update();
         
-        // Получаем сессию для проверки роли
+        // Получаем обновлённую сессию для проверки роли
         const response = await fetch("/api/auth/session");
         const session = await response.json();
         
@@ -52,8 +55,9 @@ export default function SignInPage() {
         const redirectPath = session?.user?.role === "admin" ? "/admin" : "/profile";
         console.log(`🔄 Redirecting to: ${redirectPath}`);
         
-        // Используем window.location для полной перезагрузки и обновления сессии
-        window.location.href = redirectPath;
+        // Используем Next.js router для SPA-навигации
+        router.push(redirectPath);
+        router.refresh();
       }
     } catch (err) {
       console.error("💥 Unexpected error:", err);

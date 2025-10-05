@@ -5,6 +5,7 @@ import { useTranslation } from "react-i18next";
 import { ShoppingCart, User, LogIn } from "lucide-react";
 import { useSession } from "next-auth/react";
 import Link from "next/link";
+import { useEffect } from "react";
 
 interface HeaderProps {
   cartItemsCount: number;
@@ -13,7 +14,12 @@ interface HeaderProps {
 
 export default function Header({ cartItemsCount, onCartClick }: HeaderProps) {
   const { t } = useTranslation("ns1");
-  const { data: session } = useSession();
+  const { data: session, status } = useSession();
+
+  useEffect(() => {
+    console.log("🔍 Header session status:", status);
+    console.log("👤 Header session data:", session);
+  }, [session, status]);
 
   return (
     <header className="fixed top-0 left-0 w-full bg-gray-900/95 backdrop-blur-sm z-50 shadow-lg">
