@@ -33,7 +33,11 @@ export default function SignInPage() {
       if (result?.error) {
         console.error("❌ Sign in error:", result.error);
         setError("Неверный email или пароль");
-      } else if (result?.ok) {
+        setLoading(false);
+        return;
+      }
+
+      if (result?.ok) {
         console.log("✅ Sign in successful!");
         setSuccess("Вход выполнен успешно! Перенаправление...");
         
@@ -43,24 +47,19 @@ export default function SignInPage() {
         
         console.log("👤 Session after login:", session);
         
-        // Небольшая задержка для показа сообщения об успехе
-        await new Promise(resolve => setTimeout(resolve, 500));
+        // Определяем куда редиректить
+        const redirectPath = session?.user?.role === "admin" ? "/admin" : "/profile";
+        console.log(`� Redirecting to: ${redirectPath}`);
         
-        // Редирект в зависимости от роли
-        if (session?.user?.role === "admin") {
-          console.log("🔧 Redirecting to admin panel");
-          router.push("/admin");
-        } else {
-          console.log("👤 Redirecting to profile");
-          router.push("/profile");
-        }
-        
-        router.refresh();
+        // Небольшая задержка для показа сообщения
+        setTimeout(() => {
+          router.push(redirectPath);
+          router.refresh();
+        }, 800);
       }
     } catch (err) {
       console.error("💥 Unexpected error:", err);
       setError("Произошла ошибка при входе");
-    } finally {
       setLoading(false);
     }
   };
