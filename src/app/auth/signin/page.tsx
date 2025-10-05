@@ -10,26 +10,56 @@ export default function SignInPage() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState("");
   const [loading, setLoading] = useState(false);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setError("");
+    setSuccess("");
     setLoading(true);
 
     try {
+      console.log("🔐 Attempting sign in...");
+      
       const result = await signIn("credentials", {
         email,
         password,
         redirect: false,
       });
 
+      console.log("📊 Sign in result:", result);
+
       if (result?.error) {
+        console.error("❌ Sign in error:", result.error);
         setError("Неверный email или пароль");
-      } else {
-        router.push("/profile");
+      } else if (result?.ok) {
+        console.log("✅ Sign in successful!");
+        setSuccess("Вход выполнен успешно! Перенаправление...");
+        
+        // Получаем сессию для проверки роли
+        const response = await fetch("/api/auth/session");
+        const session = await response.json();
+        
+        console.log("👤 Session after login:", session);
+        
+        // Небольшая задержка для показа сообщения об успехе
+        await new Promise(resolve => setTimeout(resolve, 500));
+        
+        // Редирект в зависимости от роли
+        if (session?.user?.role === "admin") {
+          console.log("🔧 Redirecting to admin panel");
+          router.push("/admin");
+        } else {
+          console.log("👤 Redirecting to profile");
+          router.push("/profile");
+        }
+        
         router.refresh();
       }
+    } catch (err) {
+      console.error("💥 Unexpected error:", err);
+      setError("Произошла ошибка при входе");
     } finally {
       setLoading(false);
     }
@@ -46,6 +76,12 @@ export default function SignInPage() {
           {error && (
             <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded">
               {error}
+            </div>
+          )}
+          
+          {success && (
+            <div className="bg-green-500/10 border border-green-500 text-green-500 px-4 py-3 rounded">
+              {success}
             </div>
           )}
 
