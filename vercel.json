@@ -1,17 +1,7 @@
 {
-  "buildCommand": "npm run build",
-  "outputDirectory": ".next",
-  "devCommand": "npm run dev",
-  "framework": "nextjs",
   "env": {
     "NEXT_PUBLIC_API_URL": "https://irrelevant-nellie-fodi999-aefe2c9f.koyeb.app",
     "NEXTAUTH_URL": "https://menu-fodifood.vercel.app",
     "NEXTAUTH_SECRET": "j+fkqjtR1vl6b6WzE+UISqGX211x6VMNcH0Vil/S/nw="
-  },
-  "regions": ["fra1"],
-  "functions": {
-    "src/app/api/**/*.ts": {
-      "runtime": "nodejs18.x"
-    }
   }
 }
