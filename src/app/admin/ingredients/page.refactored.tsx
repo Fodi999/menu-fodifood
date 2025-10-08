@@ -54,7 +54,6 @@ export default function AdminIngredientsPage() {
     expiryDays: "7",
     priceBrutto: "",
     priceNetto: "",
-    pricePerUnit: "",
   });
 
   // Auth guard
@@ -87,8 +86,6 @@ export default function AdminIngredientsPage() {
 
       const data = await response.json();
 
-      console.log('📥 Получены данные с сервера:', data);
-
       // Process ingredients data
       const ingredientsPromises = Array.isArray(data)
         ? data.map(async (item) => {
@@ -106,7 +103,7 @@ export default function AdminIngredientsPage() {
               console.error(`Failed to fetch movements for ingredient ${item.id}:`, err);
             }
 
-            const processedItem = {
+            return {
               id: item.id,
               name: item.ingredient?.name?.trim() || "Без названия",
               unit: item.ingredient?.unit || "g",
@@ -123,15 +120,6 @@ export default function AdminIngredientsPage() {
               updatedAt: item.updatedAt,
               movementsCount,
             };
-
-            console.log(`📦 Обработан ингредиент "${processedItem.name}":`, {
-              priceNetto: processedItem.priceNetto,
-              priceBrutto: processedItem.priceBrutto,
-              nettoWeight: processedItem.nettoWeight,
-              unit: processedItem.unit
-            });
-
-            return processedItem;
           })
         : [];
 
@@ -185,7 +173,6 @@ export default function AdminIngredientsPage() {
       expiryDays: "7",
       priceBrutto: "",
       priceNetto: "",
-      pricePerUnit: "",
     });
     setSearchQuery(ingredient.name);
     setShowSearchResults(false);
@@ -210,17 +197,7 @@ export default function AdminIngredientsPage() {
         expiryDays: formData.expiryDays ? parseInt(formData.expiryDays) : null,
         priceBrutto: formData.priceBrutto ? parseFloat(formData.priceBrutto) : null,
         priceNetto: formData.priceNetto ? parseFloat(formData.priceNetto) : null,
-        pricePerUnit: formData.pricePerUnit ? parseFloat(formData.pricePerUnit) : null, // Цена за единицу (кг/л/шт)
       };
-
-      console.log('🔍 Отправляем данные на сервер:', payload);
-      console.log('📊 FormData:', {
-        pricePerUnit: formData.pricePerUnit,
-        priceNetto: formData.priceNetto,
-        priceBrutto: formData.priceBrutto,
-        nettoWeight: formData.nettoWeight,
-        unit: formData.unit
-      });
 
       const url = editingIngredient
         ? `${apiUrl}/api/admin/ingredients/${editingIngredient.id}`
@@ -264,7 +241,6 @@ export default function AdminIngredientsPage() {
       expiryDays: "7",
       priceBrutto: "",
       priceNetto: "",
-      pricePerUnit: "",
     });
     setSearchQuery("");
     setShowSearchResults(false);
@@ -273,27 +249,6 @@ export default function AdminIngredientsPage() {
   // Handle edit
   const handleEdit = (ingredient: Ingredient) => {
     setEditingIngredient(ingredient);
-    
-    // Восстанавливаем pricePerUnit из сохранённых данных или рассчитываем для старых записей
-    let pricePerUnit = "";
-    if (ingredient.pricePerUnit) {
-      // Если есть сохранённое значение - используем его
-      pricePerUnit = ingredient.pricePerUnit.toString();
-    } else if (ingredient.priceNetto && ingredient.nettoWeight) {
-      // Для старых записей без pricePerUnit - рассчитываем обратно
-      if (ingredient.unit === 'pcs') {
-        pricePerUnit = (ingredient.priceNetto / ingredient.nettoWeight).toFixed(2);
-      } else if (ingredient.unit === 'g') {
-        pricePerUnit = (ingredient.priceNetto / (ingredient.nettoWeight / 1000)).toFixed(2);
-      } else if (ingredient.unit === 'kg') {
-        pricePerUnit = (ingredient.priceNetto / ingredient.nettoWeight).toFixed(2);
-      } else if (ingredient.unit === 'ml') {
-        pricePerUnit = (ingredient.priceNetto / (ingredient.nettoWeight / 1000)).toFixed(2);
-      } else if (ingredient.unit === 'l') {
-        pricePerUnit = (ingredient.priceNetto / ingredient.nettoWeight).toFixed(2);
-      }
-    }
-    
     setFormData({
       name: ingredient.name,
       unit: ingredient.unit,
@@ -305,7 +260,6 @@ export default function AdminIngredientsPage() {
       expiryDays: ingredient.expiryDays?.toString() || "7",
       priceBrutto: ingredient.priceBrutto?.toString() || "",
       priceNetto: ingredient.priceNetto?.toString() || "",
-      pricePerUnit: pricePerUnit,
     });
     setShowForm(true);
   };

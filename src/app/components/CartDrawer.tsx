@@ -34,6 +34,7 @@ export default function CartDrawer({
 }: CartDrawerProps) {
   const { t } = useTranslation("ns1");
   const [showCheckout, setShowCheckout] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -63,10 +64,60 @@ export default function CartDrawer({
 
   const total = items.reduce((sum, item) => sum + item.price * item.quantity, 0);
 
-  const handleCheckout = (e: React.FormEvent) => {
+  const handleCheckout = async (e: React.FormEvent) => {
     e.preventDefault();
-    alert(orderLabels.success);
-    onClose();
+    setIsSubmitting(true);
+
+    try {
+      const orderData = {
+        name: formData.name,
+        phone: formData.phone,
+        address: formData.address,
+        comment: formData.comment,
+        items: items.map((item) => ({
+          productId: item.id,
+          quantity: item.quantity,
+          price: item.price,
+        })),
+      };
+
+      const response = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/orders`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify(orderData),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error("Failed to create order");
+      }
+
+      const result = await response.json();
+      
+      alert(`✅ ${orderLabels.success}\n\nЗаказ №${result.orderId.slice(0, 8)}\nСумма: ${result.total}₽\n\nМы свяжемся с вами в ближайшее время!`);
+      
+      // Очищаем корзину
+      items.forEach((item) => onRemove(item.id));
+      
+      // Сбрасываем форму
+      setFormData({
+        name: "",
+        phone: "",
+        address: "",
+        comment: "",
+      });
+      setShowCheckout(false);
+      onClose();
+    } catch (error) {
+      console.error("Error creating order:", error);
+      alert("❌ Не удалось создать заказ. Попробуйте снова или свяжитесь с нами по телефону.");
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -162,13 +213,23 @@ export default function CartDrawer({
                   </div>
 
                   <div className="border-t border-gray-700 pt-4">
-                    <div className="flex justify-between items-center mb-6">
-                      <span className="text-xl font-semibold">
-                        {cartLabels.total}:
-                      </span>
-                      <span className="text-3xl font-bold text-orange-500">
-                        {total}₽
-                      </span>
+                    <div className="mb-4">
+                      <div className="flex justify-between items-center text-gray-400 mb-2">
+                        <span className="text-sm">
+                          Товаров в корзине:
+                        </span>
+                        <span className="text-sm font-semibold">
+                          {items.reduce((sum, item) => sum + item.quantity, 0)} шт
+                        </span>
+                      </div>
+                      <div className="flex justify-between items-center">
+                        <span className="text-xl font-semibold text-white">
+                          {cartLabels.total}:
+                        </span>
+                        <span className="text-3xl font-bold text-orange-500">
+                          {total}₽
+                        </span>
+                      </div>
                     </div>
                     <button
                       onClick={() => setShowCheckout(true)}
@@ -259,9 +320,10 @@ export default function CartDrawer({
                     </button>
                     <button
                       type="submit"
-                      className="flex-1 py-3 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition font-semibold"
+                      disabled={isSubmitting}
+                      className="flex-1 py-3 bg-orange-500 text-white rounded-full hover:bg-orange-600 transition font-semibold disabled:opacity-50 disabled:cursor-not-allowed"
                     >
-                      {orderLabels.submit}
+                      {isSubmitting ? "Отправка..." : orderLabels.submit}
                     </button>
                   </div>
                 </form>

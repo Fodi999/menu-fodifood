@@ -4,7 +4,7 @@ import { useAuth } from "@/contexts/AuthContext";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
-import { KeyRound } from "lucide-react";
+import { KeyRound, ShoppingBag, Home, Settings } from "lucide-react";
 
 interface Order {
   id: string;
@@ -97,12 +97,21 @@ export default function ProfilePage() {
                 Добро пожаловать, {profile.name || profile.email}!
               </p>
             </div>
-            <button
-              onClick={handleLogout}
-              className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition"
-            >
-              Выйти
-            </button>
+            <div className="flex gap-3">
+              <Link
+                href="/"
+                className="px-4 py-2 bg-orange-500 hover:bg-orange-600 rounded-lg transition flex items-center gap-2"
+              >
+                <Home className="w-4 h-4" />
+                Главная
+              </Link>
+              <button
+                onClick={handleLogout}
+                className="px-4 py-2 bg-red-600 hover:bg-red-700 rounded-lg transition"
+              >
+                Выйти
+              </button>
+            </div>
           </div>
 
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
@@ -151,10 +160,52 @@ export default function ProfilePage() {
             </div>
           )}
 
+          {/* Быстрые действия */}
+          <div className="mb-8 grid grid-cols-1 md:grid-cols-3 gap-4">
+            <Link
+              href="/#menu"
+              className="bg-gradient-to-r from-orange-500 to-red-500 p-6 rounded-lg hover:scale-105 transition-transform group"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <ShoppingBag className="w-8 h-8 group-hover:rotate-12 transition-transform" />
+                <h3 className="text-xl font-bold">Сделать заказ</h3>
+              </div>
+              <p className="text-sm opacity-90">Перейти к меню и выбрать блюда</p>
+            </Link>
+
+            <Link
+              href="/orders"
+              className="bg-gray-700 p-6 rounded-lg hover:bg-gray-600 transition group"
+            >
+              <div className="flex items-center gap-3 mb-2">
+                <Settings className="w-8 h-8 text-orange-500 group-hover:rotate-90 transition-transform" />
+                <h3 className="text-xl font-bold">Мои заказы</h3>
+              </div>
+              <p className="text-sm text-gray-400">История всех заказов</p>
+            </Link>
+
+            <div className="bg-gray-700 p-6 rounded-lg">
+              <div className="flex items-center gap-3 mb-2">
+                <KeyRound className="w-8 h-8 text-orange-500" />
+                <h3 className="text-xl font-bold">Профиль</h3>
+              </div>
+              <p className="text-sm text-gray-400">Текущая страница</p>
+            </div>
+          </div>
+
           <div className="bg-gray-700 p-6 rounded-lg">
             <h3 className="text-lg font-semibold mb-4">Последние заказы</h3>
             {!profile.orders || profile.orders.length === 0 ? (
-              <p className="text-gray-400">У вас пока нет заказов</p>
+              <div className="text-center py-8">
+                <p className="text-gray-400 mb-4">У вас пока нет заказов</p>
+                <Link
+                  href="/#menu"
+                  className="inline-flex items-center gap-2 px-6 py-3 bg-orange-500 hover:bg-orange-600 rounded-lg transition"
+                >
+                  <ShoppingBag className="w-5 h-5" />
+                  Перейти к меню
+                </Link>
+              </div>
             ) : (
               <div className="space-y-4">
                 {profile.orders.slice(0, 5).map((order) => (

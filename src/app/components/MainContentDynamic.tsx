@@ -56,8 +56,11 @@ export default function MainContentDynamic({ onAddToCart }: MainContentDynamicPr
   }, []);
 
   const fetchProducts = async () => {
+    setLoading(true);
     try {
-      const res = await fetch("/api/products");
+      const res = await fetch(
+        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/products`
+      );
       const data = await res.json();
       // Проверяем, что data это массив
       if (Array.isArray(data)) {
