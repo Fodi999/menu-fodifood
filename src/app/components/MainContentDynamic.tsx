@@ -77,12 +77,12 @@ export default function MainContentDynamic({ onAddToCart }: MainContentDynamicPr
     }
   };
 
-  const categories = ["All", ...Array.from(new Set((products || []).map(p => p.category)))];
+  const categories = ["All", ...Array.from(new Set((products || []).map(p => p?.category).filter(Boolean)))];
 
   const filteredProducts =
     selectedCategory === "All"
       ? products || []
-      : (products || []).filter((p) => p.category === selectedCategory);
+      : (products || []).filter((p) => p?.category === selectedCategory);
 
   const handleAddToCart = (product: Product) => {
     onAddToCart({
@@ -159,7 +159,13 @@ export default function MainContentDynamic({ onAddToCart }: MainContentDynamicPr
           </div>
         ) : (
           <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
-            {filteredProducts.map((product) => (
+            {filteredProducts.map((product) => {
+              // Проверка на валидность продукта
+              if (!product || !product.id || !product.name) {
+                return null;
+              }
+              
+              return (
               <div
                 key={product.id}
                 className="bg-gray-800 rounded-lg overflow-hidden shadow-lg hover:shadow-2xl transition-all duration-300 hover:scale-105"
@@ -181,7 +187,7 @@ export default function MainContentDynamic({ onAddToCart }: MainContentDynamicPr
                     </div>
                   )}
                   <div className="absolute top-3 right-3 bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-semibold">
-                    {product.category}
+                    {product.category || 'Без категории'}
                   </div>
                 </div>
                 <div className="p-6">
@@ -196,7 +202,7 @@ export default function MainContentDynamic({ onAddToCart }: MainContentDynamicPr
                   )}
                   <div className="flex justify-between items-center">
                     <span className="text-3xl font-bold text-orange-500">
-                      {Number(product.price).toFixed(0)}₽
+                      {Number(product.price || 0).toFixed(0)}₽
                     </span>
                     <button
                       onClick={() => handleAddToCart(product)}
@@ -208,7 +214,7 @@ export default function MainContentDynamic({ onAddToCart }: MainContentDynamicPr
                   </div>
                 </div>
               </div>
-            ))}
+            )})}
           </div>
         )}
       </section>

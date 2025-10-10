@@ -14,6 +14,7 @@
 
 1. **`src/contexts/AuthContext.tsx`** - использование `localStorage` без проверки
 2. **`src/hooks/useOrderNotifications.ts`** - использование `window.location` без проверки
+3. **`src/app/components/MainContentDynamic.tsx`** - обращение к `product.name` без проверки на `undefined`
 
 ## ✅ Решение
 
@@ -82,6 +83,12 @@ const connect = useCallback(() => {
 
 ### useOrderNotifications.ts
 - ✅ `connect()` - добавлена проверка перед `window.location`
+
+### MainContentDynamic.tsx
+- ✅ `categories` - добавлена безопасная проверка с `p?.category`
+- ✅ `filteredProducts` - добавлена проверка с `p?.category`
+- ✅ Рендеринг продуктов - добавлена валидация перед отрисовкой
+- ✅ Добавлены fallback значения для `category` и `price`
 
 ## 🚀 Деплой на Vercel
 
