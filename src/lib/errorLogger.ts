@@ -77,21 +77,22 @@ class ErrorLogger {
    * Отправляем логи на сервер (опционально)
    */
   private async sendToServer(error: ErrorLog) {
-    // Только в production
-    if (process.env.NODE_ENV !== 'production') {
-      return;
-    }
-
     try {
-      await fetch('/api/log-error', {
+      // Отправляем на MCP сервер (если запущен локально)
+      const mcpServerUrl = process.env.NEXT_PUBLIC_MCP_SERVER_URL || 'http://localhost:3001';
+      
+      await fetch(`${mcpServerUrl}/api/log`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(error),
       });
+      
+      console.log('📤 Log sent to MCP server');
     } catch (err) {
-      console.error('Failed to send error to server:', err);
+      // Не показываем ошибку, если MCP сервер не запущен
+      // console.error('Failed to send error to server:', err);
     }
   }
 
