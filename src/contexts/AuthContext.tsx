@@ -36,6 +36,12 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   // Проверить авторизацию
   const checkAuth = async () => {
     try {
+      // Проверка на клиентскую сторону (для SSR совместимости)
+      if (typeof window === "undefined") {
+        setLoading(false);
+        return;
+      }
+
       const token = localStorage.getItem("token");
       if (!token) {
         setLoading(false);
@@ -81,9 +87,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const data = await response.json();
     
-    // Сохраняем токен в localStorage и cookies
-    localStorage.setItem("token", data.token);
-    document.cookie = `token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
+    // Сохраняем токен в localStorage и cookies (только на клиенте)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("token", data.token);
+      document.cookie = `token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
+    }
     
     // Устанавливаем пользователя
     setUser(data.user);
@@ -106,9 +114,11 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
     const data = await response.json();
     
-    // Сохраняем токен в localStorage и cookies
-    localStorage.setItem("token", data.token);
-    document.cookie = `token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
+    // Сохраняем токен в localStorage и cookies (только на клиенте)
+    if (typeof window !== "undefined") {
+      localStorage.setItem("token", data.token);
+      document.cookie = `token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
+    }
     
     // Устанавливаем пользователя
     setUser(data.user);
@@ -116,8 +126,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Выход
   const logout = async () => {
-    localStorage.removeItem("token");
-    document.cookie = "token=; path=/; max-age=0";
+    if (typeof window !== "undefined") {
+      localStorage.removeItem("token");
+      document.cookie = "token=; path=/; max-age=0";
+    }
     setUser(null);
   };
 

@@ -1,0 +1,6 @@
+{
+  "github.copilot.chat.editing.enable": true,
+  "github.copilot.chat.createFiles.enable": true,
+  "github.copilot.chat.createFolders.enable": true,
+  "github.copilot.chat.terminal.enable": true
+}

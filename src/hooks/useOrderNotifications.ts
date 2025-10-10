@@ -41,6 +41,12 @@ export function useOrderNotifications(token: string | null): UseOrderNotificatio
       return;
     }
 
+    // Проверка на клиентскую сторону (для SSR совместимости)
+    if (typeof window === 'undefined') {
+      console.log('⚠️ Window is undefined, skipping WebSocket connection');
+      return;
+    }
+
     // Определяем URL для WebSocket
     const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
     const host = process.env.NEXT_PUBLIC_API_URL 
