@@ -34,21 +34,32 @@ export default function MainContentDynamic({ onAddToCart }: MainContentDynamicPr
   const [selectedCategory, setSelectedCategory] = useState("All");
   const [notification, setNotification] = useState<string | null>(null);
 
-  const hero = t("hero", { returnObjects: true }) as {
+  const hero = (t("hero", { returnObjects: true }) as {
     title: string;
     subtitle: string;
     description: string;
     orderButton: string;
     viewMenuButton: string;
+  } | undefined) || {
+    title: "FODI SUSHI",
+    subtitle: "Premium Sushi",
+    description: "Loading...",
+    orderButton: "Order",
+    viewMenuButton: "View Menu"
   };
 
-  const menu = t("menu", { returnObjects: true }) as {
+  const menu = (t("menu", { returnObjects: true }) as {
     title: string;
     categories: string[];
+  } | undefined) || {
+    title: "Our Menu",
+    categories: []
   };
 
-  const cartLabels = t("cart", { returnObjects: true }) as {
+  const cartLabels = (t("cart", { returnObjects: true }) as {
     addToCart: string;
+  } | undefined) || {
+    addToCart: "Add to Cart"
   };
 
   useEffect(() => {
