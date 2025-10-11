@@ -96,6 +96,11 @@ export default function MainContentDynamic({ onAddToCart }: MainContentDynamicPr
       : (products || []).filter((p) => p?.category === selectedCategory);
 
   const handleAddToCart = (product: Product) => {
+    if (!product || !product.id || !product.name) {
+      console.error('Invalid product:', product);
+      return;
+    }
+    
     onAddToCart({
       id: product.id,
       name: product.name,

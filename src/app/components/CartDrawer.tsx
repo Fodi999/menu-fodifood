@@ -158,22 +158,22 @@ export default function CartDrawer({
                 <>
                   <div className="space-y-4 mb-6">
                     {items && items.length > 0 ? (
-                      items.map((item) => (
+                      items.map((item) => item ? (
                         <div
                           key={item.id}
                           className="bg-gray-700 rounded-lg p-4 flex gap-4"
                         >
                           <div className="relative w-20 h-20 rounded overflow-hidden flex-shrink-0">
                             <Image
-                              src={item.image}
-                              alt={item.name}
+                              src={item.image || '/placeholder.jpg'}
+                              alt={item.name || 'Продукт'}
                               fill
                               className="object-cover"
                             />
                           </div>
                           <div className="flex-1">
                             <h3 className="font-semibold text-white">
-                              {item.name}
+                              {item.name || 'Без названия'}
                             </h3>
                             <p className="text-sm text-gray-400">{item.weight}</p>
                             <div className="flex items-center gap-3 mt-2">
@@ -210,7 +210,7 @@ export default function CartDrawer({
                           </span>
                         </div>
                       </div>
-                    ))
+                    ) : null)
                     ) : (
                       <p className="text-gray-400 text-center py-4">Корзина пуста</p>
                     )}

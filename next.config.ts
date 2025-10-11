@@ -1,6 +1,9 @@
 import type { NextConfig } from "next";
 
 const nextConfig: NextConfig = {
+  // Enable source maps for production debugging
+  productionBrowserSourceMaps: true,
+  
   images: {
     remotePatterns: [
       {
