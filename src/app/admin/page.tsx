@@ -182,7 +182,9 @@ export default function AdminPage() {
               <CardDescription className="text-white/80 text-xs sm:text-sm mb-1">
                 Выручка
               </CardDescription>
-              <CardTitle className="text-3xl sm:text-4xl font-bold">{stats.totalRevenue.toLocaleString()} ₽</CardTitle>
+              <CardTitle className="text-3xl sm:text-4xl font-bold">
+                {(stats.totalRevenue || 0).toLocaleString()} ₽
+              </CardTitle>
             </CardContent>
           </Card>
         </div>
@@ -332,7 +334,7 @@ export default function AdminPage() {
                           </Badge>
                         </TableCell>
                         <TableCell className="text-right font-bold text-orange-500">
-                          {order.total.toLocaleString()} ₽
+                          {(order.total || 0).toLocaleString()} ₽
                         </TableCell>
                       </TableRow>
                     ))}
