@@ -90,9 +90,9 @@ class ErrorLogger {
       });
       
       console.log('📤 Log sent to MCP server');
-    } catch (err) {
+    } catch {
       // Не показываем ошибку, если MCP сервер не запущен
-      // console.error('Failed to send error to server:', err);
+      // Молча игнорируем ошибку отправки
     }
   }
 
@@ -215,33 +215,33 @@ class ErrorLogger {
   /**
    * Ручное логирование
    */
-  public logError(message: string, details?: any) {
+  public logError(message: string, details?: unknown) {
     this.log({
       timestamp: new Date().toISOString(),
       message,
-      stack: details?.stack || new Error().stack,
+      stack: (details as Error | undefined)?.stack || new Error().stack,
       url: typeof window !== 'undefined' ? window.location.href : '',
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
       type: 'error',
     });
   }
 
-  public logWarning(message: string, details?: any) {
+  public logWarning(message: string, details?: unknown) {
     this.log({
       timestamp: new Date().toISOString(),
       message,
-      stack: details?.stack,
+      stack: (details as Error | undefined)?.stack,
       url: typeof window !== 'undefined' ? window.location.href : '',
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
       type: 'warning',
     });
   }
 
-  public logInfo(message: string, details?: any) {
+  public logInfo(message: string, details?: unknown) {
     this.log({
       timestamp: new Date().toISOString(),
       message,
-      stack: details?.stack,
+      stack: (details as Error | undefined)?.stack,
       url: typeof window !== 'undefined' ? window.location.href : '',
       userAgent: typeof navigator !== 'undefined' ? navigator.userAgent : '',
       type: 'info',
@@ -257,5 +257,6 @@ export default errorLogger;
 
 // Для доступа из консоли браузера
 if (typeof window !== 'undefined') {
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   (window as any).errorLogger = errorLogger;
 }
