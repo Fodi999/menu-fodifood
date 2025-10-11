@@ -18,7 +18,7 @@ interface RecentOrder {
   status: string;
   total: number;
   createdAt: string;
-  user: {
+  user?: {
     name: string | null;
     email: string;
   };
@@ -205,7 +205,7 @@ export default function AdminPage() {
                       Заказ #{order.id.slice(0, 8)}
                     </p>
                     <p className="text-sm text-gray-400">
-                      {order.user.name || order.user.email}
+                      {order.user?.name || order.user?.email || "Неизвестный пользователь"}
                     </p>
                     <p className="text-xs text-gray-500">
                       {new Date(order.createdAt).toLocaleDateString("ru-RU")}
