@@ -7,6 +7,7 @@ import CartDrawer from "./components/CartDrawer";
 import LanguageSwitcher from "./components/LanguageSwitcher";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 interface Product {
   id: string;
@@ -69,14 +70,18 @@ export default function Home() {
       <div className="relative w-full min-h-screen bg-gray-900 text-white">
         <Header cartItemsCount={totalItems} onCartClick={toggleCart} />
         <MainContentDynamic onAddToCart={addToCart} />
-        {showCart && (
-          <CartDrawer
-            items={cartItems}
-            onClose={toggleCart}
-            onUpdateQuantity={updateQuantity}
-            onRemove={removeFromCart}
-          />
-        )}
+        
+        <Sheet open={showCart} onOpenChange={setShowCart}>
+          <SheetContent side="right" className="w-full sm:max-w-md bg-gray-800 text-white border-l border-gray-700">
+            <CartDrawer
+              items={cartItems}
+              onClose={() => setShowCart(false)}
+              onUpdateQuantity={updateQuantity}
+              onRemove={removeFromCart}
+            />
+          </SheetContent>
+        </Sheet>
+        
         <LanguageSwitcher />
 
         {/* Footer */}
