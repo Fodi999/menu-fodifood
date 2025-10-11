@@ -1,0 +1,14 @@
+# Игнорировать MCP сервер при деплое на Vercel
+mcp-server/
+mcp-server/**
+
+# Игнорировать архивы и документы разработки
+archive/
+*.md
+!README.md
+!VERCEL-DEPLOYMENT.md
+
+# Игнорировать логи
+*.log
+backend.log
+frontend.log
