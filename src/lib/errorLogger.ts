@@ -77,11 +77,21 @@ class ErrorLogger {
    * Отправляем логи на сервер (опционально)
    */
   private async sendToServer(error: ErrorLog) {
+    // Не отправляем логи в production если MCP сервер не настроен
+    if (typeof window === 'undefined') return;
+    
     try {
-      // Отправляем на MCP сервер (если запущен локально)
-      const mcpServerUrl = process.env.NEXT_PUBLIC_MCP_SERVER_URL || 'http://localhost:3001';
+      // Отправляем на MCP сервер (только если указан URL)
+      const mcpServerUrl = process.env.NEXT_PUBLIC_MCP_SERVER_URL;
       
-      await fetch(`${mcpServerUrl}/api/log`, {
+      // В production не отправляем на localhost
+      if (!mcpServerUrl || mcpServerUrl.includes('localhost')) {
+        if (process.env.NODE_ENV === 'production') {
+          return; // Не отправляем в production на localhost
+        }
+      }
+      
+      await fetch(`${mcpServerUrl || 'http://localhost:3001'}/api/log`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
