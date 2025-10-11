@@ -173,16 +173,24 @@ export default function ProfilePage() {
               <p className="text-sm opacity-90">Перейти к меню и выбрать блюда</p>
             </Link>
 
-            <Link
-              href="/orders"
+                        <Link
+              href="/"
               className="bg-gray-700 p-6 rounded-lg hover:bg-gray-600 transition group"
             >
               <div className="flex items-center gap-3 mb-2">
-                <Settings className="w-8 h-8 text-orange-500 group-hover:rotate-90 transition-transform" />
+                <ShoppingBag className="w-8 h-8 group-hover:rotate-12 transition-transform" />
+                <h3 className="text-xl font-bold">Сделать заказ</h3>
+              </div>
+              <p className="text-sm opacity-90">Перейти к меню и выбрать блюда</p>
+            </Link>
+
+            <div className="bg-gray-700 p-6 rounded-lg opacity-50 cursor-not-allowed">
+              <div className="flex items-center gap-3 mb-2">
+                <Settings className="w-8 h-8 text-orange-500" />
                 <h3 className="text-xl font-bold">Мои заказы</h3>
               </div>
-              <p className="text-sm text-gray-400">История всех заказов</p>
-            </Link>
+              <p className="text-sm text-gray-400">История отображается ниже</p>
+            </div>
 
             <div className="bg-gray-700 p-6 rounded-lg">
               <div className="flex items-center gap-3 mb-2">
