@@ -2,5 +2,20 @@
   "github.copilot.chat.editing.enable": true,
   "github.copilot.chat.createFiles.enable": true,
   "github.copilot.chat.createFolders.enable": true,
-  "github.copilot.chat.terminal.enable": true
+  "github.copilot.chat.terminal.enable": true,
+  
+  // CSS настройки для Tailwind CSS 4.0
+  "css.validate": false,
+  "css.customData": [".vscode/css_custom_data.json"],
+  "scss.validate": false,
+  "less.validate": false,
+  
+  // Линтинг
+  "css.lint.unknownAtRules": "ignore",
+  
+  // Файловые ассоциации
+  "files.associations": {
+    ".vercelignore": "ignore",
+    ".env*": "dotenv"
+  }
 }
