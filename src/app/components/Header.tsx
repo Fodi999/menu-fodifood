@@ -2,7 +2,7 @@
 
 import Image from "next/image";
 import { useTranslation } from "react-i18next";
-import { ShoppingCart, User, LogIn, Settings } from "lucide-react";
+import { ShoppingCart, User, LogIn, Settings, MessageCircle } from "lucide-react";
 import { useAuth } from "@/contexts/AuthContext";
 import Link from "next/link";
 import { useEffect } from "react";
@@ -52,6 +52,14 @@ export default function Header({ cartItemsCount, onCartClick }: HeaderProps) {
           </Button>
           <Button variant="ghost" asChild className="hidden md:flex text-white hover:text-orange-500">
             <a href="#contact">{t("buttonLabels.contact")}</a>
+          </Button>
+          
+          {/* AI Chat Button */}
+          <Button variant="ghost" asChild className="text-white hover:text-orange-500">
+            <Link href="/chat" className="flex items-center gap-1 sm:gap-2">
+              <MessageCircle className="w-4 h-4 sm:w-5 sm:h-5" />
+              <span className="hidden sm:inline">AI Chat</span>
+            </Link>
           </Button>
           
           {user ? (
