@@ -24,7 +24,6 @@ export const BatchDetails: React.FC<BatchDetailsProps> = ({
   onDelete,
   onViewMovements,
   formatVolumeDisplay,
-  calculatePricePerUnit,
 }) => {
   const getExpiryStatus = (expiryDays: number | null | undefined) => {
     if (!expiryDays) {

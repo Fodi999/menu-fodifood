@@ -36,7 +36,6 @@ import {
 // Импорт типов
 import {
   Product,
-  CATEGORIES,
 } from './types'
 
 export default function AdminProductsPage() {
@@ -86,7 +85,7 @@ export default function AdminProductsPage() {
     }
   };
 
-  const handleEdit = (product: Product) => {
+  const handleEdit = () => {
     // TODO: Implement edit functionality
     setShowForm(true);
   };

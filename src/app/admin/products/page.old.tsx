@@ -7,11 +7,6 @@ import Link from "next/link";
 import Image from "next/image";
 import { Package, ArrowLeft, Plus, Edit2, Trash2, Loader2 } from "lucide-react";
 
-// Импорт компонентов
-import {
-  ProductForm,
-} from "./components";
-
 // Импорт типов
 import type {
   Product,
