@@ -3,13 +3,12 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import { Box, Edit2, Trash2, Loader2 } from "lucide-react";
+import { Trash2, Loader2 } from "lucide-react";
 
 // Импорт компонентов
 import {
   SemiFinishedHeader,
   SemiFinishedTable,
-  LoadingState,
   ErrorMessage,
 } from "./components";
 

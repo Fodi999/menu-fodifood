@@ -80,7 +80,7 @@ export function useChatSocket() {
               console.warn("⚠️ Unknown JSON format:", data);
               setMessages((prev) => [...prev, `🤖 ${JSON.stringify(data)}`]);
             }
-          } catch (error) {
+          } catch {
             // Если не JSON, просто добавляем как текст
             console.log("📝 Plain text message:", event.data);
             setMessages((prev) => [...prev, `🤖 ${event.data}`]);

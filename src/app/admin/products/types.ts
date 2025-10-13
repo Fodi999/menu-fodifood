@@ -63,16 +63,3 @@ export type ProductFormData = {
 };
 
 export const CATEGORIES = ["Роллы", "Суши", "Сеты", "Напитки", "Десерты", "Закуски"];
-
-export const INGREDIENT_CATEGORIES = [
-  { value: "all", label: "📦 Все категории" },
-  { value: "fish", label: "🐟 Рыба" },
-  { value: "seafood", label: "🦐 Морепродукты" },
-  { value: "vegetables", label: "🥬 Овощи" },
-  { value: "rice", label: "🍚 Рис" },
-  { value: "nori", label: "🌿 Нори и водоросли" },
-  { value: "sauces", label: "🥫 Соусы" },
-  { value: "spices", label: "🧂 Специи" },
-  { value: "cheese", label: "🧀 Сыр" },
-  { value: "other", label: "📦 Прочее" },
-];

@@ -16,9 +16,6 @@ import {
 // Импорт типов
 import type {
   Product,
-  ProductFormData,
-  Ingredient,
-  SemiFinished,
 } from "./types";
 
 export default function AdminProductsPage() {

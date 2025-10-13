@@ -104,14 +104,14 @@ export default function FloatingChat() {
                 new Audio("/sounds/message.mp3").play().catch(() => {
                   console.log("Sound not available");
                 });
-              } catch (e) {
+              } catch {
                 console.log("Audio not supported");
               }
             } else if (data.message) {
               setBotTyping(false);
               setMessages((prev) => [...prev, { sender: "bot", text: data.message }]);
             }
-          } catch (error) {
+          } catch {
             setBotTyping(false);
             setMessages((prev) => [...prev, { sender: "bot", text: event.data }]);
           }
