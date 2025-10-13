@@ -9,10 +9,7 @@ import { Package, ArrowLeft, Plus, Edit2, Trash2, Loader2 } from "lucide-react";
 
 // Импорт компонентов
 import {
-  ProductsHeader,
-  ProductsTable,
-  LoadingState,
-  ErrorMessage,
+  ProductForm,
 } from "./components";
 
 // Импорт типов
@@ -24,8 +21,6 @@ import type {
   ProductSemiFinished,
   ProductFormData,
 } from "./types";
-
-import { CATEGORIES, INGREDIENT_CATEGORIES } from "./types";
 
 export default function AdminProductsPage() {
   const { user, loading: authLoading } = useAuth();

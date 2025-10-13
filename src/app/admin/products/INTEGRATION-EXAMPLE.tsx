@@ -34,12 +34,10 @@ import {
 } from "./components";
 
 // Импорт типов
-import type {
+import {
   Product,
-  ProductFormData,
-  Ingredient,
-  SemiFinished,
-} from "./types";
+  CATEGORIES,
+} from './types'
 
 export default function AdminProductsPage() {
   const { user, loading: authLoading } = useAuth();
@@ -50,7 +48,6 @@ export default function AdminProductsPage() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
   const [showForm, setShowForm] = useState(false);
-  const [editingProduct, setEditingProduct] = useState<Product | null>(null);
 
   // Auth check
   useEffect(() => {
@@ -90,7 +87,7 @@ export default function AdminProductsPage() {
   };
 
   const handleEdit = (product: Product) => {
-    setEditingProduct(product);
+    // TODO: Implement edit functionality
     setShowForm(true);
   };
 
