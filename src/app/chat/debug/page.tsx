@@ -17,7 +17,7 @@ export default function ChatDebugPage() {
       const t = localStorage.getItem("token");
       setToken(t);
       
-      const baseUrl = process.env.NEXT_PUBLIC_RUST_BOT_URL!.replace("http", "ws");
+      const baseUrl = (process.env.NEXT_PUBLIC_RUST_BOT_URL || "http://localhost:8000").replace("http", "ws");
       setWsUrl(t ? `${baseUrl}/ws?token=${t.substring(0, 20)}...` : `${baseUrl}/ws`);
     }
   }, []);

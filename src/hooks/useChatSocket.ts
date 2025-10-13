@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 
-const RUST_BOT_URL = process.env.NEXT_PUBLIC_RUST_BOT_URL!.replace("http", "ws");
+const RUST_BOT_URL = (process.env.NEXT_PUBLIC_RUST_BOT_URL || "http://localhost:8000").replace("http", "ws");
 
 export function useChatSocket() {
   const [messages, setMessages] = useState<string[]>([]);
