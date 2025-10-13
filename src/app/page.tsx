@@ -5,6 +5,7 @@ import Header from "./components/Header";
 import MainContentDynamic from "./components/MainContentDynamic";
 import CartDrawer from "./components/CartDrawer";
 import LanguageSwitcher from "./components/LanguageSwitcher";
+import FloatingChat from "./components/FloatingChat";
 import { useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Sheet, SheetContent } from "@/components/ui/sheet";
@@ -86,6 +87,7 @@ export default function Home() {
         </Sheet>
         
         <LanguageSwitcher />
+        <FloatingChat />
 
         {/* Footer */}
         <footer className="bg-gray-950 py-8 sm:py-12 px-4 sm:px-6">

@@ -7,10 +7,12 @@ import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { Send, Bot, User, Wifi, WifiOff } from "lucide-react";
+import { Send, Bot, User, Wifi, WifiOff, LogIn } from "lucide-react";
 import Link from "next/link";
+import { useAuth } from "@/contexts/AuthContext";
 
 export default function ChatPage() {
+  const { user, loading } = useAuth();
   const { messages, sendMessage, isConnected } = useChatSocket();
   const [input, setInput] = useState("");
   const scrollRef = useRef<HTMLDivElement>(null);
@@ -44,6 +46,12 @@ export default function ChatPage() {
             </p>
           </div>
           <div className="flex items-center gap-3">
+            {user && (
+              <Badge variant="outline" className="border-blue-500 text-blue-400">
+                <User className="w-3 h-3 mr-1" />
+                {user.name || user.email}
+              </Badge>
+            )}
             <Badge
               variant={isConnected ? "default" : "destructive"}
               className={`${
@@ -69,6 +77,26 @@ export default function ChatPage() {
             </Button>
           </div>
         </div>
+
+        {/* Auth Warning */}
+        {!loading && !user && (
+          <Card className="bg-yellow-500/10 border-yellow-500/20 mb-6">
+            <CardContent className="pt-6">
+              <div className="flex items-start gap-3">
+                <LogIn className="w-5 h-5 text-yellow-500 mt-0.5" />
+                <div>
+                  <p className="text-yellow-500 font-semibold mb-1">Требуется авторизация</p>
+                  <p className="text-sm text-yellow-400/80 mb-3">
+                    Для использования AI чата необходимо войти в систему
+                  </p>
+                  <Button asChild size="sm" className="bg-yellow-500 hover:bg-yellow-600 text-black">
+                    <Link href="/auth/signin">Войти</Link>
+                  </Button>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
+        )}
 
         {/* Chat Card */}
         <Card className="bg-gray-800 border-gray-700">

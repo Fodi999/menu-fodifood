@@ -3,8 +3,7 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import Link from "next/link";
-import { ArrowLeft, Plus, Loader2 } from "lucide-react";
+import { Loader2 } from "lucide-react";
 
 // Types
 import { Ingredient, IngredientFormData, StockMovement } from "./types";
@@ -18,8 +17,10 @@ import { groupIngredientsByName } from "./utils/grouping";
 // Components
 import { CategoryTabs } from "./components/CategoryTabs";
 import { IngredientForm } from "./components/IngredientForm";
-import { IngredientsTable } from "./components/IngredientsTable";
+import { IngredientsTable as IngredientsTableNew } from "./components/IngredientsTableNew";
 import { MovementsModal } from "./components/MovementsModal";
+import { IngredientsHeader } from "./components/IngredientsHeader";
+import { IngredientsSearchBar } from "./components/IngredientsSearchBar";
 
 export default function AdminIngredientsPage() {
   const { user, loading: authLoading } = useAuth();
@@ -33,6 +34,7 @@ export default function AdminIngredientsPage() {
   const [showForm, setShowForm] = useState(false);
   const [editingIngredient, setEditingIngredient] = useState<Ingredient | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
+  const [tableSearchQuery, setTableSearchQuery] = useState(""); // Новое состояние для поиска по таблице
   const [showSearchResults, setShowSearchResults] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState<string>("all");
   const [selectedIngredientMovements, setSelectedIngredientMovements] = useState<{
@@ -150,12 +152,19 @@ export default function AdminIngredientsPage() {
   const groupedIngredients = groupIngredientsByName(ingredients);
 
   // Filter by category
-  const filteredGroupedIngredients =
+  let filteredGroupedIngredients =
     selectedCategory === "all"
       ? groupedIngredients
       : groupedIngredients.filter((group) => {
           return group.batches.some((batch) => batch.category === selectedCategory);
         });
+
+  // Filter by table search query
+  if (tableSearchQuery) {
+    filteredGroupedIngredients = filteredGroupedIngredients.filter((group) =>
+      group.name.toLowerCase().includes(tableSearchQuery.toLowerCase())
+    );
+  }
 
   // Category counts
   const getCategoryCount = (category: string): number => {
@@ -390,28 +399,14 @@ export default function AdminIngredientsPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900 text-white">
-      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
-        {/* Header */}
-        <div className="mb-6 flex items-center justify-between">
-          <div className="flex items-center gap-4">
-            <Link
-              href="/admin"
-              className="flex items-center gap-2 text-gray-400 hover:text-white transition"
-            >
-              <ArrowLeft className="w-5 h-5" />
-              <span>Назад в админ панель</span>
-            </Link>
-            <h1 className="text-3xl font-bold">Склад сырья</h1>
-          </div>
-          <button
-            onClick={() => setShowForm(!showForm)}
-            className="flex items-center gap-2 bg-orange-500 hover:bg-orange-600 text-white px-4 py-2 rounded-lg transition"
-          >
-            <Plus className="w-5 h-5" />
-            <span>{showForm ? "Скрыть форму" : "Добавить партию"}</span>
-          </button>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-orange-950/20 py-8 sm:py-12 md:py-16 lg:py-20">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
+        {/* Header с shadcn компонентами */}
+        <IngredientsHeader
+          ingredientsCount={groupedIngredients.length}
+          showForm={showForm}
+          onToggleForm={() => setShowForm(!showForm)}
+        />
 
         {/* Error message */}
         {error && (
@@ -425,6 +420,14 @@ export default function AdminIngredientsPage() {
           selectedCategory={selectedCategory}
           onSelectCategory={setSelectedCategory}
           getCategoryCount={getCategoryCount}
+        />
+
+        {/* Search Bar */}
+        <IngredientsSearchBar
+          searchQuery={tableSearchQuery}
+          onSearchChange={setTableSearchQuery}
+          totalCount={groupedIngredients.length}
+          filteredCount={filteredGroupedIngredients.length}
         />
 
         {/* Form */}
@@ -445,7 +448,7 @@ export default function AdminIngredientsPage() {
         )}
 
         {/* Ingredients Table */}
-        <IngredientsTable
+        <IngredientsTableNew
           groupedIngredients={filteredGroupedIngredients}
           expandedGroups={expandedGroups}
           categories={CATEGORIES}
@@ -455,15 +458,6 @@ export default function AdminIngredientsPage() {
           onDelete={handleDelete}
           onViewMovements={handleViewMovements}
         />
-
-        {/* Empty state */}
-        {filteredGroupedIngredients.length === 0 && (
-          <div className="text-center py-12 text-gray-400">
-            {selectedCategory === "all"
-              ? "Нет ингредиентов. Добавьте первый ингредиент."
-              : "Нет ингредиентов в этой категории."}
-          </div>
-        )}
 
         {/* Movements Modal */}
         <MovementsModal

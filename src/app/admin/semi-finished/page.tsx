@@ -3,8 +3,15 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
-import Link from "next/link";
-import { Box, ArrowLeft, Plus, Edit2, Trash2, Loader2 } from "lucide-react";
+import { Box, Edit2, Trash2, Loader2 } from "lucide-react";
+
+// Импорт компонентов
+import {
+  SemiFinishedHeader,
+  SemiFinishedTable,
+  LoadingState,
+  ErrorMessage,
+} from "./components";
 
 type Ingredient = {
   id: string; // StockItem ID
@@ -386,43 +393,24 @@ export default function AdminSemiFinishedPage() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-900 text-white py-20">
-      <div className="max-w-7xl mx-auto px-6">
-        <div className="flex justify-between items-center mb-8">
-          <div className="flex items-center gap-3">
-            <Box className="w-8 h-8 text-cyan-500" />
-            <h1 className="text-4xl font-bold text-cyan-500">Управление полуфабрикатами</h1>
-          </div>
-          <div className="flex gap-3">
-            <button
-              onClick={() => setShowForm(!showForm)}
-              className="flex items-center gap-2 px-4 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition"
-            >
-              <Plus className="w-4 h-4" />
-              Добавить полуфабрикат
-            </button>
-            <Link
-              href="/admin"
-              className="flex items-center gap-2 px-4 py-2 bg-gray-700 text-white rounded-lg hover:bg-gray-600 transition"
-            >
-              <ArrowLeft className="w-4 h-4" />
-              Назад
-            </Link>
-          </div>
-        </div>
+    <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-purple-950/20 py-8 sm:py-12 md:py-16 lg:py-20">
+      <div className="max-w-7xl mx-auto px-3 sm:px-4 md:px-6">
+        {/* Header с shadcn компонентами */}
+        <SemiFinishedHeader
+          itemsCount={semiFinished.length}
+          showForm={showForm}
+          onToggleForm={() => setShowForm(!showForm)}
+        />
 
-        {error && (
-          <div className="bg-red-500/10 border border-red-500 text-red-500 px-4 py-3 rounded mb-6">
-            {error}
-          </div>
-        )}
+        {/* Error message */}
+        {error && <ErrorMessage message={error} />}
 
         {/* Форма добавления/редактирования */}
         {showForm && (
           <div className="bg-gray-800 rounded-lg shadow-xl p-6 mb-6">
             <div className="flex items-center justify-between mb-6">
               <div>
-                <h2 className="text-2xl font-bold text-cyan-500">
+                <h2 className="text-2xl font-bold text-purple-500">
                   {editingItem ? "Редактировать полуфабрикат" : "Добавить новый полуфабрикат"}
                 </h2>
                 <p className="text-sm text-gray-400 mt-1">
@@ -791,92 +779,15 @@ export default function AdminSemiFinishedPage() {
           </div>
         )}
 
-        {/* Список полуфабрикатов */}
-        {semiFinished.length === 0 ? (
-          <div className="bg-gray-800 rounded-lg shadow-xl p-12 text-center">
-            <Box className="w-16 h-16 text-gray-600 mx-auto mb-4" />
-            <p className="text-gray-400 text-lg">Полуфабрикаты отсутствуют</p>
-            <p className="text-sm text-gray-500 mt-2">
-              💡 Полуфабрикаты - это промежуточные продукты, которые используются в приготовлении блюд
-            </p>
-            <button
-              onClick={() => setShowForm(true)}
-              className="mt-4 px-6 py-2 bg-cyan-500 text-white rounded-lg hover:bg-cyan-600 transition"
-            >
-              Добавить первый полуфабрикат
-            </button>
-          </div>
-        ) : (
-          <div className="bg-gray-800 rounded-lg shadow-xl overflow-hidden">
-            <div className="overflow-x-auto">
-              <table className="w-full">
-                <thead className="bg-gray-700">
-                  <tr>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Название</th>
-                    <th className="px-6 py-4 text-left text-sm font-semibold">Категория</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold">Выход</th>
-                    <th className="px-6 py-4 text-right text-sm font-semibold">Себестоимость/ед</th>
-                    <th className="px-6 py-4 text-center text-sm font-semibold">Действия</th>
-                  </tr>
-                </thead>
-                <tbody className="divide-y divide-gray-700">
-                  {semiFinished.map((item) => (
-                    <tr key={item.id} className="hover:bg-gray-700/50 transition">
-                      <td className="px-6 py-4">
-                        <p className="font-medium">{item.name}</p>
-                        {item.description && (
-                          <p className="text-sm text-gray-400 mt-1 line-clamp-2">
-                            {item.description}
-                          </p>
-                        )}
-                      </td>
-                      <td className="px-6 py-4">
-                        <span className="px-3 py-1 rounded-full text-xs font-semibold bg-cyan-500/20 text-cyan-400">
-                          {item.category}
-                        </span>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <p className="font-semibold text-purple-400">
-                          {item.outputQuantity} {item.outputUnit}
-                        </p>
-                      </td>
-                      <td className="px-6 py-4 text-right">
-                        <p className="font-semibold text-cyan-500">
-                          {item.costPerUnit.toFixed(3)} ₽/{item.outputUnit}
-                        </p>
-                      </td>
-                      <td className="px-6 py-4">
-                        <div className="flex justify-center gap-2">
-                          <button
-                            onClick={() => {
-                              setEditingItem(item);
-                              setShowForm(true);
-                            }}
-                            className="p-2 bg-blue-500 text-white rounded hover:bg-blue-600 transition"
-                            title="Редактировать"
-                          >
-                            <Edit2 className="w-4 h-4" />
-                          </button>
-                          <button
-                            onClick={() => handleDelete(item.id, item.name)}
-                            className="p-2 bg-red-500 text-white rounded hover:bg-red-600 transition"
-                            title="Удалить"
-                          >
-                            <Trash2 className="w-4 h-4" />
-                          </button>
-                        </div>
-                      </td>
-                    </tr>
-                  ))}
-                </tbody>
-              </table>
-            </div>
-          </div>
-        )}
-
-        <div className="mt-6 text-center text-gray-400">
-          <p>Всего полуфабрикатов: <span className="font-bold text-cyan-500">{semiFinished.length}</span></p>
-        </div>
+        {/* Список полуфабрикатов с shadcn */}
+        <SemiFinishedTable
+          items={semiFinished}
+          onEdit={(item) => {
+            setEditingItem(item);
+            setShowForm(true);
+          }}
+          onDelete={handleDelete}
+        />
       </div>
     </div>
   );
