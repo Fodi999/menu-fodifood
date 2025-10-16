@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { UserRole } from "@/types/user";
+import api from "@/lib/api";
 
 // Импорт компонентов
 import {
@@ -31,14 +33,14 @@ export default function AdminProductsPage() {
 
   // Auth check
   useEffect(() => {
-    if (!authLoading && (!user || user.role !== "admin")) {
+    if (!authLoading && (!user || user.role !== UserRole.BUSINESS_OWNER)) {
       router.push("/auth/signin?callbackUrl=/admin/products");
     }
   }, [user, authLoading, router]);
 
   // Fetch products
   useEffect(() => {
-    if (user && user.role === "admin") {
+    if (user && user.role === UserRole.BUSINESS_OWNER) {
       fetchProducts();
     }
   }, [user]);
@@ -46,17 +48,7 @@ export default function AdminProductsPage() {
   const fetchProducts = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/products`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to fetch products");
-
-      const data = await response.json();
+      const data = await api.get<Product[]>("/admin/products");
       setProducts(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Error fetching products:", err);
@@ -75,17 +67,7 @@ export default function AdminProductsPage() {
     if (!confirm(`Удалить продукт "${productName}"?`)) return;
 
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/products/${productId}`,
-        {
-          method: "DELETE",
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to delete");
-
+      await api.delete(`/admin/products/${productId}`);
       setProducts(products.filter((p) => p.id !== productId));
       alert(`Продукт "${productName}" удалён`);
     } catch (err) {
@@ -96,23 +78,10 @@ export default function AdminProductsPage() {
 
   const handleToggleVisibility = async (product: Product) => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/products/${product.id}`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${token}`,
-          },
-          body: JSON.stringify({
-            ...product,
-            isVisible: !product.isVisible,
-          }),
-        }
-      );
-
-      if (!response.ok) throw new Error("Failed to update");
+      await api.put(`/admin/products/${product.id}`, {
+        ...product,
+        isVisible: !product.isVisible,
+      });
 
       await fetchProducts();
     } catch (err) {
@@ -123,7 +92,7 @@ export default function AdminProductsPage() {
 
   // Render
   if (authLoading || loading) return <LoadingState />;
-  if (!user || user.role !== "admin") return null;
+  if (!user || user.role !== UserRole.BUSINESS_OWNER) return null;
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-orange-950/20 py-8 sm:py-12 md:py-16 lg:py-20">
@@ -144,21 +113,11 @@ export default function AdminProductsPage() {
               product={editingProduct}
               onSubmit={async (data) => {
                 try {
-                  const token = localStorage.getItem("token");
-                  const url = editingProduct
-                    ? `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/products/${editingProduct.id}`
-                    : `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/products`;
-                  
-                  const response = await fetch(url, {
-                    method: editingProduct ? "PUT" : "POST",
-                    headers: {
-                      "Content-Type": "application/json",
-                      Authorization: `Bearer ${token}`,
-                    },
-                    body: JSON.stringify(data),
-                  });
-
-                  if (!response.ok) throw new Error("Failed to save product");
+                  if (editingProduct) {
+                    await api.put(`/admin/products/${editingProduct.id}`, data);
+                  } else {
+                    await api.post("/admin/products", data);
+                  }
 
                   await fetchProducts();
                   setShowForm(false);

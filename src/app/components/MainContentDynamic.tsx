@@ -9,6 +9,8 @@ import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle }
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Skeleton } from "@/components/ui/skeleton";
+import { getApiUrl } from "@/lib/utils";
+import { mockApi, type MockProduct } from "@/lib/mock-api";
 
 interface Product {
   id: string;
@@ -74,17 +76,28 @@ export default function MainContentDynamic({ onAddToCart }: MainContentDynamicPr
   const fetchProducts = async () => {
     setLoading(true);
     try {
-      const res = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/products`
-      );
-      const data = await res.json();
-      // Проверяем, что data это массив
-      if (Array.isArray(data)) {
-        setProducts(data);
-      } else {
-        console.error("Products data is not an array:", data);
-        setProducts([]);
+      // Пробуем получить данные из Rust backend
+      try {
+        const res = await fetch(`${getApiUrl()}/products`, {
+          signal: AbortSignal.timeout(2000)
+        });
+        
+        if (res.ok) {
+          const data = await res.json();
+          if (Array.isArray(data) && data.length > 0) {
+            setProducts(data);
+            console.log("✅ Products loaded from Rust backend");
+            return;
+          }
+        }
+      } catch (backendError) {
+        console.warn("⚠️ Rust backend not available, using mock data");
       }
+
+      // Fallback на mock данные
+      const mockProducts = await mockApi.getProducts();
+      setProducts(mockProducts as Product[]);
+      console.log("✅ Products loaded from mock API");
     } catch (error) {
       console.error("Error fetching products:", error);
       setProducts([]);

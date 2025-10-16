@@ -1,6 +1,7 @@
 'use client';
 
 import { useEffect, useRef, useState, useCallback } from 'react';
+import { getWsUrl } from '@/lib/utils';
 
 interface OrderNotification {
   type: string; // "new_order" | "order_updated" | "connected"
@@ -47,12 +48,10 @@ export function useOrderNotifications(token: string | null): UseOrderNotificatio
       return;
     }
 
-    // Определяем URL для WebSocket
-    const protocol = window.location.protocol === 'https:' ? 'wss:' : 'ws:';
-    const host = process.env.NEXT_PUBLIC_API_URL 
-      ? process.env.NEXT_PUBLIC_API_URL.replace(/^https?:\/\//, '')
-      : 'localhost:8080';
-    const wsUrl = `${protocol}//${host}/api/admin/ws?token=${encodeURIComponent(token)}`;
+    // Определяем URL для WebSocket через Rust Backend
+    // Используем getWsUrl() который возвращает ws://127.0.0.1:8000/api/v1/admin/ws
+    const wsBaseUrl = getWsUrl();
+    const wsUrl = `${wsBaseUrl}?token=${encodeURIComponent(token)}`;
 
     console.log('🔌 Connecting to WebSocket:', wsUrl);
 

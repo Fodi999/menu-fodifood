@@ -1,14 +1,12 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+import api from "@/lib/api";
+import { getApiUrl } from "@/lib/utils";
+import type { User, AuthTokens } from "@/types/user";
 
-// Типы для пользователя и контекста
-export interface User {
-  id: string;
-  email: string;
-  name: string | null;
-  role: "user" | "admin";
-}
+// Экспортируем типы для совместимости
+export type { User } from "@/types/user";
 
 interface AuthContextType {
   user: User | null;
@@ -20,9 +18,6 @@ interface AuthContextType {
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
-
-// URL вашего Go API (измените на свой)
-const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
 export function AuthProvider({ children }: { children: ReactNode }) {
   const [user, setUser] = useState<User | null>(null);
@@ -48,16 +43,10 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         return;
       }
 
-      const response = await fetch(`${API_URL}/api/user/profile`, {
-        headers: {
-          Authorization: `Bearer ${token}`,
-        },
-      });
-
-      if (response.ok) {
-        const userData = await response.json();
+      try {
+        const userData = await api.get<User>("/user/profile");
         setUser(userData);
-      } else {
+      } catch (error) {
         // Токен невалидный - удаляем
         localStorage.removeItem("token");
         setUser(null);
@@ -72,25 +61,16 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Вход
   const login = async (email: string, password: string) => {
-    const response = await fetch(`${API_URL}/api/auth/login`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password }),
+    const data = await api.post<{ token: string; user: User; tokens?: AuthTokens }>("/auth/login", {
+      email,
+      password,
     });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Login failed");
-    }
-
-    const data = await response.json();
     
-    // Сохраняем токен в localStorage и cookies (только на клиенте)
+    // Сохраняем токен и роль в localStorage и cookies (только на клиенте)
     if (typeof window !== "undefined") {
       localStorage.setItem("token", data.token);
       document.cookie = `token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
+      document.cookie = `role=${data.user.role}; path=/; max-age=86400; SameSite=Lax`;
     }
     
     // Устанавливаем пользователя
@@ -99,25 +79,17 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Регистрация
   const signup = async (email: string, password: string, name?: string) => {
-    const response = await fetch(`${API_URL}/api/auth/register`, {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify({ email, password, name }),
+    const data = await api.post<{ token: string; user: User; tokens?: AuthTokens }>("/auth/register", {
+      email,
+      password,
+      name,
     });
-
-    if (!response.ok) {
-      const error = await response.json();
-      throw new Error(error.message || "Signup failed");
-    }
-
-    const data = await response.json();
     
-    // Сохраняем токен в localStorage и cookies (только на клиенте)
+    // Сохраняем токен и роль в localStorage и cookies (только на клиенте)
     if (typeof window !== "undefined") {
       localStorage.setItem("token", data.token);
       document.cookie = `token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
+      document.cookie = `role=${data.user.role}; path=/; max-age=86400; SameSite=Lax`;
     }
     
     // Устанавливаем пользователя
@@ -169,7 +141,7 @@ export function getToken(): string | null {
   return localStorage.getItem("token");
 }
 
-// Утилита для API запросов с авторизацией
+// Утилита для API запросов с авторизацией (deprecated - используйте api из @/lib/api)
 export async function fetchWithAuth(url: string, options: RequestInit = {}) {
   const token = getToken();
   
@@ -178,7 +150,8 @@ export async function fetchWithAuth(url: string, options: RequestInit = {}) {
     ...(token ? { Authorization: `Bearer ${token}` } : {}),
   };
 
-  return fetch(`${API_URL}${url}`, {
+  // Используем новый API клиент
+  return fetch(`${getApiUrl()}${url}`, {
     ...options,
     headers,
   });

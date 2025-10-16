@@ -3,6 +3,9 @@
 import React, { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { UserRole } from "@/types/user";
+import api from "@/lib/api";
+import { getApiUrl } from "@/lib/utils";
 import { Loader2 } from "lucide-react";
 
 // Types
@@ -61,14 +64,14 @@ export default function AdminIngredientsPage() {
 
   // Auth guard
   useEffect(() => {
-    if (!authLoading && (!user || user.role !== "admin")) {
+    if (!authLoading && (!user || user.role !== UserRole.BUSINESS_OWNER)) {
       router.push("/auth/signin?callbackUrl=/admin/ingredients");
     }
   }, [user, authLoading, router]);
 
   // Fetch ingredients
   useEffect(() => {
-    if (user && user.role === "admin") {
+    if (user && user.role === UserRole.BUSINESS_OWNER) {
       fetchIngredients();
     }
   }, [user]);
@@ -76,18 +79,12 @@ export default function AdminIngredientsPage() {
   const fetchIngredients = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
-      const response = await fetch(`${apiUrl}/api/admin/ingredients`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch ingredients: ${response.status}`);
-      }
-
-      const data = await response.json();
+      // Временный тип для ответа API с вложенными данными
+      type ApiIngredientResponse = Ingredient & {
+        ingredient?: { name?: string; unit?: string; createdAt?: string };
+      };
+      
+      const data = await api.get<ApiIngredientResponse[]>("/admin/ingredients");
 
       console.log('📥 Получены данные с сервера:', data);
 
@@ -96,22 +93,16 @@ export default function AdminIngredientsPage() {
         ? data.map(async (item) => {
             let movementsCount = 0;
             try {
-              const movementsResponse = await fetch(
-                `${apiUrl}/api/admin/ingredients/${item.id}/movements`,
-                { headers: { Authorization: `Bearer ${token}` } }
-              );
-              if (movementsResponse.ok) {
-                const movements = await movementsResponse.json();
-                movementsCount = Array.isArray(movements) ? movements.length : 0;
-              }
+              const movements = await api.get<StockMovement[]>(`/admin/ingredients/${item.id}/movements`);
+              movementsCount = Array.isArray(movements) ? movements.length : 0;
             } catch (err) {
               console.error(`Failed to fetch movements for ingredient ${item.id}:`, err);
             }
 
-            const processedItem = {
+            const processedItem: Ingredient = {
               id: item.id,
-              name: item.ingredient?.name?.trim() || "Без названия",
-              unit: item.ingredient?.unit || "g",
+              name: item.ingredient?.name?.trim() || item.name?.trim() || "Без названия",
+              unit: item.ingredient?.unit || item.unit || "g",
               batchNumber: item.batchNumber?.trim() || null,
               category: item.category?.trim() || null,
               supplier: item.supplier?.trim() || null,
@@ -121,7 +112,7 @@ export default function AdminIngredientsPage() {
               expiryDays: typeof item.expiryDays === "number" ? item.expiryDays : null,
               priceBrutto: typeof item.priceBrutto === "number" ? item.priceBrutto : null,
               priceNetto: typeof item.priceNetto === "number" ? item.priceNetto : null,
-              createdAt: item.ingredient?.createdAt || item.updatedAt,
+              createdAt: item.ingredient?.createdAt || item.createdAt || item.updatedAt,
               updatedAt: item.updatedAt,
               movementsCount,
             };
@@ -206,7 +197,6 @@ export default function AdminIngredientsPage() {
     
     try {
       const token = localStorage.getItem("token");
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
 
       const payload = {
         name: formData.name.trim(),
@@ -231,23 +221,10 @@ export default function AdminIngredientsPage() {
         unit: formData.unit
       });
 
-      const url = editingIngredient
-        ? `${apiUrl}/api/admin/ingredients/${editingIngredient.id}`
-        : `${apiUrl}/api/admin/ingredients`;
-
-      const method = editingIngredient ? "PUT" : "POST";
-
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify(payload),
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to save ingredient: ${response.status}`);
+      if (editingIngredient) {
+        await api.put(`/admin/ingredients/${editingIngredient.id}`, payload);
+      } else {
+        await api.post("/admin/ingredients", payload);
       }
 
       await fetchIngredients();
@@ -326,18 +303,7 @@ export default function AdminIngredientsPage() {
     }
 
     try {
-      const token = localStorage.getItem("token");
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
-      const response = await fetch(`${apiUrl}/api/admin/ingredients/${id}`, {
-        method: "DELETE",
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to delete ingredient: ${response.status}`);
-      }
-
+      await api.delete(`/admin/ingredients/${id}`);
       await fetchIngredients();
     } catch (err) {
       console.error("Failed to delete ingredient:", err);
@@ -348,18 +314,7 @@ export default function AdminIngredientsPage() {
   // Handle view movements
   const handleViewMovements = async (id: string, name: string, batchNumber: string) => {
     try {
-      const token = localStorage.getItem("token");
-      const apiUrl = process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080";
-
-      const response = await fetch(`${apiUrl}/api/admin/ingredients/${id}/movements`, {
-        headers: { Authorization: `Bearer ${token}` },
-      });
-
-      if (!response.ok) {
-        throw new Error(`Failed to fetch movements: ${response.status}`);
-      }
-
-      const movements = await response.json();
+      const movements = await api.get<StockMovement[]>(`/admin/ingredients/${id}/movements`);
       setSelectedIngredientMovements({
         ingredientId: id,
         ingredientName: name,
@@ -394,7 +349,7 @@ export default function AdminIngredientsPage() {
   }
 
   // Not authorized
-  if (!user || user.role !== "admin") {
+  if (!user || user.role !== UserRole.BUSINESS_OWNER) {
     return null;
   }
 

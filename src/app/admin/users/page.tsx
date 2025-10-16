@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { UserRole } from "@/types/user";
+import api from "@/lib/api";
 import Link from "next/link";
 import { Users, ArrowLeft, Loader2, Mail, Shield, Calendar, Trash2, UserCircle, Search } from "lucide-react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -31,13 +33,13 @@ export default function AdminUsersPage() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    if (!authLoading && (!user || user.role !== "admin")) {
+    if (!authLoading && (!user || user.role !== UserRole.BUSINESS_OWNER)) {
       router.push("/auth/signin?callbackUrl=/admin/users");
     }
   }, [user, authLoading, router]);
 
   useEffect(() => {
-    if (user && user.role === "admin") {
+    if (user && user.role === UserRole.BUSINESS_OWNER) {
       fetchUsers();
     }
   }, [user]);
@@ -45,20 +47,7 @@ export default function AdminUsersPage() {
   const fetchUsers = async () => {
     try {
       setLoading(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/users`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch users");
-      }
-
-      const data = await response.json();
+      const data = await api.get<User[]>("/admin/users");
       console.log("📊 Users data:", data);
       // Go API возвращает массив напрямую, не в объекте
       const usersList = Array.isArray(data) ? data : [];
@@ -95,20 +84,7 @@ export default function AdminUsersPage() {
     }
 
     try {
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/users/${userId}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to delete user");
-      }
-
+      await api.delete(`/admin/users/${userId}`);
       // Обновляем список пользователей
       setUsers(users.filter((u) => u.id !== userId));
       alert(`Пользователь ${userEmail} успешно удалён`);
@@ -133,7 +109,7 @@ export default function AdminUsersPage() {
     );
   }
 
-  if (!user || user.role !== "admin") {
+  if (!user || user.role !== UserRole.BUSINESS_OWNER) {
     return null;
   }
 

@@ -3,6 +3,8 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { UserRole } from "@/types/user";
+import api from "@/lib/api";
 import { Trash2, Loader2 } from "lucide-react";
 
 // Импорт компонентов
@@ -107,13 +109,13 @@ export default function AdminSemiFinishedPage() {
     : ingredients.filter(ing => ing.category === selectedIngredientCategory);
 
   useEffect(() => {
-    if (!authLoading && (!user || user.role !== "admin")) {
+    if (!authLoading && (!user || user.role !== UserRole.BUSINESS_OWNER)) {
       router.push("/auth/signin?callbackUrl=/admin/semi-finished");
     }
   }, [user, authLoading, router]);
 
   useEffect(() => {
-    if (user && user.role === "admin") {
+    if (user && user.role === UserRole.BUSINESS_OWNER) {
       fetchSemiFinished();
       fetchIngredients();
     }
@@ -121,19 +123,7 @@ export default function AdminSemiFinishedPage() {
 
   const fetchIngredients = async () => {
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/ingredients`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch ingredients");
-      }
-
-      const data = await response.json();
+      const data = await api.get<any[]>("/admin/ingredients");
       const processedIngredients = Array.isArray(data)
         ? data.map((item: { id: number; ingredientId: number; ingredient?: { name?: string; unit?: string }; priceNetto: number; nettoWeight: number; category: string }) => ({
             id: String(item.id), // StockItem ID для отображения
@@ -154,24 +144,7 @@ export default function AdminSemiFinishedPage() {
   const fetchSemiFinished = async () => {
     try {
       setLoading(true);
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/semi-finished`,
-        {
-          headers: { Authorization: `Bearer ${token}` },
-        }
-      );
-
-      if (!response.ok) {
-        // Если endpoint не найден, просто показываем пустой список
-        if (response.status === 404) {
-          setSemiFinished([]);
-          return;
-        }
-        throw new Error("Failed to fetch semi-finished");
-      }
-
-      const data = await response.json();
+      const data = await api.get<SemiFinished[]>("/admin/semi-finished");
       setSemiFinished(Array.isArray(data) ? data : []);
     } catch (err) {
       console.error("Error fetching semi-finished:", err);
@@ -186,45 +159,31 @@ export default function AdminSemiFinishedPage() {
     e.preventDefault();
 
     try {
-      const token = localStorage.getItem("token");
       const totalCost = calculateTotalCost();
       const outputQty = parseFloat(formData.outputQuantity);
       const costPerUnit = outputQty > 0 ? totalCost / outputQty : 0;
 
-      const url = editingItem
-        ? `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/semi-finished/${editingItem.id}`
-        : `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/semi-finished`;
-      
-      const method = editingItem ? "PUT" : "POST";
+      const payload = {
+        name: formData.name,
+        description: formData.description || null,
+        outputQuantity: outputQty,
+        outputUnit: formData.outputUnit,
+        costPerUnit: costPerUnit,
+        category: formData.category,
+        ingredients: selectedIngredients.map(ing => ({
+          ingredientId: ing.ingredientId,
+          ingredientName: ing.ingredientName,
+          quantity: ing.quantity,
+          unit: ing.unit,
+          pricePerUnit: ing.pricePerUnit,
+          totalPrice: ing.totalPrice,
+        })),
+      };
 
-      const response = await fetch(url, {
-        method,
-        headers: {
-          "Content-Type": "application/json",
-          Authorization: `Bearer ${token}`,
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          description: formData.description || null,
-          outputQuantity: outputQty,
-          outputUnit: formData.outputUnit,
-          costPerUnit: costPerUnit,
-          category: formData.category,
-          ingredients: selectedIngredients.map(ing => ({
-            ingredientId: ing.ingredientId,
-            ingredientName: ing.ingredientName,
-            quantity: ing.quantity,
-            unit: ing.unit,
-            pricePerUnit: ing.pricePerUnit,
-            totalPrice: ing.totalPrice,
-          })),
-        }),
-      });
-
-      if (!response.ok) {
-        const errorText = await response.text();
-        console.error("Server error:", errorText);
-        throw new Error("Failed to save semi-finished");
+      if (editingItem) {
+        await api.put(`/admin/semi-finished/${editingItem.id}`, payload);
+      } else {
+        await api.post("/admin/semi-finished", payload);
       }
 
       await fetchSemiFinished();
@@ -253,21 +212,7 @@ export default function AdminSemiFinishedPage() {
     }
 
     try {
-      const token = localStorage.getItem("token");
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/semi-finished/${id}`,
-        {
-          method: "DELETE",
-          headers: {
-            Authorization: `Bearer ${token}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to delete semi-finished");
-      }
-
+      await api.delete(`/admin/semi-finished/${id}`);
       setSemiFinished(semiFinished.filter((sf) => sf.id !== id));
       alert(`Полуфабрикат "${name}" удалён`);
     } catch (err) {
@@ -387,7 +332,7 @@ export default function AdminSemiFinishedPage() {
     );
   }
 
-  if (!user || user.role !== "admin") {
+  if (!user || user.role !== UserRole.BUSINESS_OWNER) {
     return null;
   }
 

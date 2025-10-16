@@ -12,14 +12,14 @@ export async function GET() {
 
 /**
  * API Route для создания заказа
- * Перенаправляет на Go Backend
+ * Перенаправляет на Elixir Gateway
  */
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8080';
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 
-    // Перенаправляем на Go backend
+    // Перенаправляем на Elixir Gateway
     const response = await fetch(`${API_URL}/api/orders`, {
       method: 'POST',
       headers: {

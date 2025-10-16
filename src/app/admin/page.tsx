@@ -1,6 +1,7 @@
 "use client";
 
 import { useAuth } from "@/contexts/AuthContext";
+import { UserRole } from "@/types/user";
 import { useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import Link from "next/link";
@@ -11,6 +12,7 @@ import { Badge } from "@/components/ui/badge";
 import { Skeleton } from "@/components/ui/skeleton";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { ScrollArea } from "@/components/ui/scroll-area";
+import { getApiUrl } from "@/lib/utils";
 
 interface Stats {
   totalUsers: number;
@@ -43,7 +45,7 @@ export default function AdminPage() {
   const [loadingData, setLoadingData] = useState(true);
 
   useEffect(() => {
-    if (!loading && (!user || user.role !== "admin")) {
+    if (!loading && (!user || user.role !== UserRole.BUSINESS_OWNER)) {
       router.push("/");
     }
   }, [user, loading, router]);
@@ -54,10 +56,10 @@ export default function AdminPage() {
         const token = localStorage.getItem("token");
         
         const [statsRes, ordersRes] = await Promise.all([
-          fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/stats`, {
+          fetch(`${getApiUrl()}/admin/stats`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
-          fetch(`${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/orders/recent`, {
+          fetch(`${getApiUrl()}/admin/orders/recent`, {
             headers: { Authorization: `Bearer ${token}` },
           }),
         ]);
@@ -77,7 +79,7 @@ export default function AdminPage() {
       }
     };
 
-    if (user?.role === "admin") {
+    if (user?.role === UserRole.BUSINESS_OWNER) {
       fetchAdminData();
     }
   }, [user]);
@@ -102,7 +104,7 @@ export default function AdminPage() {
     );
   }
 
-  if (!user || user.role !== "admin") {
+  if (!user || user.role !== UserRole.BUSINESS_OWNER) {
     return null;
   }
 

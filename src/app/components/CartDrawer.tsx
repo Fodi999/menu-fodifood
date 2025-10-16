@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { X, Plus, Minus, ShoppingBag } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
+import { getApiUrl } from "@/lib/utils";
 
 interface Product {
   id: string;
@@ -82,7 +83,7 @@ export default function CartDrawer({
       };
 
       const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/orders`,
+        `${getApiUrl()}/orders`,
         {
           method: "POST",
           headers: {

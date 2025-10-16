@@ -20,6 +20,9 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { Separator } from "@/components/ui/separator";
 import { Avatar, AvatarFallback } from "@/components/ui/avatar";
+import { RoleSwitcher } from "@/app/components/RoleSwitcher";
+import { useRole } from "@/hooks/useRole";
+import { getApiUrl } from "@/lib/utils";
 
 interface Order {
   id: string;
@@ -38,6 +41,7 @@ interface UserProfile {
 
 export default function ProfilePage() {
   const { user, logout, loading } = useAuth();
+  const { currentRole } = useRole();
   const router = useRouter();
   const [profile, setProfile] = useState<UserProfile | null>(null);
   const [loadingProfile, setLoadingProfile] = useState(true);
@@ -55,7 +59,7 @@ export default function ProfilePage() {
         console.log("🔍 Fetching profile with token:", token ? "exists" : "missing");
         
         const response = await fetch(
-          `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/user/profile`,
+          `${getApiUrl()}/user/profile`,
           {
             headers: {
               Authorization: `Bearer ${token}`,
@@ -117,6 +121,15 @@ export default function ProfilePage() {
   const roleColors = {
     admin: "bg-red-500/10 text-red-500 border-red-500/20",
     user: "bg-blue-500/10 text-blue-500 border-blue-500/20",
+    business_owner: "bg-orange-500/10 text-orange-500 border-orange-500/20",
+    investor: "bg-green-500/10 text-green-500 border-green-500/20",
+  };
+
+  const roleLabels = {
+    user: "Пользователь",
+    business_owner: "Владелец бизнеса",
+    investor: "Инвестор",
+    admin: "Администратор",
   };
 
   return (
@@ -174,7 +187,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
           {/* Profile Info Card */}
           <Card className="bg-gray-900/50 border-gray-800 backdrop-blur-xl">
             <CardHeader className="pb-3 sm:pb-6">
@@ -209,10 +222,10 @@ export default function ProfilePage() {
                 <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between p-2.5 sm:p-3 rounded-lg bg-gray-800/50 gap-1 sm:gap-0">
                   <div className="flex items-center gap-2 sm:gap-3">
                     <Shield className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-gray-400" />
-                    <span className="text-xs sm:text-sm text-gray-400">Роль</span>
+                    <span className="text-xs sm:text-sm text-gray-400">Активная роль</span>
                   </div>
-                  <Badge className={`text-xs ${roleColors[profile.role as keyof typeof roleColors] || roleColors.user} ml-6 sm:ml-0`}>
-                    {profile.role}
+                  <Badge className={`text-xs ${roleColors[currentRole as keyof typeof roleColors] || roleColors.user} ml-6 sm:ml-0`}>
+                    {roleLabels[currentRole as keyof typeof roleLabels] || currentRole}
                   </Badge>
                 </div>
               </div>
@@ -271,6 +284,21 @@ export default function ProfilePage() {
                 </Link>
               </Button>
               
+              {currentRole === "business_owner" && (
+                <Button 
+                  asChild 
+                  variant="outline"
+                  size="sm"
+                  className="w-full border-orange-500/30 hover:bg-orange-500/10 text-xs sm:text-sm h-9 sm:h-10"
+                >
+                  <Link href="/business/dashboard">
+                    <Package className="w-3.5 h-3.5 sm:w-4 sm:h-4 mr-1.5 sm:mr-2" />
+                    Панель ресторана
+                    <ChevronRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 ml-auto" />
+                  </Link>
+                </Button>
+              )}
+              
               {profile.role === "admin" && (
                 <Button 
                   asChild 
@@ -287,6 +315,11 @@ export default function ProfilePage() {
               )}
             </CardContent>
           </Card>
+        </div>
+
+        {/* Role Switcher Section */}
+        <div className="mb-6 sm:mb-8">
+          <RoleSwitcher />
         </div>
 
         {/* Orders History Card */}

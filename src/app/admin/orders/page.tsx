@@ -3,8 +3,10 @@
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { UserRole } from "@/types/user";
 import { useOrderNotifications } from "@/hooks/useOrderNotifications";
 import { OrderNotificationsContainer } from "@/components/OrderNotificationToast";
+import api from "@/lib/api";
 import Link from "next/link";
 import { 
   ShoppingCart, 
@@ -129,13 +131,13 @@ export default function AdminOrdersPage() {
   const { isConnected, notifications, clearNotifications } = useOrderNotifications(token);
 
   useEffect(() => {
-    if (!authLoading && (!user || user.role !== "admin")) {
+    if (!authLoading && (!user || user.role !== UserRole.BUSINESS_OWNER)) {
       router.push("/auth/signin?callbackUrl=/admin/orders");
     }
   }, [user, authLoading, router]);
 
   useEffect(() => {
-    if (user && user.role === "admin") {
+    if (user && user.role === UserRole.BUSINESS_OWNER) {
       fetchOrders();
     }
   }, [user]);
@@ -150,20 +152,7 @@ export default function AdminOrdersPage() {
   const fetchOrders = async () => {
     try {
       setLoading(true);
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/orders`,
-        {
-          headers: {
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to fetch orders");
-      }
-
-      const data = await response.json();
+      const data = await api.get<{ orders: Order[] }>("/admin/orders");
       const ordersList = data.orders || [];
       setOrders(ordersList);
       setFilteredOrders(ordersList);
@@ -188,21 +177,7 @@ export default function AdminOrdersPage() {
     try {
       setUpdatingOrderId(orderId);
 
-      const response = await fetch(
-        `${process.env.NEXT_PUBLIC_API_URL || "http://localhost:8080"}/api/admin/orders/${orderId}/status`,
-        {
-          method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${localStorage.getItem("token")}`,
-          },
-          body: JSON.stringify({ status: newStatus }),
-        }
-      );
-
-      if (!response.ok) {
-        throw new Error("Failed to update order status");
-      }
+      await api.put(`/admin/orders/${orderId}/status`, { status: newStatus });
 
       // Обновляем локальное состояние
       setOrders(
@@ -247,7 +222,7 @@ export default function AdminOrdersPage() {
     );
   }
 
-  if (!user || user.role !== "admin") {
+  if (!user || user.role !== UserRole.BUSINESS_OWNER) {
     return null;
   }
 

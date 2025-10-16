@@ -18,16 +18,26 @@ function getAuthToken(request: NextRequest) {
   return null;
 }
 
+// Получить роль из cookie (устанавливается при логине)
+function getUserRole(request: NextRequest): string | null {
+  const roleCookie = request.cookies.get('role');
+  return roleCookie?.value || null;
+}
+
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
   
   // Получаем токен от Go API
   const token = getAuthToken(request);
+  const role = getUserRole(request);
 
-  console.log(`🛡️ Middleware: ${pathname} | Authenticated: ${!!token}`);
+  console.log(`🛡️ Middleware: ${pathname} | Authenticated: ${!!token} | Role: ${role || 'none'}`);
 
-  // Защищенные маршруты для админов и пользователей
-  if (pathname.startsWith("/admin") || pathname.startsWith("/profile") || pathname.startsWith("/orders")) {
+  // Защищенные маршруты для всех авторизованных
+  const protectedPaths = ["/admin", "/business", "/profile", "/orders"];
+  const isProtectedPath = protectedPaths.some(path => pathname.startsWith(path));
+
+  if (isProtectedPath) {
     if (!token) {
       console.log(`❌ Unauthorized access to ${pathname}, redirecting to signin`);
       const signInUrl = new URL("/auth/signin", request.url);
@@ -35,8 +45,21 @@ export async function middleware(request: NextRequest) {
       return NextResponse.redirect(signInUrl);
     }
     
-    // Для админки - дополнительная проверка будет на Go API
-    // Здесь просто проверяем наличие токена
+    // Проверка доступа по ролям
+    if (pathname.startsWith("/admin") && role !== "admin") {
+      console.log(`❌ Role ${role} attempted to access admin area, redirecting`);
+      // Редирект на соответствующий дашборд
+      if (role === "business_owner") {
+        return NextResponse.redirect(new URL("/business/dashboard", request.url));
+      }
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+
+    if (pathname.startsWith("/business") && role !== "business_owner" && role !== "admin") {
+      console.log(`❌ Role ${role} attempted to access business area, redirecting`);
+      return NextResponse.redirect(new URL("/", request.url));
+    }
+    
     console.log(`✅ Token found, allowing access to ${pathname}`);
   }
 
@@ -44,5 +67,6 @@ export async function middleware(request: NextRequest) {
 }
 
 export const config = {
-  matcher: ["/admin/:path*", "/profile/:path*", "/orders/:path*"],
+  matcher: ["/admin/:path*", "/business/:path*", "/profile/:path*", "/orders/:path*"],
 };
+
