@@ -87,6 +87,22 @@ export const businessesApi = {
       method: 'DELETE',
     });
   },
+
+  // Получить статистику бизнеса
+  getStats: async (businessId?: string): Promise<{
+    orders_today: number;
+    revenue_today: number;
+    clients_total: number;
+    rating: number;
+    products_count: number;
+    reviews_count: number;
+    subscribers_count: number;
+  }> => {
+    const endpoint = businessId 
+      ? `/businesses/${businessId}/stats` 
+      : '/businesses/stats';
+    return fetchRust(endpoint);
+  },
 };
 
 // ==================== SUBSCRIPTIONS API ====================

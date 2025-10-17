@@ -66,8 +66,12 @@ class ErrorLogger {
       this.logs.shift();
     }
 
-    // Выводим в консоль для разработки
-    console.error('🔴 Error logged:', error);
+    // Выводим в консоль для разработки (только критичные ошибки)
+    if (error.type === 'error') {
+      console.error('🔴 Error logged:', error);
+    } else if (process.env.NODE_ENV === 'development' && error.type === 'warning') {
+      console.warn('⚠️ Warning logged:', error);
+    }
 
     // Опционально: отправляем на сервер
     this.sendToServer(error);

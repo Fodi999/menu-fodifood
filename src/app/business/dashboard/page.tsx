@@ -7,8 +7,9 @@ import { useRouter } from "next/navigation";
 import { UserRole } from "@/types/user";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
-import { Store, ShoppingCart, TrendingUp, Users, MapPin, Tag, ArrowLeft } from "lucide-react";
+import { Store, ShoppingCart, TrendingUp, Users, MapPin, Tag, ArrowLeft, UtensilsCrossed, BarChart3, Settings as SettingsIcon } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import Link from "next/link";
 
 export default function BusinessDashboard() {
   const { user } = useAuth();
@@ -51,8 +52,8 @@ export default function BusinessDashboard() {
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-[#090909] via-[#0d0d0d] to-[#1a1a1a] p-6">
-      <div className="max-w-7xl mx-auto">
+    <div className="min-h-screen bg-gradient-to-br from-[#090909] via-[#0d0d0d] to-[#1a1a1a]">
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Back Button */}
         <Button
           variant="ghost"
@@ -164,29 +165,47 @@ export default function BusinessDashboard() {
             </CardDescription>
           </CardHeader>
           <CardContent className="grid grid-cols-1 md:grid-cols-3 gap-4">
-            <button
-              onClick={() => router.push("/admin/products")}
-              className="p-4 rounded-lg bg-gradient-to-br from-orange-500/20 to-orange-600/20 border border-orange-500/50 hover:border-orange-500 transition-all text-left"
+            <Button
+              asChild
+              variant="outline"
+              className="h-auto p-4 bg-gradient-to-br from-orange-500/20 to-orange-600/20 border-orange-500/50 hover:border-orange-500 transition-all text-left justify-start"
             >
-              <div className="text-orange-400 font-semibold mb-1">Меню</div>
-              <div className="text-sm text-gray-400">Управление блюдами</div>
-            </button>
+              <Link href="/business/menu" className="flex flex-col gap-1">
+                <div className="flex items-center gap-2 text-orange-400 font-semibold">
+                  <UtensilsCrossed className="w-5 h-5" />
+                  Меню
+                </div>
+                <div className="text-sm text-gray-400">Управление блюдами</div>
+              </Link>
+            </Button>
 
-            <button
-              onClick={() => router.push("/admin/orders")}
-              className="p-4 rounded-lg bg-gradient-to-br from-blue-500/20 to-blue-600/20 border border-blue-500/50 hover:border-blue-500 transition-all text-left"
+            <Button
+              asChild
+              variant="outline"
+              className="h-auto p-4 bg-gradient-to-br from-blue-500/20 to-blue-600/20 border-blue-500/50 hover:border-blue-500 transition-all text-left justify-start"
             >
-              <div className="text-blue-400 font-semibold mb-1">Заказы</div>
-              <div className="text-sm text-gray-400">Просмотр и обработка</div>
-            </button>
+              <Link href="/business/orders" className="flex flex-col gap-1">
+                <div className="flex items-center gap-2 text-blue-400 font-semibold">
+                  <ShoppingCart className="w-5 h-5" />
+                  Заказы
+                </div>
+                <div className="text-sm text-gray-400">Просмотр и обработка</div>
+              </Link>
+            </Button>
 
-            <button
-              onClick={() => router.push("/admin/metrics")}
-              className="p-4 rounded-lg bg-gradient-to-br from-green-500/20 to-green-600/20 border border-green-500/50 hover:border-green-500 transition-all text-left"
+            <Button
+              asChild
+              variant="outline"
+              className="h-auto p-4 bg-gradient-to-br from-green-500/20 to-green-600/20 border-green-500/50 hover:border-green-500 transition-all text-left justify-start"
             >
-              <div className="text-green-400 font-semibold mb-1">Аналитика</div>
-              <div className="text-sm text-gray-400">Статистика и отчёты</div>
-            </button>
+              <Link href="/business/analytics" className="flex flex-col gap-1">
+                <div className="flex items-center gap-2 text-green-400 font-semibold">
+                  <BarChart3 className="w-5 h-5" />
+                  Аналитика
+                </div>
+                <div className="text-sm text-gray-400">Статистика и отчёты</div>
+              </Link>
+            </Button>
           </CardContent>
         </Card>
       </div>

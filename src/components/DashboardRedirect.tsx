@@ -2,49 +2,40 @@
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
-import { UserRole } from "@/types/user";
-import type { User } from "@/types/user";
-
-interface DashboardRedirectProps {
-  user: User | null;
-}
+import { useRole } from "@/hooks/useRole";
 
 /**
- * Компонент для автоматического редиректа на нужный дашборд
- * в зависимости от роли пользователя
+ * Универсальный компонент для автоматического редиректа
+ * на соответствующий дашборд в зависимости от роли пользователя.
+ * 
+ * Использование:
+ * <DashboardRedirect />
+ * 
+ * Маршруты:
+ * - admin → /admin/dashboard
+ * - business_owner → /business/dashboard
+ * - investor → /invest/dashboard
+ * - user → /profile
  */
-export default function DashboardRedirect({ user }: DashboardRedirectProps) {
+export default function DashboardRedirect() {
   const router = useRouter();
+  const { currentRole } = useRole();
 
   useEffect(() => {
-    if (!user) return;
+    if (!currentRole) return;
 
-    console.log("🔄 DashboardRedirect: Redirecting user based on role:", user.role);
+    const routes: Record<string, string> = {
+      admin: "/admin/dashboard",
+      business_owner: "/business/dashboard",
+      investor: "/invest/dashboard",
+      user: "/profile",
+    };
 
-    // Редирект в зависимости от роли
-    switch (user.role) {
-      case UserRole.ADMIN:
-        console.log("🧠 Admin detected, redirecting to /admin/dashboard");
-        router.push("/admin/dashboard");
-        break;
-      
-      case UserRole.BUSINESS_OWNER:
-        console.log("👨‍🍳 Business owner detected, redirecting to /business/dashboard");
-        router.push("/business/dashboard");
-        break;
-      
-      case UserRole.INVESTOR:
-        console.log("💰 Investor detected, redirecting to /invest");
-        router.push("/invest");
-        break;
-      
-      case UserRole.USER:
-      default:
-        console.log("👤 Regular user detected, redirecting to /");
-        router.push("/");
-        break;
-    }
-  }, [user, router]);
+    const targetRoute = routes[currentRole] || "/profile";
+    
+    console.log(`� DashboardRedirect: Role "${currentRole}" → ${targetRoute}`);
+    router.push(targetRoute);
+  }, [currentRole, router]);
 
   return null;
 }

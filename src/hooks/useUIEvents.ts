@@ -108,7 +108,10 @@ export function useUIEvents() {
       };
 
       ws.onerror = (error) => {
-        console.error('❌ UI Events WebSocket error:', error);
+        // WebSocket ошибка - не критично, сервер может быть не запущен
+        if (process.env.NODE_ENV === 'development') {
+          console.warn('⚠️ UI Events WebSocket unavailable (optional feature)');
+        }
       };
 
       ws.onclose = () => {
