@@ -122,6 +122,12 @@ export default function HomePage() {
                   <span className="text-white">MARKET</span>
                 </span>
               </Link>
+              <Link 
+                href="/about" 
+                className="hidden sm:block text-gray-400 hover:text-orange-400 transition-colors duration-200 font-medium"
+              >
+                О проекте
+              </Link>
             </div>
 
             <div className="flex items-center gap-4">

@@ -106,6 +106,34 @@ const mockUsers: Map<string, MockUser & { password: string }> = new Map([
 // Mock orders database
 const mockOrders: MockOrder[] = [];
 
+// Mock businesses database
+const mockBusinesses = [
+  { id: "1", name: "Sushi Gdansk", city: "Gdansk", revenue: 12000, category: "Restaurant" },
+  { id: "2", name: "CoffeeLab Warsaw", city: "Warsaw", revenue: 8900, category: "Cafe" },
+];
+
+// Mock market data
+const mockMarketData = [
+  { business: "Sushi Gdansk", token: "FODI-SUSHI", price: 1.18, change: 2.5 },
+  { business: "CoffeeLab Warsaw", token: "FODI-COFFEE", price: 0.93, change: -1.2 },
+];
+
+// Mock analytics data
+const mockAnalytics = {
+  revenue: 12000,
+  orders: 320,
+  customers: 280,
+  growth: 4.3,
+};
+
+// Mock metrics data
+const mockMetrics = {
+  totalRevenue: 45000,
+  activeOrders: 23,
+  completedOrders: 1250,
+  averageOrderValue: 36,
+};
+
 // Simulate network delay
 const delay = (ms: number = 300) => new Promise(resolve => setTimeout(resolve, ms));
 
@@ -206,6 +234,41 @@ export const mockApi = {
 
     mockOrders.push(newOrder);
     return newOrder;
+  },
+
+  // Businesses
+  async getBusinesses(): Promise<typeof mockBusinesses> {
+    await delay();
+    return mockBusinesses;
+  },
+
+  async getBusiness(id: string): Promise<typeof mockBusinesses[0] | null> {
+    await delay();
+    return mockBusinesses.find(b => b.id === id) || null;
+  },
+
+  // Market Data
+  async getMarketData(): Promise<typeof mockMarketData> {
+    await delay();
+    return mockMarketData;
+  },
+
+  // Analytics
+  async getAnalytics(): Promise<typeof mockAnalytics> {
+    await delay();
+    return mockAnalytics;
+  },
+
+  // Metrics
+  async getMetrics(): Promise<typeof mockMetrics> {
+    await delay();
+    return mockMetrics;
+  },
+
+  // Users (admin)
+  async getUsers(): Promise<MockUser[]> {
+    await delay();
+    return Array.from(mockUsers.values()).map(({ password: _, ...user }) => user);
   }
 };
 
