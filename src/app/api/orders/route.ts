@@ -17,10 +17,10 @@ export async function GET() {
 export async function POST(request: Request) {
   try {
     const body = await request.json();
-    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api/v1';
 
-    // Перенаправляем на Elixir Gateway
-    const response = await fetch(`${API_URL}/api/orders`, {
+    // Перенаправляем на Rust Backend
+    const response = await fetch(`${API_URL}/orders`, {
       method: 'POST',
       headers: {
         'Content-Type': 'application/json',

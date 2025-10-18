@@ -215,7 +215,10 @@ export const mockApi = {
  */
 export async function shouldUseMockApi(): Promise<boolean> {
   try {
-    const response = await fetch("http://127.0.0.1:8000/health", {
+    const API_URL = process.env.NEXT_PUBLIC_API_URL || "http://127.0.0.1:8000/api/v1";
+    // Убираем /api/v1 из URL для health check
+    const baseUrl = API_URL.replace('/api/v1', '');
+    const response = await fetch(`${baseUrl}/health`, {
       method: "GET",
       signal: AbortSignal.timeout(1000)
     });

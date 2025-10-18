@@ -12,7 +12,7 @@ import type { BusinessMetrics, AIInsight } from '@/types/metrics';
 import { MetricsPeriod } from '@/types/metrics';
 import type { User, AuthTokens, LoginDto, SignupDto } from '@/types/user';
 
-const RUST_API_URL = process.env.NEXT_PUBLIC_RUST_API || 'http://127.0.0.1:8000';
+const RUST_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api/v1';
 
 // ==================== AUTH HEADER ====================
 function getAuthHeader(): HeadersInit {
