@@ -10,10 +10,11 @@ import LanguageSwitcher from "./components/LanguageSwitcher";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRole } from "@/hooks/useRole";
 import { UserRole } from "@/types/user";
-import { Loader2, Store } from "lucide-react";
+import { Loader2, Store, Menu, User } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
+import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/components/ui/sheet";
 import { motion } from "framer-motion";
 import { WalletButton } from "@/components/WalletButton";
 import { AnimatedStats } from "@/components/AnimatedStats";
@@ -25,6 +26,7 @@ export default function HomePage() {
   const [filteredBusinesses, setFilteredBusinesses] = useState<Business[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
   // Filters state
   const [selectedCategory, setSelectedCategory] = useState<string | null>(null);
@@ -144,57 +146,117 @@ export default function HomePage() {
       
       {/* Header */}
       <header className="border-b border-gray-800/50 bg-gray-900/50 backdrop-blur-xl sticky top-0 z-50 shadow-lg">
-        <div className="max-w-7xl mx-auto px-6 py-5">
-          <div className="flex items-center justify-between">
-            <div className="flex items-center gap-2 sm:gap-4">
-              <Link href="/" className="flex items-center gap-2">
-                <Store className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500" />
-                <span className="text-xl sm:text-2xl font-bold">
-                  <span className="text-orange-500">FODI</span>{" "}
-                  <span className="text-white hidden xs:inline">MARKET</span>
-                </span>
-              </Link>
-              
-              {/* Adaptive About Button */}
-              <motion.div
-                whileHover={{ scale: 1.05 }}
-                whileTap={{ scale: 0.95 }}
-              >
-                <Link 
-                  href="/about" 
-                  className="relative flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base font-medium text-gray-300 hover:text-white transition-all duration-300 rounded-full border border-gray-700/50 hover:border-orange-500/50 bg-gray-800/30 hover:bg-orange-500/10 backdrop-blur-sm group"
-                >
-                  <span className="hidden xs:inline">О проекте</span>
-                  <span className="xs:hidden">О нас</span>
-                  <motion.span 
-                    className="text-orange-400 text-xs sm:text-sm"
-                    animate={{ rotate: [0, 10, -10, 0] }}
-                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
-                  >
-                    ⚡
-                  </motion.span>
-                  
-                  {/* Glow effect on hover */}
-                  <motion.div
-                    className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-500/20 to-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm -z-10"
-                  />
-                </Link>
-              </motion.div>
-            </div>
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 py-4 sm:py-5">
+          <div className="flex items-center justify-between gap-4">
+            {/* Logo */}
+            <Link href="/" className="flex items-center gap-2 flex-shrink-0">
+              <Store className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500" />
+              <span className="text-xl sm:text-2xl font-bold">
+                <span className="text-orange-500">FODI</span>{" "}
+                <span className="text-white hidden xs:inline">MARKET</span>
+              </span>
+            </Link>
 
-            <div className="flex items-center gap-3">
+            {/* Desktop Navigation */}
+            <nav className="hidden md:flex items-center gap-2">
+              <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
+                <Button asChild variant="ghost" size="sm">
+                  <Link href="/about" className="gap-2">
+                    <span className="hidden lg:inline">О проекте</span>
+                    <span className="lg:hidden">О нас</span>
+                    <motion.span 
+                      className="text-orange-400 text-xs"
+                      animate={{ rotate: [0, 10, -10, 0] }}
+                      transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                    >
+                      ⚡
+                    </motion.span>
+                  </Link>
+                </Button>
+              </motion.div>
+            </nav>
+
+            {/* Desktop Actions */}
+            <div className="hidden md:flex items-center gap-2 lg:gap-3">
               <WalletButton />
               <LanguageSwitcher />
               {user && user.role === UserRole.BUSINESS_OWNER && <RoleSwitcher />}
               {user ? (
-                <Button asChild variant="outline">
-                  <Link href="/profile">Профиль</Link>
+                <Button asChild variant="outline" size="sm">
+                  <Link href="/profile">
+                    <User className="w-4 h-4 mr-2" />
+                    Профиль
+                  </Link>
                 </Button>
               ) : (
-                <Button asChild variant="default" className="bg-orange-500 hover:bg-orange-600">
+                <Button asChild size="sm" className="bg-orange-500 hover:bg-orange-600">
                   <Link href="/auth/signin">Войти</Link>
                 </Button>
               )}
+            </div>
+
+            {/* Mobile Actions */}
+            <div className="flex md:hidden items-center gap-2">
+              <WalletButton />
+              <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
+                <SheetTrigger asChild>
+                  <Button variant="ghost" size="icon" className="text-gray-300">
+                    <Menu className="w-6 h-6" />
+                    <span className="sr-only">Открыть меню</span>
+                  </Button>
+                </SheetTrigger>
+                <SheetContent side="right" className="w-[280px] sm:w-[350px] bg-gray-900 border-gray-800">
+                  <SheetHeader>
+                    <SheetTitle className="flex items-center gap-2 text-white">
+                      <Store className="w-6 h-6 text-orange-500" />
+                      <span>
+                        <span className="text-orange-500">FODI</span> MARKET
+                      </span>
+                    </SheetTitle>
+                  </SheetHeader>
+
+                  <div className="flex flex-col gap-4 mt-8">
+                    {/* Navigation Links */}
+                    <nav className="flex flex-col gap-2">
+                      <Button
+                        asChild
+                        variant="ghost"
+                        className="justify-start gap-3 text-base"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        <Link href="/about">
+                          <span>О проекте</span>
+                          <span className="text-orange-400 text-sm">⚡</span>
+                        </Link>
+                      </Button>
+                    </nav>
+
+                    <div className="border-t border-gray-800 my-2" />
+
+                    {/* Mobile Settings */}
+                    <div className="flex flex-col gap-3">
+                      <LanguageSwitcher />
+                      {user && user.role === UserRole.BUSINESS_OWNER && <RoleSwitcher />}
+                      {user ? (
+                        <Button asChild variant="outline" onClick={() => setMobileMenuOpen(false)}>
+                          <Link href="/profile">
+                            <User className="w-4 h-4 mr-2" />
+                            Профиль
+                          </Link>
+                        </Button>
+                      ) : (
+                        <Button
+                          asChild
+                          className="bg-orange-500 hover:bg-orange-600"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          <Link href="/auth/signin">Войти</Link>
+                        </Button>
+                      )}
+                    </div>
+                  </div>
+                </SheetContent>
+              </Sheet>
             </div>
           </div>
         </div>
