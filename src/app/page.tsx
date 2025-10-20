@@ -182,7 +182,7 @@ export default function HomePage() {
               <LanguageSwitcher />
               {user && user.role === UserRole.BUSINESS_OWNER && <RoleSwitcher />}
               {user ? (
-                <Button asChild variant="outline" size="sm">
+                <Button asChild variant="ghost" size="sm" className="text-gray-300 hover:text-white hover:bg-gray-800">
                   <Link href="/profile">
                     <User className="w-4 h-4 mr-2" />
                     Профиль
@@ -238,7 +238,7 @@ export default function HomePage() {
                       <LanguageSwitcher />
                       {user && user.role === UserRole.BUSINESS_OWNER && <RoleSwitcher />}
                       {user ? (
-                        <Button asChild variant="outline" onClick={() => setMobileMenuOpen(false)}>
+                        <Button asChild variant="ghost" className="justify-start text-gray-300 hover:text-white hover:bg-gray-800" onClick={() => setMobileMenuOpen(false)}>
                           <Link href="/profile">
                             <User className="w-4 h-4 mr-2" />
                             Профиль
