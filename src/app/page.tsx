@@ -101,12 +101,11 @@ export default function HomePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-gray-950 via-gray-900 to-orange-950/20 flex items-center justify-center">
-        <div className="text-center">
-          <Loader2 className="w-16 h-16 animate-spin text-orange-500 mx-auto mb-4" />
-          <p className="text-gray-400 text-lg">Загрузка бизнесов...</p>
-        </div>
-      </div>
+        return (
+    <div className="min-h-screen bg-gradient-to-br from-gray-900 via-gray-800 to-gray-900">
+      {/* Header */}
+      <header className="sticky top-0 z-50 backdrop-blur-md bg-gray-900/80 border-b border-gray-800 shadow-lg">
+        <div className="container mx-auto px-4 h-16 flex items-center justify-between">
     );
   }
 
@@ -200,7 +199,12 @@ export default function HomePage() {
               <WalletButton />
               <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
                 <SheetTrigger asChild>
-                  <Button variant="ghost" size="icon" className="text-gray-300">
+                  <Button 
+                    variant="ghost" 
+                    size="icon" 
+                    className="text-gray-300"
+                    aria-label="Открыть навигационное меню"
+                  >
                     <Menu className="w-6 h-6" />
                     <span className="sr-only">Открыть меню</span>
                   </Button>
