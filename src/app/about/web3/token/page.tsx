@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { Coins, Wallet, BarChart3, Shield, Zap, Store } from "lucide-react";
 import { SectionHeader } from "../../components/SectionHeader";
 import { BackButton } from "../../components/BackButton";
+import Link from "next/link";
 
 export default function TokenPage() {
   const features = [
@@ -114,6 +115,39 @@ export default function TokenPage() {
             ))}
           </div>
         </section>
+
+        {/* CTA NAVIGATION */}
+        <motion.div
+          initial={{ opacity: 0, y: 30 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ delay: 0.6 }}
+          className="mt-16 text-center"
+        >
+          <Link
+            href="/about/web3"
+            className="inline-flex items-center gap-3 px-8 py-4
+              bg-gradient-to-r from-orange-500 to-yellow-400 text-black font-semibold
+              rounded-xl shadow-lg hover:scale-105 transition-all duration-300"
+          >
+            Вернуться к разделу <span className="font-bold">Web3 и Токенизация</span>
+            <svg
+              xmlns="http://www.w3.org/2000/svg"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+              strokeLinecap="round"
+              strokeLinejoin="round"
+              className="w-5 h-5"
+            >
+              <line x1="19" y1="12" x2="5" y2="12" />
+              <polyline points="12 19 5 12 12 5" />
+            </svg>
+          </Link>
+          <p className="text-sm text-gray-500 mt-3">
+            Узнайте больше о Web3-экосистеме FODI
+          </p>
+        </motion.div>
       </div>
 
       {/* FOOTER */}

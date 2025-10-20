@@ -10,12 +10,11 @@ import LanguageSwitcher from "./components/LanguageSwitcher";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRole } from "@/hooks/useRole";
 import { UserRole } from "@/types/user";
-import { Loader2, Store, TrendingUp, Users } from "lucide-react";
+import { Loader2, Store } from "lucide-react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { motion } from "framer-motion";
-import { useCountUp } from "@/hooks/useCountUp";
 import { WalletButton } from "@/components/WalletButton";
 import { AnimatedStats } from "@/components/AnimatedStats";
 
@@ -147,20 +146,40 @@ export default function HomePage() {
       <header className="border-b border-gray-800/50 bg-gray-900/50 backdrop-blur-xl sticky top-0 z-50 shadow-lg">
         <div className="max-w-7xl mx-auto px-6 py-5">
           <div className="flex items-center justify-between">
-            <div className="flex items-center gap-4">
+            <div className="flex items-center gap-2 sm:gap-4">
               <Link href="/" className="flex items-center gap-2">
-                <Store className="w-8 h-8 text-orange-500" />
-                <span className="text-2xl font-bold">
+                <Store className="w-6 h-6 sm:w-8 sm:h-8 text-orange-500" />
+                <span className="text-xl sm:text-2xl font-bold">
                   <span className="text-orange-500">FODI</span>{" "}
-                  <span className="text-white">MARKET</span>
+                  <span className="text-white hidden xs:inline">MARKET</span>
                 </span>
               </Link>
-              <Link 
-                href="/about" 
-                className="hidden sm:block text-gray-400 hover:text-orange-400 transition-colors duration-200 font-medium"
+              
+              {/* Adaptive About Button */}
+              <motion.div
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
               >
-                О проекте
-              </Link>
+                <Link 
+                  href="/about" 
+                  className="relative flex items-center gap-1.5 px-3 py-1.5 sm:px-4 sm:py-2 text-sm sm:text-base font-medium text-gray-300 hover:text-white transition-all duration-300 rounded-full border border-gray-700/50 hover:border-orange-500/50 bg-gray-800/30 hover:bg-orange-500/10 backdrop-blur-sm group"
+                >
+                  <span className="hidden xs:inline">О проекте</span>
+                  <span className="xs:hidden">О нас</span>
+                  <motion.span 
+                    className="text-orange-400 text-xs sm:text-sm"
+                    animate={{ rotate: [0, 10, -10, 0] }}
+                    transition={{ duration: 2, repeat: Infinity, ease: "easeInOut" }}
+                  >
+                    ⚡
+                  </motion.span>
+                  
+                  {/* Glow effect on hover */}
+                  <motion.div
+                    className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-500/20 to-yellow-500/20 opacity-0 group-hover:opacity-100 transition-opacity duration-300 blur-sm -z-10"
+                  />
+                </Link>
+              </motion.div>
             </div>
 
             <div className="flex items-center gap-3">

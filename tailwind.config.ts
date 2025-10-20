@@ -2,4 +2,11 @@ import type { Config } from "tailwindcss";
 
 export default {
   content: ["./src/**/*.{js,ts,jsx,tsx,mdx}"],
+  theme: {
+    extend: {
+      screens: {
+        'xs': '475px', // Extra small devices
+      },
+    },
+  },
 } satisfies Config;

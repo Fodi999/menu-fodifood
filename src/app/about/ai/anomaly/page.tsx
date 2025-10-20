@@ -1,51 +1,60 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Shield, AlertTriangle, Eye, Bell, ArrowRight } from "lucide-react";
+import { Shield, AlertTriangle, Eye, Bell, ArrowRight, Target, Layers, Brain, Lock, TrendingDown, MessageSquare, Settings } from "lucide-react";
 import { SectionHeader } from "../../components/SectionHeader";
 import { BackButton } from "../../components/BackButton";
 import { AnimatedSection } from "../../components/AnimatedSection";
 import Link from "next/link";
 
 export default function AnomalyPage() {
-  const features = [
+  const principles = [
+    {
+      icon: <Layers className="w-10 h-10 text-purple-400" />,
+      title: "Многоуровневый анализ данных",
+      desc: "AI оценивает не только сам факт транзакции, но и контекст — время, геолокацию, устройство, частоту действий, тип клиента и аномальные паттерны поведения."
+    },
     {
       icon: <Eye className="w-10 h-10 text-red-400" />,
-      title: "Мониторинг 24/7",
-      desc: "AI следит за всеми транзакциями, заказами и действиями пользователей в режиме реального времени."
+      title: "Обнаружение в реальном времени",
+      desc: "Потоковые алгоритмы Rust Gateway позволяют системе обрабатывать до 100K событий в минуту, моментально сигнализируя о подозрительной активности."
     },
     {
-      icon: <AlertTriangle className="w-10 h-10 text-yellow-400" />,
-      title: "Детекция фрода",
-      desc: "Система выявляет подозрительные паттерны: массовые заказы с одного IP, фейковые аккаунты, накрутку рейтинга."
+      icon: <Brain className="w-10 h-10 text-blue-400" />,
+      title: "Самообучение (Continuous Learning)",
+      desc: "Модели адаптируются к поведению конкретного бизнеса. Если кафе увеличивает поток заказов в сезон праздников — AI понимает, что это не аномалия, а закономерный рост."
     },
     {
-      icon: <Bell className="w-10 h-10 text-blue-400" />,
-      title: "Мгновенные уведомления",
-      desc: "При обнаружении аномалии владелец бизнеса получает push-уведомление с деталями инцидента."
-    },
-    {
-      icon: <Shield className="w-10 h-10 text-green-400" />,
-      title: "Автоматическая защита",
-      desc: "В критических случаях система автоматически блокирует подозрительные транзакции до проверки."
+      icon: <Target className="w-10 h-10 text-orange-400" />,
+      title: "Классификация рисков",
+      desc: "Каждое событие получает оценку риска (0–100), а система автоматически уведомляет администратора или инвестора при превышении порога."
     },
   ];
 
-  const examples = [
+  const tracking = [
+    "Фрод при оплатах или токен-трансферах",
+    "Ненормальные пики трафика или заказов",
+    "Подозрительные операции с бизнес-токенами",
+    "Сбои API и неожиданные отклонения в метриках",
+    "Подозрительное поведение сотрудников (например, массовое редактирование заказов)",
+  ];
+
+  const reactions = [
     {
-      type: "Фрод",
-      desc: "20 заказов за 5 минут с одного IP-адреса",
-      action: "Автоматически заблокирован, владелец уведомлён"
+      title: "Автоматические уведомления",
+      desc: "Владельцу бизнеса и команде безопасности"
     },
     {
-      type: "Накрутка рейтинга",
-      desc: "5 новых аккаунтов оставили идентичные отзывы",
-      action: "Отзывы скрыты, аккаунты отмечены как подозрительные"
+      title: "Блокировка действий",
+      desc: "До подтверждения (если уровень риска >90)"
     },
     {
-      type: "Технический сбой",
-      desc: "API не отвечает более 30 секунд",
-      action: "Переключение на резервный сервер, уведомление DevOps"
+      title: "Создание отчёта AI Audit",
+      desc: "Включающего детали, паттерн и возможную причину"
+    },
+    {
+      title: "Синхронизация с Rust Gateway",
+      desc: "Изолирование проблемы без остановки всей сети"
     },
   ];
 
@@ -65,25 +74,35 @@ export default function AnomalyPage() {
             <div className="flex items-start gap-6">
               <Shield className="w-16 h-16 text-red-400 flex-shrink-0" />
               <div className="space-y-4">
-                <h3 className="text-2xl font-bold text-white">Как работает система обнаружения?</h3>
+                <h3 className="text-2xl font-bold text-white">Anomaly Watch — цифровой иммунитет FODI</h3>
                 <p className="text-gray-300 leading-relaxed">
-                  AI-модель обучена на миллионах транзакций и знает, как выглядит "нормальное" поведение.
-                  Когда происходит что-то необычное — массовый заказ, странная активность, технический сбой —
-                  система мгновенно реагирует.
+                  Система "Anomaly Watch" — это встроенный в FODI Market модуль,
+                  созданный для предиктивного мониторинга транзакций, заказов и пользовательской активности.
                 </p>
-                <p className="text-gray-400 text-sm">
-                  Модель использует алгоритмы машинного обучения (Isolation Forest, Autoencoders)
-                  и анализирует до 100 параметров каждой транзакции.
+                <p className="text-gray-300 leading-relaxed">
+                  Она использует поведенческие модели, обученные на больших массивах данных,
+                  чтобы мгновенно определять любые отклонения от нормы:
+                  от фродовых операций до технических аномалий в API.
                 </p>
               </div>
             </div>
           </div>
         </AnimatedSection>
 
-        {/* Features Grid */}
+        {/* Principles */}
         <AnimatedSection>
-          <section className="grid sm:grid-cols-2 gap-8 mt-16">
-            {features.map((item, i) => (
+          <div className="mt-16 mb-8 flex items-center gap-3">
+            <Settings className="w-8 h-8 text-purple-400" />
+            <div>
+              <h3 className="text-2xl font-bold text-white">Основные принципы работы</h3>
+            </div>
+          </div>
+        </AnimatedSection>
+
+        {/* Principles Grid */}
+        <AnimatedSection>
+          <section className="grid sm:grid-cols-2 gap-8">
+            {principles.map((item, i) => (
               <motion.div
                 key={i}
                 whileHover={{ scale: 1.03 }}
@@ -99,48 +118,114 @@ export default function AnomalyPage() {
           </section>
         </AnimatedSection>
 
-        {/* Examples */}
+        {/* What AI Tracks */}
         <AnimatedSection>
           <div className="mt-16 p-8 bg-gradient-to-r from-gray-900/50 to-gray-800/30 border border-gray-700/50 rounded-2xl">
-            <h3 className="text-2xl font-bold text-white mb-6">Примеры обнаруженных аномалий</h3>
-            <div className="space-y-4">
-              {examples.map((item, i) => (
-                <motion.div
+            <div className="flex items-center gap-3 mb-6">
+              <Eye className="w-7 h-7 text-red-400" />
+              <h3 className="text-2xl font-bold text-white">Что AI отслеживает</h3>
+            </div>
+            <ul className="space-y-3">
+              {tracking.map((item, i) => (
+                <motion.li
                   key={i}
                   initial={{ opacity: 0, x: -20 }}
                   whileInView={{ opacity: 1, x: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: i * 0.1 }}
-                  className="p-4 bg-black/30 rounded-lg border-l-4 border-red-500"
+                  className="flex items-start gap-3 text-gray-300"
                 >
-                  <div className="flex items-start justify-between gap-4">
-                    <div className="flex-1">
-                      <p className="text-red-400 font-semibold text-sm">{item.type}</p>
-                      <p className="text-gray-300 text-sm mt-1">{item.desc}</p>
-                      <p className="text-gray-500 text-xs mt-2">→ {item.action}</p>
-                    </div>
-                    <AlertTriangle className="w-5 h-5 text-red-400 flex-shrink-0" />
-                  </div>
+                  <AlertTriangle className="w-5 h-5 text-yellow-400 flex-shrink-0 mt-0.5" />
+                  <span>{item}</span>
+                </motion.li>
+              ))}
+            </ul>
+          </div>
+        </AnimatedSection>
+
+        {/* System Response */}
+        <AnimatedSection>
+          <div className="mt-16 p-8 bg-gradient-to-br from-blue-900/20 to-purple-900/10 border border-blue-500/20 rounded-2xl">
+            <div className="flex items-center gap-3 mb-6">
+              <Bell className="w-7 h-7 text-blue-400" />
+              <h3 className="text-2xl font-bold text-white">Реакция системы</h3>
+            </div>
+            <div className="grid sm:grid-cols-2 gap-4">
+              {reactions.map((item, i) => (
+                <motion.div
+                  key={i}
+                  initial={{ opacity: 0, y: 20 }}
+                  whileInView={{ opacity: 1, y: 0 }}
+                  viewport={{ once: true }}
+                  transition={{ delay: i * 0.1 }}
+                  className="p-4 bg-black/30 rounded-lg border border-blue-500/30"
+                >
+                  <h4 className="text-blue-400 font-semibold mb-2">{item.title}</h4>
+                  <p className="text-gray-400 text-sm">{item.desc}</p>
                 </motion.div>
               ))}
             </div>
           </div>
         </AnimatedSection>
 
-        {/* Stats */}
+        {/* Security */}
         <AnimatedSection>
-          <div className="mt-16 grid sm:grid-cols-3 gap-6">
-            <div className="p-6 bg-gradient-to-br from-red-900/20 to-pink-900/10 border border-red-500/20 rounded-xl text-center">
-              <p className="text-3xl font-bold text-red-400">99.8%</p>
-              <p className="text-gray-400 text-sm mt-2">Точность детекции фрода</p>
+          <div className="mt-16 p-8 bg-gradient-to-r from-gray-900/50 to-gray-800/30 border border-gray-700/50 rounded-2xl">
+            <div className="flex items-center gap-3 mb-6">
+              <Lock className="w-7 h-7 text-green-400" />
+              <h3 className="text-2xl font-bold text-white">Безопасность данных</h3>
             </div>
-            <div className="p-6 bg-gradient-to-br from-yellow-900/20 to-orange-900/10 border border-yellow-500/20 rounded-xl text-center">
-              <p className="text-3xl font-bold text-yellow-400">&lt;500ms</p>
-              <p className="text-gray-400 text-sm mt-2">Время реакции на аномалию</p>
+            <p className="text-gray-300 leading-relaxed mb-4">
+              Все операции проходят через анонимизированный фильтр,
+              поэтому система анализирует только поведенческие метрики без раскрытия персональных данных.
+            </p>
+            <div className="p-4 bg-black/30 rounded-lg border-l-4 border-green-500">
+              <p className="text-green-400 font-semibold mb-2">Zero-Knowledge AI</p>
+              <p className="text-gray-400 text-sm">
+                AI понимает, что произошло, не зная, с кем. Алгоритмы построены на принципе полной анонимизации данных.
+              </p>
             </div>
-            <div className="p-6 bg-gradient-to-br from-green-900/20 to-blue-900/10 border border-green-500/20 rounded-xl text-center">
-              <p className="text-3xl font-bold text-green-400">24/7</p>
-              <p className="text-gray-400 text-sm mt-2">Непрерывный мониторинг</p>
+          </div>
+        </AnimatedSection>
+
+        {/* Results */}
+        <AnimatedSection>
+          <div className="mt-16 p-8 bg-gradient-to-br from-green-900/20 to-blue-900/10 border border-green-500/20 rounded-2xl">
+            <div className="flex items-center gap-3 mb-6">
+              <TrendingDown className="w-7 h-7 text-green-400" />
+              <h3 className="text-2xl font-bold text-white">Эффект для экосистемы</h3>
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
+              <div className="text-center">
+                <p className="text-4xl font-bold text-green-400 mb-2">−85%</p>
+                <p className="text-gray-400 text-sm">Снижение вероятности фрода</p>
+              </div>
+              <div className="text-center">
+                <p className="text-4xl font-bold text-blue-400 mb-2">−60%</p>
+                <p className="text-gray-400 text-sm">Меньше технических сбоев</p>
+              </div>
+              <div className="text-center">
+                <p className="text-4xl font-bold text-purple-400 mb-2">100%</p>
+                <p className="text-gray-400 text-sm">Повышение доверия</p>
+              </div>
+              <div className="text-center">
+                <p className="text-4xl font-bold text-orange-400 mb-2">Auto</p>
+                <p className="text-gray-400 text-sm">AI Audit Logs</p>
+              </div>
+            </div>
+          </div>
+        </AnimatedSection>
+
+        {/* Final Message */}
+        <AnimatedSection>
+          <div className="mt-16 p-8 bg-gradient-to-r from-gray-900/50 to-gray-800/30 border border-gray-700/50 rounded-2xl">
+            <div className="flex items-start gap-4">
+              <MessageSquare className="w-6 h-6 text-red-400 flex-shrink-0 mt-1" />
+              <p className="text-gray-300 leading-relaxed text-lg">
+                <span className="text-red-400 font-semibold">AI Anomaly Detection</span> — цифровой иммунитет FODI Market.<br/>
+                Он защищает экосистему, обеспечивая прозрачность, доверие и безопасность —
+                основные принципы будущей цифровой экономики.
+              </p>
             </div>
           </div>
         </AnimatedSection>

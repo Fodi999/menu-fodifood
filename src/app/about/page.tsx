@@ -50,11 +50,11 @@ export default function AboutPage() {
       color: "pink"
     },
     {
-      title: "Для разработчиков",
-      description: "API, SDK и open-source инструменты",
+      title: "Developer Platform",
+      description: "API, SDK, документация и open-source",
       icon: <Code className="w-12 h-12" />,
       href: "/about/developers",
-      color: "blue"
+      color: "cyan"
     },
   ];
 
