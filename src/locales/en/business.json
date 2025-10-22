@@ -1,0 +1,135 @@
+{
+  "dashboard": {
+    "title": "Dashboard",
+    "welcome": "Welcome",
+    "overview": "Overview",
+    "todaysStats": "Today's Statistics",
+    "revenue": "Revenue",
+    "orders": "Orders",
+    "customers": "Customers",
+    "averageOrder": "Average Order",
+    "charts": {
+      "salesTrend": "Sales Trend",
+      "topProducts": "Top Products",
+      "ordersByHour": "Orders by Hour",
+      "customerGrowth": "Customer Growth"
+    }
+  },
+  "menu": {
+    "title": "Menu Management",
+    "addProduct": "Add Product",
+    "editProduct": "Edit",
+    "deleteProduct": "Delete",
+    "categories": "Categories",
+    "addCategory": "Add Category",
+    "product": {
+      "name": "Name",
+      "description": "Description",
+      "price": "Price",
+      "category": "Category",
+      "image": "Image",
+      "available": "Available",
+      "ingredients": "Ingredients",
+      "allergens": "Allergens",
+      "calories": "Calories",
+      "preparationTime": "Preparation Time"
+    }
+  },
+  "orders": {
+    "title": "Orders",
+    "newOrders": "New Orders",
+    "inProgress": "In Progress",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "orderDetails": {
+      "orderNumber": "Order Number",
+      "customer": "Customer",
+      "items": "Items",
+      "total": "Total",
+      "status": "Status",
+      "deliveryTime": "Delivery Time",
+      "deliveryAddress": "Delivery Address",
+      "notes": "Notes"
+    },
+    "actions": {
+      "accept": "Accept",
+      "reject": "Reject",
+      "ready": "Ready",
+      "delivered": "Delivered",
+      "cancel": "Cancel"
+    }
+  },
+  "analytics": {
+    "title": "Analytics",
+    "period": {
+      "today": "Today",
+      "week": "Week",
+      "month": "Month",
+      "year": "Year",
+      "custom": "Custom Period"
+    },
+    "metrics": {
+      "totalRevenue": "Total Revenue",
+      "totalOrders": "Total Orders",
+      "averageOrderValue": "Average Order Value",
+      "newCustomers": "New Customers",
+      "repeatCustomers": "Repeat Customers",
+      "conversionRate": "Conversion Rate",
+      "customerSatisfaction": "Customer Satisfaction"
+    },
+    "reports": {
+      "salesReport": "Sales Report",
+      "productReport": "Product Report",
+      "customerReport": "Customer Report",
+      "exportButton": "Export"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "businessInfo": {
+      "title": "Business Information",
+      "name": "Name",
+      "description": "Description",
+      "logo": "Logo",
+      "banner": "Banner",
+      "category": "Category",
+      "cuisineType": "Cuisine Type"
+    },
+    "hours": {
+      "title": "Business Hours",
+      "monday": "Monday",
+      "tuesday": "Tuesday",
+      "wednesday": "Wednesday",
+      "thursday": "Thursday",
+      "friday": "Friday",
+      "saturday": "Saturday",
+      "sunday": "Sunday",
+      "closed": "Closed",
+      "openTime": "Open Time",
+      "closeTime": "Close Time"
+    },
+    "delivery": {
+      "title": "Delivery",
+      "enabled": "Delivery Enabled",
+      "radius": "Delivery Radius (km)",
+      "fee": "Delivery Fee",
+      "freeDeliveryFrom": "Free Delivery From",
+      "estimatedTime": "Estimated Time (min)"
+    },
+    "payments": {
+      "title": "Payment Methods",
+      "cash": "Cash",
+      "card": "Card",
+      "online": "Online",
+      "stripe": "Stripe Account"
+    },
+    "subscription": {
+      "title": "Subscription",
+      "plan": "Current Plan",
+      "status": "Status",
+      "nextBilling": "Next Billing",
+      "upgrade": "Upgrade Plan",
+      "cancel": "Cancel Subscription"
+    }
+  }
+}

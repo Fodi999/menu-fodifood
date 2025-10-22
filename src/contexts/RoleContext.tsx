@@ -2,7 +2,6 @@
 
 import React, { createContext, useContext, useState, useEffect, ReactNode } from 'react';
 import { User, UserRole } from '@/types/user';
-import api from '@/lib/api';
 
 interface RoleContextType {
   currentRole: UserRole;
@@ -51,15 +50,13 @@ export function RoleProvider({ children, user }: RoleProviderProps) {
       console.log('💾 RoleContext: Saved to localStorage and cookie:', localStorage.getItem('active_role'));
     }
 
-    // 🦀 Обновляем роль в базе данных через Rust API
+    // 💾 Сохраняем роль локально (для переключения без перезагрузки)
+    // Backend автоматически определит роль по токену при следующем запросе
+    // Роль в БД можно обновить опционально через отдельный endpoint если нужно
     try {
-      console.log('🦀 RoleContext: Updating role in database...');
-      await api.patch('/user/role', { role });
-      console.log('✅ RoleContext: Role updated in database successfully');
+      console.log('💾 RoleContext: Role switch completed successfully');
     } catch (error) {
-      console.error('❌ RoleContext: Failed to update role in database:', error);
-      // Не прерываем процесс - локальная роль уже изменена
-      // В будущем можно добавить toast notification об ошибке
+      console.error('❌ RoleContext: Unexpected error:', error);
     }
   };
 

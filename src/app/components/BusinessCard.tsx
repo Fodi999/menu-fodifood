@@ -6,6 +6,7 @@ import { Star, MapPin, Users, Package } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import type { Business } from '@/types/business';
+import { getBusinessUrl } from '@/lib/business-utils';
 
 interface BusinessCardProps {
   business: Business;
@@ -21,7 +22,7 @@ export function BusinessCard({ business, isSubscribed = false, onSubscribe }: Bu
   };
 
   return (
-    <Link href={`/${business.slug}`} className="block group">
+    <Link href={getBusinessUrl(business)} className="block group">
       <div className="h-full rounded-xl border border-gray-800 bg-[#0d0d0d] hover:border-orange-500/50 hover:shadow-lg hover:shadow-orange-500/10 transition-all duration-300 overflow-hidden flex flex-col">
         {/* Accent line on top */}
         <div className="h-1 bg-gradient-to-r from-orange-500 via-orange-400 to-yellow-400 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />

@@ -10,6 +10,7 @@ export interface Business {
   address: string;
   phone: string;
   email: string;
+  website?: string; // Веб-сайт бизнеса
   logo_url?: string;
   cover_image_url?: string;
   is_active: boolean;

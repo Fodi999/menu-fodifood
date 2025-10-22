@@ -26,6 +26,8 @@ export interface ProductSuggestion {
 }
 
 export interface ChatRequest {
+  user_id?: string; // User ID (автоматически из токена или явно)
+  username?: string; // Имя пользователя для персонализации (используется backend)
   message: string;
   business_id?: string; // Контекст бизнеса
   conversation_id?: string; // ID беседы для контекста

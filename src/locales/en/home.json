@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "title": "FODI SUSHI",
+    "subtitle": "Premium Sushi Delivery",
+    "description": "Metaverse connecting AI, Web3 and real businesses into a single ecosystem",
+    "orderButton": "Order Now",
+    "viewMenuButton": "FODI Token"
+  },
+  "features": {
+    "title": "Why Choose Us",
+    "freshIngredients": {
+      "title": "Fresh Ingredients",
+      "description": "Daily delivery of premium products"
+    },
+    "fastDelivery": {
+      "title": "Fast Delivery",
+      "description": "Hot delivery in 40 minutes"
+    },
+    "chefExpertise": {
+      "title": "Chef Expertise",
+      "description": "Experienced chefs from Japan"
+    }
+  },
+  "businesses": {
+    "title": "Our Restaurants",
+    "subtitle": "Choose the nearest one",
+    "categories": {
+      "all": "All",
+      "sushi": "Sushi",
+      "pizza": "Pizza",
+      "burgers": "Burgers",
+      "asian": "Asian",
+      "italian": "Italian",
+      "desserts": "Desserts"
+    },
+    "viewMenu": "View Menu",
+    "orderNow": "Order Now",
+    "openUntil": "Open until",
+    "closed": "Closed",
+    "rating": "Rating"
+  },
+  "cta": {
+    "businessTitle": "Own a business?",
+    "businessSubtitle": "Register and create your business showcase for free! Attract new customers and increase sales.",
+    "businessButton": "Create Business Account",
+    "investTitle": "Invest in the future of food",
+    "investSubtitle": "Get FODI tokens and participate in growth",
+    "investButton": "Learn About Project"
+  }
+}

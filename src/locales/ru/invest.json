@@ -1,0 +1,97 @@
+{
+  "title": "Инвестиции",
+  "subtitle": "Инвестируйте в будущее еды",
+  "hero": {
+    "title": "Получайте токены FODI",
+    "description": "Участвуйте в росте экосистемы и получайте вознаграждения",
+    "investButton": "Начать инвестировать",
+    "learnMore": "Узнать больше"
+  },
+  "dashboard": {
+    "title": "Инвестиционная панель",
+    "portfolio": {
+      "title": "Мой портфель",
+      "totalValue": "Общая стоимость",
+      "totalTokens": "Всего токенов",
+      "totalProfit": "Прибыль",
+      "profitPercentage": "Процент прибыли"
+    },
+    "tokenPrice": {
+      "title": "Цена токена FODI",
+      "current": "Текущая",
+      "change24h": "Изменение за 24ч",
+      "high24h": "Максимум за 24ч",
+      "low24h": "Минимум за 24ч"
+    },
+    "transactions": {
+      "title": "История транзакций",
+      "buy": "Покупка",
+      "sell": "Продажа",
+      "reward": "Вознаграждение",
+      "date": "Дата",
+      "amount": "Количество",
+      "price": "Цена",
+      "total": "Итого"
+    }
+  },
+  "buyTokens": {
+    "title": "Купить токены FODI",
+    "amount": "Количество токенов",
+    "amountPlaceholder": "Введите количество",
+    "payWith": "Оплатить через",
+    "estimatedCost": "Примерная стоимость",
+    "fees": "Комиссия",
+    "total": "Итого",
+    "buyButton": "Купить токены",
+    "minAmount": "Минимум",
+    "maxAmount": "Максимум"
+  },
+  "sellTokens": {
+    "title": "Продать токены FODI",
+    "available": "Доступно",
+    "sellButton": "Продать токены",
+    "receiveAmount": "Вы получите"
+  },
+  "staking": {
+    "title": "Стейкинг",
+    "description": "Застейкайте токены и получайте пассивный доход",
+    "stake": "Застейкать",
+    "unstake": "Вывести",
+    "staked": "В стейкинге",
+    "rewards": "Вознаграждения",
+    "apy": "Годовая доходность (APY)",
+    "claimRewards": "Забрать вознаграждения"
+  },
+  "tokenomics": {
+    "title": "Токеномика",
+    "totalSupply": "Общий объем",
+    "circulatingSupply": "В обращении",
+    "burned": "Сожжено",
+    "distribution": {
+      "title": "Распределение",
+      "ecosystem": "Экосистема",
+      "team": "Команда",
+      "investors": "Инвесторы",
+      "rewards": "Вознаграждения"
+    }
+  },
+  "benefits": {
+    "title": "Преимущества держателей",
+    "cashback": {
+      "title": "Кэшбэк",
+      "description": "Получайте до 5% кэшбэка токенами за каждый заказ"
+    },
+    "discounts": {
+      "title": "Скидки",
+      "description": "Эксклюзивные скидки в партнерских ресторанах"
+    },
+    "governance": {
+      "title": "Управление",
+      "description": "Голосуйте за развитие платформы"
+    },
+    "priority": {
+      "title": "Приоритет",
+      "description": "Приоритетная поддержка и доставка"
+    }
+  }
+}

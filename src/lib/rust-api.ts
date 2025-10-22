@@ -8,11 +8,20 @@ import type {
   Subscription 
 } from '@/types/business';
 import type { ChatRequest, ChatResponse, Conversation } from '@/types/chat';
+import { MessageRole } from '@/types/chat';
 import type { BusinessMetrics, AIInsight } from '@/types/metrics';
 import { MetricsPeriod } from '@/types/metrics';
 import type { User, AuthTokens, LoginDto, SignupDto } from '@/types/user';
 
-const RUST_API_URL = process.env.NEXT_PUBLIC_API_URL || 'http://127.0.0.1:8000/api/v1';
+// 🚀 Shuttle Production URL
+const RUST_API_URL = process.env.NEXT_PUBLIC_API_URL || 'https://bot-fodifood-lcon.shuttle.app/api/v1';
+const WS_URL = process.env.NEXT_PUBLIC_WS_URL || 'wss://bot-fodifood-lcon.shuttle.app/ws';
+
+// Debug: Log API URL on load
+if (typeof window !== 'undefined') {
+  console.log('🔧 Rust API URL:', RUST_API_URL);
+  console.log('🔌 WebSocket URL:', WS_URL);
+}
 
 // ==================== AUTH HEADER ====================
 function getAuthHeader(): HeadersInit {
@@ -134,10 +143,45 @@ export const subscriptionsApi = {
 export const chatApi = {
   // Отправить сообщение
   sendMessage: async (request: ChatRequest): Promise<ChatResponse> => {
-    return fetchRust<ChatResponse>('/chat/message', {
+    // Backend Shuttle возвращает {intent, response, suggestions, products}
+    // Нужно трансформировать в ChatResponse
+    const backendResponse = await fetchRust<{
+      intent: string;
+      response: string;
+      suggestions: string[] | null;
+      products: any[] | null;
+    }>('/chat/message', {
       method: 'POST',
       body: JSON.stringify(request),
     });
+
+    // Преобразуем ответ backend в ChatResponse
+    return {
+      message: {
+        id: `msg_${Date.now()}`,
+        user_id: request.user_id || 'anonymous',
+        business_id: request.business_id,
+        role: MessageRole.ASSISTANT,
+        content: backendResponse.response,
+        product_suggestions: backendResponse.products?.map(p => ({
+          product_id: p.id || p.product_id,
+          product_name: p.name || p.product_name,
+          product_description: p.description || p.product_description || '',
+          product_price: p.price || p.product_price || 0,
+          product_image_url: p.image_url || p.product_image_url,
+          reason: p.reason || 'Рекомендовано AI'
+        })),
+        created_at: new Date().toISOString(),
+      },
+      suggestions: backendResponse.products?.map(p => ({
+        product_id: p.id || p.product_id,
+        product_name: p.name || p.product_name,
+        product_description: p.description || p.product_description || '',
+        product_price: p.price || p.product_price || 0,
+        product_image_url: p.image_url || p.product_image_url,
+        reason: p.reason || 'Рекомендовано AI'
+      })),
+    };
   },
 
   // Получить подсказки для начала разговора
@@ -201,33 +245,98 @@ export const insightsApi = {
 // ==================== AUTH API ====================
 
 export const authApi = {
-  // Вход
-  login: async (data: LoginDto): Promise<{ user: User; tokens: AuthTokens }> => {
-    return fetchRust('/auth/login', {
+  // Регистрация (используем /auth/register, не /auth/signup)
+  signup: async (data: SignupDto): Promise<{ user: User; tokens: AuthTokens }> => {
+    const response = await fetchRust<{ 
+      token: string;
+      user: {
+        id: string;
+        email: string;
+        name: string;
+        role: string;
+      }
+    }>('/auth/register', {
       method: 'POST',
       body: JSON.stringify(data),
     });
+
+    // Преобразуем ответ в ожидаемый формат
+    return {
+      user: {
+        id: response.user.id,
+        email: response.user.email,
+        name: response.user.name,
+        role: response.user.role as any,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      tokens: {
+        access_token: response.token,
+        refresh_token: response.token, // Shuttle использует один токен
+        expires_in: 86400,
+      },
+    };
   },
 
-  // Регистрация
-  signup: async (data: SignupDto): Promise<{ user: User; tokens: AuthTokens }> => {
-    return fetchRust('/auth/signup', {
+  // Вход
+  login: async (data: LoginDto): Promise<{ user: User; tokens: AuthTokens }> => {
+    const response = await fetchRust<{ 
+      token: string;
+      user: {
+        id: string;
+        email: string;
+        name: string;
+        role: string;
+      }
+    }>('/auth/login', {
       method: 'POST',
       body: JSON.stringify(data),
     });
+
+    // Преобразуем ответ в ожидаемый формат
+    return {
+      user: {
+        id: response.user.id,
+        email: response.user.email,
+        name: response.user.name,
+        role: response.user.role as any,
+        created_at: new Date().toISOString(),
+        updated_at: new Date().toISOString(),
+      },
+      tokens: {
+        access_token: response.token,
+        refresh_token: response.token,
+        expires_in: 86400,
+      },
+    };
   },
 
   // Получить текущего пользователя
   getCurrentUser: async (): Promise<User> => {
-    return fetchRust('/auth/me');
+    const response = await fetchRust<{
+      id: string;
+      email: string;
+      name: string;
+      role: string;
+    }>('/user/profile');
+
+    return {
+      id: response.id,
+      email: response.email,
+      name: response.name,
+      role: response.role as any,
+      created_at: new Date().toISOString(),
+      updated_at: new Date().toISOString(),
+    };
   },
 
-  // Обновить токен
+  // Обновить токен (Shuttle использует тот же токен)
   refreshToken: async (refresh_token: string): Promise<AuthTokens> => {
-    return fetchRust('/auth/refresh', {
-      method: 'POST',
-      body: JSON.stringify({ refresh_token }),
-    });
+    return {
+      access_token: refresh_token,
+      refresh_token: refresh_token,
+      expires_in: 86400,
+    };
   },
 };
 
@@ -274,3 +383,152 @@ export async function fetchInsights(businessId: string): Promise<AIInsight[]> {
 export async function healthCheck(): Promise<{ status: string }> {
   return fetchRust('/health');
 }
+
+// ==================== WEBSOCKET API ====================
+
+/**
+ * 🔌 WebSocket connection for real-time updates
+ */
+export class FodiWebSocket {
+  private ws: WebSocket | null = null;
+  private reconnectAttempts = 0;
+  private maxReconnectAttempts = 5;
+  private reconnectDelay = 1000;
+
+  constructor(
+    private onMessage: (data: any) => void,
+    private onError?: (error: Event) => void,
+    private onClose?: () => void
+  ) {}
+
+  connect(userId?: string) {
+    const url = userId ? `${WS_URL}?user_id=${userId}` : WS_URL;
+    
+    try {
+      this.ws = new WebSocket(url);
+
+      this.ws.onopen = () => {
+        console.log('✅ WebSocket connected to Shuttle backend');
+        this.reconnectAttempts = 0;
+      };
+
+      this.ws.onmessage = (event) => {
+        try {
+          const data = JSON.parse(event.data);
+          this.onMessage(data);
+        } catch (error) {
+          console.error('Failed to parse WebSocket message:', error);
+        }
+      };
+
+      this.ws.onerror = (error) => {
+        console.error('❌ WebSocket error:', error);
+        this.onError?.(error);
+      };
+
+      this.ws.onclose = () => {
+        console.log('🔌 WebSocket disconnected');
+        this.onClose?.();
+        this.attemptReconnect(userId);
+      };
+    } catch (error) {
+      console.error('Failed to create WebSocket:', error);
+    }
+  }
+
+  private attemptReconnect(userId?: string) {
+    if (this.reconnectAttempts < this.maxReconnectAttempts) {
+      this.reconnectAttempts++;
+      console.log(`🔄 Reconnecting... Attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts}`);
+      
+      setTimeout(() => {
+        this.connect(userId);
+      }, this.reconnectDelay * this.reconnectAttempts);
+    } else {
+      console.error('❌ Max reconnection attempts reached');
+    }
+  }
+
+  send(data: any) {
+    if (this.ws && this.ws.readyState === WebSocket.OPEN) {
+      this.ws.send(JSON.stringify(data));
+    } else {
+      console.error('WebSocket is not connected');
+    }
+  }
+
+  disconnect() {
+    if (this.ws) {
+      this.ws.close();
+      this.ws = null;
+    }
+  }
+
+  get isConnected(): boolean {
+    return this.ws?.readyState === WebSocket.OPEN;
+  }
+}
+
+/**
+ * 🔌 Create WebSocket connection
+ */
+export function createWebSocket(
+  onMessage: (data: any) => void,
+  onError?: (error: Event) => void,
+  onClose?: () => void
+): FodiWebSocket {
+  return new FodiWebSocket(onMessage, onError, onClose);
+}
+
+// ==================== 🏦 BANK API ====================
+
+import type { BankStats, FullBalance, RewardRequest, RewardResponse, TransferRequest, TransferResponse } from '@/types/bank';
+
+/**
+ * 🏦 Bank API for FODI token management
+ */
+export const bankApi = {
+  /**
+   * Get bank statistics (total supply, transactions, users, etc.)
+   */
+  getStats: async (): Promise<BankStats> => {
+    const response = await fetch('https://bot-fodifood-lcon.shuttle.app/api/bank/stats');
+    if (!response.ok) throw new Error('Failed to fetch bank stats');
+    return response.json();
+  },
+
+  /**
+   * Get full balance for a user (bank + Solana)
+   */
+  getBalance: async (userId: string): Promise<FullBalance> => {
+    const response = await fetch(`https://bot-fodifood-lcon.shuttle.app/api/bank/balance/${userId}/full`);
+    if (!response.ok) throw new Error('Failed to fetch balance');
+    return response.json();
+  },
+
+  /**
+   * Issue reward to a user
+   */
+  issueReward: async (data: RewardRequest): Promise<RewardResponse> => {
+    const response = await fetch('https://bot-fodifood-lcon.shuttle.app/api/bank/reward', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw new Error('Failed to issue reward');
+    return response.json();
+  },
+
+  /**
+   * Transfer tokens between users
+   */
+  transfer: async (data: TransferRequest): Promise<TransferResponse> => {
+    const response = await fetch('https://bot-fodifood-lcon.shuttle.app/api/bank/transfer', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(data),
+    });
+    if (!response.ok) throw new Error('Failed to transfer tokens');
+    return response.json();
+  },
+};

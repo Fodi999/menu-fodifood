@@ -1,0 +1,54 @@
+{
+  "navigation": {
+    "home": "Главная",
+    "menu": "Меню",
+    "about": "О нас",
+    "contact": "Контакты",
+    "profile": "Профиль",
+    "orders": "Заказы",
+    "cart": "Корзина",
+    "signIn": "Войти",
+    "signUp": "Регистрация",
+    "signOut": "Выйти"
+  },
+  "buttons": {
+    "submit": "Отправить",
+    "cancel": "Отмена",
+    "save": "Сохранить",
+    "delete": "Удалить",
+    "edit": "Редактировать",
+    "back": "Назад",
+    "next": "Далее",
+    "close": "Закрыть",
+    "confirm": "Подтвердить",
+    "search": "Поиск",
+    "filter": "Фильтр",
+    "clear": "Очистить",
+    "apply": "Применить",
+    "viewAll": "Показать все",
+    "loadMore": "Загрузить еще"
+  },
+  "status": {
+    "loading": "Загрузка...",
+    "success": "Успешно!",
+    "error": "Ошибка",
+    "pending": "В ожидании",
+    "completed": "Завершено",
+    "cancelled": "Отменено",
+    "processing": "Обработка"
+  },
+  "messages": {
+    "noData": "Нет данных",
+    "noResults": "Ничего не найдено",
+    "comingSoon": "Скоро...",
+    "underConstruction": "В разработке",
+    "tryAgain": "Попробуйте снова",
+    "contactSupport": "Свяжитесь с поддержкой"
+  },
+  "footer": {
+    "allRightsReserved": "Все права защищены",
+    "privacyPolicy": "Политика конфиденциальности",
+    "termsOfService": "Условия использования",
+    "poweredBy": "Работает на"
+  }
+}

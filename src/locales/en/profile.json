@@ -1,0 +1,80 @@
+{
+  "title": "Profile",
+  "tabs": {
+    "overview": "Overview",
+    "orders": "Orders",
+    "favorites": "Favorites",
+    "settings": "Settings"
+  },
+  "overview": {
+    "welcomeBack": "Welcome back",
+    "memberSince": "Member since",
+    "stats": {
+      "totalOrders": "Total Orders",
+      "totalSpent": "Total Spent",
+      "favoriteRestaurants": "Favorite Restaurants",
+      "rewardPoints": "Reward Points"
+    }
+  },
+  "orders": {
+    "title": "Order History",
+    "empty": "You don't have any orders yet",
+    "orderNumber": "Order #",
+    "date": "Date",
+    "total": "Total",
+    "status": "Status",
+    "viewDetails": "View Details",
+    "reorder": "Reorder",
+    "trackOrder": "Track Order"
+  },
+  "favorites": {
+    "title": "Favorite Restaurants",
+    "empty": "No favorite restaurants",
+    "addFavorite": "Add to favorites"
+  },
+  "settings": {
+    "title": "Profile Settings",
+    "personalInfo": {
+      "title": "Personal Information",
+      "name": "Name",
+      "email": "Email",
+      "phone": "Phone",
+      "updateButton": "Update"
+    },
+    "addresses": {
+      "title": "Delivery Addresses",
+      "addNew": "Add Address",
+      "default": "Default",
+      "edit": "Edit",
+      "delete": "Delete"
+    },
+    "payments": {
+      "title": "Payment Methods",
+      "addCard": "Add Card",
+      "endingIn": "ending in"
+    },
+    "notifications": {
+      "title": "Notifications",
+      "orderUpdates": "Order Updates",
+      "promotions": "Promotions and Offers",
+      "newsletter": "Newsletter",
+      "sms": "SMS Notifications"
+    },
+    "security": {
+      "title": "Security",
+      "changePassword": "Change Password",
+      "twoFactor": "Two-Factor Authentication",
+      "loginHistory": "Login History"
+    }
+  },
+  "aiChat": {
+    "title": "AI Assistant",
+    "placeholder": "Ask about menu, recommendations...",
+    "suggestions": {
+      "recommendations": "What do you recommend today?",
+      "dietaryInfo": "Are there vegetarian options?",
+      "orderHistory": "What did I order before?",
+      "deals": "Any deals right now?"
+    }
+  }
+}

@@ -3,6 +3,7 @@
 import React from "react";
 import { useRouter } from "next/navigation";
 import { useAuth } from "@/contexts/AuthContext";
+import { useRole } from "@/hooks/useRole";
 import { useBusiness } from "@/contexts/BusinessContext";
 import { UserRole } from "@/types/user";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -11,14 +12,15 @@ import { ArrowLeft, Plus, UtensilsCrossed } from "lucide-react";
 
 export default function BusinessMenuPage() {
   const { user } = useAuth();
+  const { currentRole } = useRole();
   const { currentBusiness } = useBusiness();
   const router = useRouter();
 
   React.useEffect(() => {
-    if (!user || user.role !== UserRole.BUSINESS_OWNER) {
+    if (!user || (currentRole !== UserRole.BUSINESS_OWNER && currentRole !== UserRole.ADMIN)) {
       router.push("/");
     }
-  }, [user, router]);
+  }, [user, currentRole, router]);
 
   if (!user || !currentBusiness) {
     return null;

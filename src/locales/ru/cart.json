@@ -1,0 +1,58 @@
+{
+  "title": "Корзина",
+  "empty": {
+    "title": "Ваша корзина пуста",
+    "description": "Добавьте блюда из меню",
+    "browseButton": "Смотреть меню"
+  },
+  "items": {
+    "quantity": "Количество",
+    "price": "Цена",
+    "subtotal": "Подытог",
+    "remove": "Удалить",
+    "addMore": "Добавить еще"
+  },
+  "summary": {
+    "title": "Итого",
+    "subtotal": "Подытог",
+    "delivery": "Доставка",
+    "deliveryFree": "Бесплатно",
+    "discount": "Скидка",
+    "tax": "Налог",
+    "total": "К оплате",
+    "promoCode": "Промокод",
+    "applyPromo": "Применить",
+    "invalidPromo": "Неверный промокод"
+  },
+  "checkout": {
+    "button": "Оформить заказ",
+    "continueButton": "Продолжить покупки"
+  },
+  "delivery": {
+    "title": "Доставка",
+    "address": "Адрес доставки",
+    "selectAddress": "Выберите адрес",
+    "newAddress": "Новый адрес",
+    "deliveryTime": "Время доставки",
+    "asap": "Как можно скорее",
+    "schedule": "Запланировать",
+    "notes": "Комментарий к заказу",
+    "notesPlaceholder": "Например: позвоните перед доставкой"
+  },
+  "payment": {
+    "title": "Оплата",
+    "method": "Способ оплаты",
+    "cash": "Наличные",
+    "card": "Карта",
+    "online": "Онлайн",
+    "tokens": "Токены FODI",
+    "saveCard": "Сохранить карту"
+  },
+  "confirmation": {
+    "title": "Подтверждение заказа",
+    "orderNumber": "Номер заказа",
+    "estimatedTime": "Ожидаемое время",
+    "trackOrder": "Отследить заказ",
+    "backToHome": "На главную"
+  }
+}

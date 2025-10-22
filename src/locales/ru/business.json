@@ -1,0 +1,135 @@
+{
+  "dashboard": {
+    "title": "Панель управления",
+    "welcome": "Добро пожаловать",
+    "overview": "Обзор",
+    "todaysStats": "Статистика сегодня",
+    "revenue": "Выручка",
+    "orders": "Заказы",
+    "customers": "Клиенты",
+    "averageOrder": "Средний чек",
+    "charts": {
+      "salesTrend": "Тенденция продаж",
+      "topProducts": "Топ продукты",
+      "ordersByHour": "Заказы по часам",
+      "customerGrowth": "Рост клиентов"
+    }
+  },
+  "menu": {
+    "title": "Управление меню",
+    "addProduct": "Добавить блюдо",
+    "editProduct": "Редактировать",
+    "deleteProduct": "Удалить",
+    "categories": "Категории",
+    "addCategory": "Добавить категорию",
+    "product": {
+      "name": "Название",
+      "description": "Описание",
+      "price": "Цена",
+      "category": "Категория",
+      "image": "Изображение",
+      "available": "В наличии",
+      "ingredients": "Ингредиенты",
+      "allergens": "Аллергены",
+      "calories": "Калории",
+      "preparationTime": "Время приготовления"
+    }
+  },
+  "orders": {
+    "title": "Заказы",
+    "newOrders": "Новые заказы",
+    "inProgress": "В обработке",
+    "completed": "Завершенные",
+    "cancelled": "Отмененные",
+    "orderDetails": {
+      "orderNumber": "Номер заказа",
+      "customer": "Клиент",
+      "items": "Товары",
+      "total": "Итого",
+      "status": "Статус",
+      "deliveryTime": "Время доставки",
+      "deliveryAddress": "Адрес доставки",
+      "notes": "Комментарии"
+    },
+    "actions": {
+      "accept": "Принять",
+      "reject": "Отклонить",
+      "ready": "Готово",
+      "delivered": "Доставлено",
+      "cancel": "Отменить"
+    }
+  },
+  "analytics": {
+    "title": "Аналитика",
+    "period": {
+      "today": "Сегодня",
+      "week": "Неделя",
+      "month": "Месяц",
+      "year": "Год",
+      "custom": "Произвольный период"
+    },
+    "metrics": {
+      "totalRevenue": "Общая выручка",
+      "totalOrders": "Всего заказов",
+      "averageOrderValue": "Средний чек",
+      "newCustomers": "Новые клиенты",
+      "repeatCustomers": "Постоянные клиенты",
+      "conversionRate": "Конверсия",
+      "customerSatisfaction": "Удовлетворенность"
+    },
+    "reports": {
+      "salesReport": "Отчет по продажам",
+      "productReport": "Отчет по продуктам",
+      "customerReport": "Отчет по клиентам",
+      "exportButton": "Экспортировать"
+    }
+  },
+  "settings": {
+    "title": "Настройки",
+    "businessInfo": {
+      "title": "Информация о бизнесе",
+      "name": "Название",
+      "description": "Описание",
+      "logo": "Логотип",
+      "banner": "Баннер",
+      "category": "Категория",
+      "cuisineType": "Тип кухни"
+    },
+    "hours": {
+      "title": "Часы работы",
+      "monday": "Понедельник",
+      "tuesday": "Вторник",
+      "wednesday": "Среда",
+      "thursday": "Четверг",
+      "friday": "Пятница",
+      "saturday": "Суббота",
+      "sunday": "Воскресенье",
+      "closed": "Закрыто",
+      "openTime": "Открытие",
+      "closeTime": "Закрытие"
+    },
+    "delivery": {
+      "title": "Доставка",
+      "enabled": "Доставка включена",
+      "radius": "Радиус доставки (км)",
+      "fee": "Стоимость доставки",
+      "freeDeliveryFrom": "Бесплатная доставка от",
+      "estimatedTime": "Время доставки (мин)"
+    },
+    "payments": {
+      "title": "Способы оплаты",
+      "cash": "Наличные",
+      "card": "Карта",
+      "online": "Онлайн",
+      "stripe": "Stripe аккаунт"
+    },
+    "subscription": {
+      "title": "Подписка",
+      "plan": "Текущий план",
+      "status": "Статус",
+      "nextBilling": "Следующий платеж",
+      "upgrade": "Улучшить план",
+      "cancel": "Отменить подписку"
+    }
+  }
+}

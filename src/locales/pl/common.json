@@ -1,0 +1,54 @@
+{
+  "navigation": {
+    "home": "Home",
+    "menu": "Menu",
+    "about": "O nas",
+    "contact": "Kontakt",
+    "profile": "Profil",
+    "orders": "Zamówienia",
+    "cart": "Koszyk",
+    "signIn": "Zaloguj się",
+    "signUp": "Zarejestruj się",
+    "signOut": "Wyloguj"
+  },
+  "buttons": {
+    "submit": "Wyślij",
+    "cancel": "Anuluj",
+    "save": "Zapisz",
+    "delete": "Usuń",
+    "edit": "Edytuj",
+    "back": "Wstecz",
+    "next": "Dalej",
+    "close": "Zamknij",
+    "confirm": "Potwierdź",
+    "search": "Szukaj",
+    "filter": "Filtr",
+    "clear": "Wyczyść",
+    "apply": "Zastosuj",
+    "viewAll": "Zobacz wszystko",
+    "loadMore": "Załaduj więcej"
+  },
+  "status": {
+    "loading": "Ładowanie...",
+    "success": "Sukces!",
+    "error": "Błąd",
+    "pending": "Oczekujące",
+    "completed": "Zakończone",
+    "cancelled": "Anulowane",
+    "processing": "Przetwarzanie"
+  },
+  "messages": {
+    "noData": "Brak danych",
+    "noResults": "Nie znaleziono wyników",
+    "comingSoon": "Wkrótce...",
+    "underConstruction": "W budowie",
+    "tryAgain": "Spróbuj ponownie",
+    "contactSupport": "Skontaktuj się z wsparciem"
+  },
+  "footer": {
+    "allRightsReserved": "Wszelkie prawa zastrzeżone",
+    "privacyPolicy": "Polityka prywatności",
+    "termsOfService": "Warunki użytkowania",
+    "poweredBy": "Powered by"
+  }
+}

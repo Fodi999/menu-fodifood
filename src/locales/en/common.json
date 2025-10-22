@@ -1,0 +1,54 @@
+{
+  "navigation": {
+    "home": "Home",
+    "menu": "Menu",
+    "about": "About",
+    "contact": "Contact",
+    "profile": "Profile",
+    "orders": "Orders",
+    "cart": "Cart",
+    "signIn": "Sign In",
+    "signUp": "Sign Up",
+    "signOut": "Sign Out"
+  },
+  "buttons": {
+    "submit": "Submit",
+    "cancel": "Cancel",
+    "save": "Save",
+    "delete": "Delete",
+    "edit": "Edit",
+    "back": "Back",
+    "next": "Next",
+    "close": "Close",
+    "confirm": "Confirm",
+    "search": "Search",
+    "filter": "Filter",
+    "clear": "Clear",
+    "apply": "Apply",
+    "viewAll": "View All",
+    "loadMore": "Load More"
+  },
+  "status": {
+    "loading": "Loading...",
+    "success": "Success!",
+    "error": "Error",
+    "pending": "Pending",
+    "completed": "Completed",
+    "cancelled": "Cancelled",
+    "processing": "Processing"
+  },
+  "messages": {
+    "noData": "No data",
+    "noResults": "No results found",
+    "comingSoon": "Coming soon...",
+    "underConstruction": "Under construction",
+    "tryAgain": "Try again",
+    "contactSupport": "Contact support"
+  },
+  "footer": {
+    "allRightsReserved": "All rights reserved",
+    "privacyPolicy": "Privacy Policy",
+    "termsOfService": "Terms of Service",
+    "poweredBy": "Powered by"
+  }
+}

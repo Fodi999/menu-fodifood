@@ -1,0 +1,135 @@
+{
+  "dashboard": {
+    "title": "Panel zarządzania",
+    "welcome": "Witaj",
+    "overview": "Przegląd",
+    "todaysStats": "Statystyki dzisiaj",
+    "revenue": "Przychód",
+    "orders": "Zamówienia",
+    "customers": "Klienci",
+    "averageOrder": "Średnie zamówienie",
+    "charts": {
+      "salesTrend": "Trend sprzedaży",
+      "topProducts": "Top produkty",
+      "ordersByHour": "Zamówienia według godziny",
+      "customerGrowth": "Wzrost klientów"
+    }
+  },
+  "menu": {
+    "title": "Zarządzanie menu",
+    "addProduct": "Dodaj produkt",
+    "editProduct": "Edytuj",
+    "deleteProduct": "Usuń",
+    "categories": "Kategorie",
+    "addCategory": "Dodaj kategorię",
+    "product": {
+      "name": "Nazwa",
+      "description": "Opis",
+      "price": "Cena",
+      "category": "Kategoria",
+      "image": "Obraz",
+      "available": "Dostępny",
+      "ingredients": "Składniki",
+      "allergens": "Alergeny",
+      "calories": "Kalorie",
+      "preparationTime": "Czas przygotowania"
+    }
+  },
+  "orders": {
+    "title": "Zamówienia",
+    "newOrders": "Nowe zamówienia",
+    "inProgress": "W trakcie",
+    "completed": "Zakończone",
+    "cancelled": "Anulowane",
+    "orderDetails": {
+      "orderNumber": "Numer zamówienia",
+      "customer": "Klient",
+      "items": "Produkty",
+      "total": "Razem",
+      "status": "Status",
+      "deliveryTime": "Czas dostawy",
+      "deliveryAddress": "Adres dostawy",
+      "notes": "Uwagi"
+    },
+    "actions": {
+      "accept": "Akceptuj",
+      "reject": "Odrzuć",
+      "ready": "Gotowe",
+      "delivered": "Dostarczone",
+      "cancel": "Anuluj"
+    }
+  },
+  "analytics": {
+    "title": "Analityka",
+    "period": {
+      "today": "Dzisiaj",
+      "week": "Tydzień",
+      "month": "Miesiąc",
+      "year": "Rok",
+      "custom": "Własny okres"
+    },
+    "metrics": {
+      "totalRevenue": "Całkowity przychód",
+      "totalOrders": "Wszystkie zamówienia",
+      "averageOrderValue": "Średnia wartość zamówienia",
+      "newCustomers": "Nowi klienci",
+      "repeatCustomers": "Stali klienci",
+      "conversionRate": "Współczynnik konwersji",
+      "customerSatisfaction": "Zadowolenie klientów"
+    },
+    "reports": {
+      "salesReport": "Raport sprzedaży",
+      "productReport": "Raport produktów",
+      "customerReport": "Raport klientów",
+      "exportButton": "Eksportuj"
+    }
+  },
+  "settings": {
+    "title": "Ustawienia",
+    "businessInfo": {
+      "title": "Informacje o biznesie",
+      "name": "Nazwa",
+      "description": "Opis",
+      "logo": "Logo",
+      "banner": "Baner",
+      "category": "Kategoria",
+      "cuisineType": "Typ kuchni"
+    },
+    "hours": {
+      "title": "Godziny otwarcia",
+      "monday": "Poniedziałek",
+      "tuesday": "Wtorek",
+      "wednesday": "Środa",
+      "thursday": "Czwartek",
+      "friday": "Piątek",
+      "saturday": "Sobota",
+      "sunday": "Niedziela",
+      "closed": "Zamknięte",
+      "openTime": "Otwarcie",
+      "closeTime": "Zamknięcie"
+    },
+    "delivery": {
+      "title": "Dostawa",
+      "enabled": "Dostawa włączona",
+      "radius": "Promień dostawy (km)",
+      "fee": "Opłata za dostawę",
+      "freeDeliveryFrom": "Darmowa dostawa od",
+      "estimatedTime": "Czas dostawy (min)"
+    },
+    "payments": {
+      "title": "Metody płatności",
+      "cash": "Gotówka",
+      "card": "Karta",
+      "online": "Online",
+      "stripe": "Konto Stripe"
+    },
+    "subscription": {
+      "title": "Subskrypcja",
+      "plan": "Aktualny plan",
+      "status": "Status",
+      "nextBilling": "Następna płatność",
+      "upgrade": "Ulepsz plan",
+      "cancel": "Anuluj subskrypcję"
+    }
+  }
+}

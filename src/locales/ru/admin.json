@@ -1,0 +1,72 @@
+{
+  "title": "Админ панель",
+  "dashboard": {
+    "title": "Обзор системы",
+    "totalUsers": "Всего пользователей",
+    "totalBusinesses": "Всего бизнесов",
+    "totalOrders": "Всего заказов",
+    "totalRevenue": "Общая выручка",
+    "platformFees": "Комиссии платформы",
+    "activeUsers": "Активные пользователи",
+    "pendingApprovals": "Ожидают одобрения"
+  },
+  "users": {
+    "title": "Управление пользователями",
+    "search": "Поиск пользователей",
+    "filters": "Фильтры",
+    "role": "Роль",
+    "status": "Статус",
+    "joined": "Дата регистрации",
+    "actions": {
+      "view": "Просмотр",
+      "edit": "Редактировать",
+      "suspend": "Приостановить",
+      "delete": "Удалить",
+      "resetPassword": "Сбросить пароль"
+    }
+  },
+  "businesses": {
+    "title": "Управление бизнесами",
+    "pending": "Ожидают одобрения",
+    "approved": "Одобренные",
+    "rejected": "Отклоненные",
+    "suspended": "Приостановленные",
+    "approve": "Одобрить",
+    "reject": "Отклонить",
+    "verificationRequired": "Требуется проверка документов"
+  },
+  "orders": {
+    "title": "Все заказы",
+    "viewAll": "Все заказы",
+    "disputes": "Споры",
+    "refunds": "Возвраты"
+  },
+  "products": {
+    "title": "Управление продуктами",
+    "flagged": "Отмеченные",
+    "review": "На проверке"
+  },
+  "analytics": {
+    "title": "Системная аналитика",
+    "platformMetrics": "Метрики платформы",
+    "userGrowth": "Рост пользователей",
+    "revenueByCategory": "Выручка по категориям",
+    "topBusinesses": "Топ бизнесы",
+    "exportReport": "Экспортировать отчет"
+  },
+  "settings": {
+    "title": "Настройки системы",
+    "general": "Общие",
+    "payments": "Платежи",
+    "notifications": "Уведомления",
+    "security": "Безопасность",
+    "api": "API настройки",
+    "maintenance": "Обслуживание"
+  },
+  "logs": {
+    "title": "Системные логи",
+    "activity": "Активность",
+    "errors": "Ошибки",
+    "security": "Безопасность"
+  }
+}

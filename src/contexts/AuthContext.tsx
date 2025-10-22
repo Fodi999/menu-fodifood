@@ -1,8 +1,7 @@
 "use client";
 
 import { createContext, useContext, useState, useEffect, ReactNode } from "react";
-import api from "@/lib/api";
-import { getApiUrl } from "@/lib/utils";
+import { authApi } from "@/lib/rust-api";
 import type { User, AuthTokens } from "@/types/user";
 
 // Экспортируем типы для совместимости
@@ -44,7 +43,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       }
 
       try {
-        const userData = await api.get<User>("/user/profile");
+        const userData = await authApi.getCurrentUser();
         setUser(userData);
       } catch (error) {
         // Токен невалидный - удаляем
@@ -61,15 +60,18 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Вход
   const login = async (email: string, password: string) => {
-    const data = await api.post<{ token: string; user: User; tokens?: AuthTokens }>("/auth/login", {
-      email,
-      password,
-    });
+    const data = await authApi.login({ email, password });
+    
+    // Проверка что данные получены
+    if (!data || !data.user) {
+      throw new Error("Invalid response from server");
+    }
     
     // Сохраняем токен и роль в localStorage и cookies (только на клиенте)
     if (typeof window !== "undefined") {
-      localStorage.setItem("token", data.token);
-      document.cookie = `token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
+      const token = data.tokens?.access_token || '';
+      localStorage.setItem("token", token);
+      document.cookie = `token=${token}; path=/; max-age=86400; SameSite=Lax`;
       document.cookie = `role=${data.user.role}; path=/; max-age=86400; SameSite=Lax`;
     }
     
@@ -79,16 +81,22 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   // Регистрация
   const signup = async (email: string, password: string, name?: string) => {
-    const data = await api.post<{ token: string; user: User; tokens?: AuthTokens }>("/auth/register", {
-      email,
+    const data = await authApi.signup({ 
+      email, 
       password,
-      name,
+      name: name || email.split('@')[0] // Default name from email
     });
+    
+    // Проверка что данные получены
+    if (!data || !data.user) {
+      throw new Error("Invalid response from server");
+    }
     
     // Сохраняем токен и роль в localStorage и cookies (только на клиенте)
     if (typeof window !== "undefined") {
-      localStorage.setItem("token", data.token);
-      document.cookie = `token=${data.token}; path=/; max-age=86400; SameSite=Lax`;
+      const token = data.tokens?.access_token || '';
+      localStorage.setItem("token", token);
+      document.cookie = `token=${token}; path=/; max-age=86400; SameSite=Lax`;
       document.cookie = `role=${data.user.role}; path=/; max-age=86400; SameSite=Lax`;
     }
     
@@ -139,20 +147,4 @@ export function useAuth() {
 export function getToken(): string | null {
   if (typeof window === "undefined") return null;
   return localStorage.getItem("token");
-}
-
-// Утилита для API запросов с авторизацией (deprecated - используйте api из @/lib/api)
-export async function fetchWithAuth(url: string, options: RequestInit = {}) {
-  const token = getToken();
-  
-  const headers = {
-    ...options.headers,
-    ...(token ? { Authorization: `Bearer ${token}` } : {}),
-  };
-
-  // Используем новый API клиент
-  return fetch(`${getApiUrl()}${url}`, {
-    ...options,
-    headers,
-  });
 }

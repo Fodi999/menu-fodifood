@@ -2,6 +2,7 @@
 
 import React from "react";
 import { useAuth } from "@/contexts/AuthContext";
+import { useRole } from "@/hooks/useRole";
 import { useBusiness } from "@/contexts/BusinessContext";
 import { useRouter } from "next/navigation";
 import { UserRole } from "@/types/user";
@@ -13,27 +14,29 @@ import Link from "next/link";
 
 export default function BusinessDashboard() {
   const { user } = useAuth();
+  const { currentRole } = useRole();
   const { currentBusiness, isLoading } = useBusiness();
   const router = useRouter();
 
-  // Проверка доступа
+  // Проверка доступа по currentRole вместо user.role
   React.useEffect(() => {
     if (!user) return;
-    if (user.role !== UserRole.BUSINESS_OWNER) {
+    if (currentRole !== UserRole.BUSINESS_OWNER && currentRole !== UserRole.ADMIN) {
+      console.log(`⚠️ Access denied: role=${currentRole}, redirecting to /`);
       router.push("/");
     }
-  }, [user, router]);
+  }, [user, currentRole, router]);
 
   // Если нет бизнеса, предложить создать
   React.useEffect(() => {
     if (!user) return;
-    if (user.role === UserRole.BUSINESS_OWNER && !isLoading && !currentBusiness) {
+    if (currentRole === UserRole.BUSINESS_OWNER && !isLoading && !currentBusiness) {
       console.log("⚠️ No business found, redirecting to onboarding");
       router.push("/auth/onboarding");
     }
-  }, [user, currentBusiness, isLoading, router]);
+  }, [user, currentBusiness, isLoading, currentRole, router]);
 
-  if (!user || user.role !== UserRole.BUSINESS_OWNER) {
+  if (!user || (currentRole !== UserRole.BUSINESS_OWNER && currentRole !== UserRole.ADMIN)) {
     return null;
   }
 

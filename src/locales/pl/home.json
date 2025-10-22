@@ -1,0 +1,50 @@
+{
+  "hero": {
+    "title": "FODI SUSHI",
+    "subtitle": "Dostawa premium sushi",
+    "description": "Metawersum łączące AI, Web3 i rzeczywiste biznesy w jeden ekosystem",
+    "orderButton": "Zamów teraz",
+    "viewMenuButton": "Token FODI"
+  },
+  "features": {
+    "title": "Dlaczego my",
+    "freshIngredients": {
+      "title": "Świeże składniki",
+      "description": "Codzienna dostawa produktów premium"
+    },
+    "fastDelivery": {
+      "title": "Szybka dostawa",
+      "description": "Gorąca dostawa w 40 minut"
+    },
+    "chefExpertise": {
+      "title": "Eksperci kuchni",
+      "description": "Doświadczeni kucharze z Japonii"
+    }
+  },
+  "businesses": {
+    "title": "Nasze restauracje",
+    "subtitle": "Wybierz najbliższą",
+    "categories": {
+      "all": "Wszystkie",
+      "sushi": "Sushi",
+      "pizza": "Pizza",
+      "burgers": "Burgery",
+      "asian": "Azjatycka",
+      "italian": "Włoska",
+      "desserts": "Desery"
+    },
+    "viewMenu": "Zobacz menu",
+    "orderNow": "Zamów",
+    "openUntil": "Otwarte do",
+    "closed": "Zamknięte",
+    "rating": "Ocena"
+  },
+  "cta": {
+    "businessTitle": "Masz biznes?",
+    "businessSubtitle": "Zarejestruj się i stwórz witrynę swojego biznesu za darmo! Przyciągaj nowych klientów i zwiększ sprzedaż.",
+    "businessButton": "Utwórz konto biznesowe",
+    "investTitle": "Inwestuj w przyszłość jedzenia",
+    "investSubtitle": "Zdobądź tokeny FODI i uczestniczyć w rozwoju",
+    "investButton": "Dowiedz się o projekcie"
+  }
+}

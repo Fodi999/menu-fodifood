@@ -23,6 +23,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { RoleSwitcher } from "@/app/components/RoleSwitcher";
 import { useRole } from "@/hooks/useRole";
 import { getApiUrl } from "@/lib/utils";
+import { ChatWidget } from "@/components/ChatWidget";
+import { UserWalletCard } from "@/components/UserWalletCard";
 
 interface Order {
   id: string;
@@ -187,7 +189,12 @@ export default function ProfilePage() {
         </div>
 
         {/* Main Content Grid */}
-        <div className="grid grid-cols-1 lg:grid-cols-3 gap-4 sm:gap-6 mb-6 sm:mb-8">
+        <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-4 gap-4 sm:gap-6 mb-6 sm:mb-8">
+          {/* Wallet Card - FIRST */}
+          <div className="xl:col-span-1">
+            <UserWalletCard userId={user.id} />
+          </div>
+
           {/* Profile Info Card */}
           <Card className="bg-gray-900/50 border-gray-800 backdrop-blur-xl">
             <CardHeader className="pb-3 sm:pb-6">
@@ -263,7 +270,7 @@ export default function ProfilePage() {
           </Card>
 
           {/* Quick Actions Card */}
-          <Card className="bg-gradient-to-br from-orange-500/20 to-red-500/20 border-orange-500/30 backdrop-blur-xl sm:col-span-2 lg:col-span-1">
+          <Card className="bg-gradient-to-br from-orange-500/20 to-red-500/20 border-orange-500/30 backdrop-blur-xl xl:col-span-1">
             <CardHeader className="pb-3 sm:pb-6">
               <CardTitle className="flex items-center gap-2 text-white text-base sm:text-lg">
                 <Settings className="w-4 h-4 sm:w-5 sm:h-5 text-orange-500" />
@@ -315,6 +322,15 @@ export default function ProfilePage() {
               )}
             </CardContent>
           </Card>
+        </div>
+
+        {/* AI Chat Widget - NEW SECTION */}
+        <div className="mb-6 sm:mb-8">
+          <ChatWidget 
+            userId={profile.id}
+            userName={profile.name}
+            size="compact"
+          />
         </div>
 
         {/* Role Switcher Section */}

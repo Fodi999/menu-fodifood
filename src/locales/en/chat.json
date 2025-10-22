@@ -1,0 +1,36 @@
+{
+  "title": "AI Chat",
+  "subtitle": "Your personal food assistant",
+  "placeholder": "Type a message...",
+  "sendButton": "Send",
+  "typing": "typing...",
+  "modes": {
+    "compact": "Compact mode",
+    "full": "Full mode",
+    "expand": "Expand",
+    "collapse": "Collapse"
+  },
+  "suggestions": {
+    "title": "Quick questions",
+    "whatToOrder": "What should I order today?",
+    "recommendations": "Recommend something",
+    "dietaryOptions": "Are there vegetarian options?",
+    "specialDeals": "Any special offers?",
+    "orderHistory": "Show my order history",
+    "trackOrder": "Track my order"
+  },
+  "context": {
+    "selectBusiness": "Select restaurant for context",
+    "currentBusiness": "Current restaurant",
+    "clearContext": "Clear context"
+  },
+  "errors": {
+    "sendFailed": "Failed to send message",
+    "retryButton": "Try again",
+    "connectionLost": "Connection lost"
+  },
+  "empty": {
+    "title": "Start a conversation",
+    "subtitle": "Ask me about menu, recommendations, or your order"
+  }
+}

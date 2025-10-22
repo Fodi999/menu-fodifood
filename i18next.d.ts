@@ -1,75 +1,29 @@
 import "i18next";
+import common_ru from "./src/locales/ru/common.json";
+import home_ru from "./src/locales/ru/home.json";
+import auth_ru from "./src/locales/ru/auth.json";
+import profile_ru from "./src/locales/ru/profile.json";
+import chat_ru from "./src/locales/ru/chat.json";
+import business_ru from "./src/locales/ru/business.json";
+import invest_ru from "./src/locales/ru/invest.json";
+import cart_ru from "./src/locales/ru/cart.json";
+import admin_ru from "./src/locales/ru/admin.json";
+import ns1_ru from "./src/locales/ru/ns1.json";
 
 declare module "i18next" {
   interface CustomTypeOptions {
-    defaultNS: "ns1";
+    defaultNS: "common";
     resources: {
-      ns1: {
-        hero: {
-          title: string;
-          subtitle: string;
-          description: string;
-          orderButton: string;
-          viewMenuButton: string;
-        };
-        menu: {
-          title: string;
-          categories: string[];
-        };
-        products: Array<{
-          id: number;
-          name: string;
-          category: string;
-          description: string;
-          price: number;
-          image: string;
-          weight: string;
-        }>;
-        cart: {
-          title: string;
-          empty: string;
-          total: string;
-          checkout: string;
-          continueShopping: string;
-          addToCart: string;
-          remove: string;
-          quantity: string;
-        };
-        order: {
-          title: string;
-          name: string;
-          phone: string;
-          address: string;
-          comment: string;
-          submit: string;
-          success: string;
-          deliveryTime: string;
-          minOrder: string;
-        };
-        siteMetadata: {
-          title: string;
-          description: string;
-          contactAlert: string;
-          deliveryInfo: string;
-        };
-        buttonLabels: {
-          home: string;
-          menu: string;
-          about: string;
-          contact: string;
-          language: string;
-          cart: string;
-          close: string;
-          viewDetails: string;
-          orderNow: string;
-        };
-        footer: {
-          workingHours: string;
-          phone: string;
-          email: string;
-          social: string;
-        };
-      };
+      common: typeof common_ru;
+      home: typeof home_ru;
+      auth: typeof auth_ru;
+      profile: typeof profile_ru;
+      chat: typeof chat_ru;
+      business: typeof business_ru;
+      invest: typeof invest_ru;
+      cart: typeof cart_ru;
+      admin: typeof admin_ru;
+      ns1: typeof ns1_ru;
     };
   }
 }

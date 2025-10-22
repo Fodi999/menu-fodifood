@@ -2,6 +2,7 @@
 
 import { useRole } from "@/hooks/useRole";
 import RoleNavbar from "@/components/RoleNavbar";
+import LanguageSwitcher from "@/app/components/LanguageSwitcher";
 import { usePathname } from "next/navigation";
 import { ReactNode, useState, useEffect } from "react";
 
@@ -41,6 +42,8 @@ export default function LayoutContent({ children }: LayoutContentProps) {
       <main className={showNavbar ? "" : "min-h-screen"}>
         {children}
       </main>
+      {/* Глобальная плавающая кнопка смены языка - доступна на всех страницах */}
+      <LanguageSwitcher />
     </>
   );
 }

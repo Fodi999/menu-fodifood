@@ -1,12 +1,12 @@
 "use client";
 
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { businessesApi } from "@/lib/rust-api";
 import type { Business, BusinessCategory } from "@/types/business";
 import { BusinessGrid } from "./components/BusinessGrid";
 import { Filters } from "./components/Filters";
 import { RoleSwitcher } from "./components/RoleSwitcher";
-import LanguageSwitcher from "./components/LanguageSwitcher";
 import { useAuth } from "@/contexts/AuthContext";
 import { useRole } from "@/hooks/useRole";
 import { UserRole } from "@/types/user";
@@ -18,8 +18,10 @@ import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetTrigger } from "@/co
 import { motion } from "framer-motion";
 import { WalletButton } from "@/components/WalletButton";
 import { AnimatedStats } from "@/components/AnimatedStats";
+import { BankStatsSection } from "@/components/BankStatsSection";
 
 export default function HomePage() {
+  const { t } = useTranslation(["home", "common"]);
   const { user } = useAuth();
   const { currentRole } = useRole();
   const [businesses, setBusinesses] = useState<Business[]>([]);
@@ -42,35 +44,16 @@ export default function HomePage() {
       setLoading(true);
       setError(null);
       const data = await businessesApi.getAll();
+      console.log('✅ Loaded businesses from Shuttle:', data.length);
       setBusinesses(data);
       setFilteredBusinesses(data);
     } catch (err: any) {
-      console.error("Failed to load businesses:", err);
+      console.error("❌ Failed to load businesses from Shuttle:", err);
       setError(err.message || "Не удалось загрузить бизнесы");
-      // Mock data for development
-      const mockBusinesses: Business[] = [
-        {
-          id: "1",
-          name: "FODI SUSHI",
-          slug: "fodi-sushi",
-          description: "Лучшие суши в городе с доставкой",
-          category: "RESTAURANT" as any,
-          city: "Москва",
-          address: "ул. Пушкина, д. 10",
-          phone: "+7 (999) 123-45-67",
-          email: "info@fodisushi.ru",
-          logo_url: "/svg 1.svg",
-          owner_id: "1",
-          is_active: true,
-          rating: 4.8,
-          subscribers_count: 1250,
-          products_count: 45,
-          created_at: new Date().toISOString(),
-          updated_at: new Date().toISOString(),
-        },
-      ];
-      setBusinesses(mockBusinesses);
-      setFilteredBusinesses(mockBusinesses);
+      
+      // Fallback to empty array instead of mock data
+      setBusinesses([]);
+      setFilteredBusinesses([]);
     } finally {
       setLoading(false);
     }
@@ -159,8 +142,8 @@ export default function HomePage() {
               <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
                 <Button asChild variant="ghost" size="sm">
                   <Link href="/about" className="gap-2">
-                    <span className="hidden lg:inline">О проекте</span>
-                    <span className="lg:hidden">О нас</span>
+                    <span className="hidden lg:inline">{t("common:navigation.about")}</span>
+                    <span className="lg:hidden">{t("common:navigation.about")}</span>
                     <motion.span 
                       className="text-orange-400 text-xs"
                       animate={{ rotate: [0, 10, -10, 0] }}
@@ -176,18 +159,17 @@ export default function HomePage() {
             {/* Desktop Actions */}
             <div className="hidden md:flex items-center gap-2 lg:gap-3">
               <WalletButton />
-              <LanguageSwitcher />
               {user && user.role === UserRole.BUSINESS_OWNER && <RoleSwitcher />}
               {user ? (
                 <Button asChild variant="ghost" size="sm" className="text-gray-300 hover:text-white hover:bg-gray-800">
                   <Link href="/profile">
                     <User className="w-4 h-4 mr-2" />
-                    Профиль
+                    {t("common:navigation.profile")}
                   </Link>
                 </Button>
               ) : (
                 <Button asChild size="sm" className="bg-orange-500 hover:bg-orange-600">
-                  <Link href="/auth/signin">Войти</Link>
+                  <Link href="/auth/signin">{t("common:navigation.signIn")}</Link>
                 </Button>
               )}
             </div>
@@ -227,7 +209,7 @@ export default function HomePage() {
                         onClick={() => setMobileMenuOpen(false)}
                       >
                         <Link href="/about">
-                          <span>О проекте</span>
+                          <span>{t("common:navigation.about")}</span>
                           <span className="text-orange-400 text-sm">⚡</span>
                         </Link>
                       </Button>
@@ -237,13 +219,12 @@ export default function HomePage() {
 
                     {/* Mobile Settings */}
                     <div className="flex flex-col gap-3">
-                      <LanguageSwitcher />
                       {user && user.role === UserRole.BUSINESS_OWNER && <RoleSwitcher />}
                       {user ? (
                         <Button asChild variant="ghost" className="justify-start text-gray-300 hover:text-white hover:bg-gray-800" onClick={() => setMobileMenuOpen(false)}>
                           <Link href="/profile">
                             <User className="w-4 h-4 mr-2" />
-                            Профиль
+                            {t("common:navigation.profile")}
                           </Link>
                         </Button>
                       ) : (
@@ -252,7 +233,7 @@ export default function HomePage() {
                           className="bg-orange-500 hover:bg-orange-600"
                           onClick={() => setMobileMenuOpen(false)}
                         >
-                          <Link href="/auth/signin">Войти</Link>
+                          <Link href="/auth/signin">{t("common:navigation.signIn")}</Link>
                         </Button>
                       )}
                     </div>
@@ -318,7 +299,7 @@ export default function HomePage() {
               animate={{ opacity: 1 }}
               transition={{ delay: 0.4 }}
             >
-              Метавселенная, объединяющая AI, Web3 и реальные бизнесы в единую экосистему
+              {t("home:hero.description")}
             </motion.p>
             
             {/* CTA Buttons with pulsing glow */}
@@ -347,7 +328,7 @@ export default function HomePage() {
                 className="w-full sm:w-auto bg-gradient-to-r from-orange-500 to-yellow-500 hover:from-orange-600 hover:to-yellow-600 text-white font-semibold px-8 py-6 text-base sm:text-lg rounded-full shadow-lg hover:shadow-orange-500/50 transition-all duration-300 relative group"
               >
                 <Link href="/about">
-                  🚀 Узнать о проекте
+                  🚀 {t("home:cta.investButton")}
                   <motion.div
                     className="absolute inset-0 rounded-full bg-gradient-to-r from-orange-400 to-yellow-400 opacity-0 group-hover:opacity-30 blur-xl -z-10"
                     animate={{
@@ -368,7 +349,7 @@ export default function HomePage() {
                 className="w-full sm:w-auto border-2 border-orange-500 text-orange-500 hover:bg-orange-500 hover:text-white font-semibold px-8 py-6 text-base sm:text-lg rounded-full transition-all duration-300 relative group"
               >
                 <Link href="/about/web3/token">
-                  💎 Токен FODI
+                  💎 {t("home:hero.viewMenuButton")}
                   <motion.div
                     className="absolute inset-0 rounded-full bg-orange-500 opacity-0 group-hover:opacity-20 blur-xl -z-10"
                     animate={{
@@ -388,6 +369,9 @@ export default function HomePage() {
           {/* Stats - Premium Dashboard Panel with Animated Counters */}
           <AnimatedStats businesses={businesses} />
         </motion.div>
+
+        {/* Bank Stats Section */}
+        <BankStatsSection />
 
         {/* Divider with "Витрина бизнесов" - Parallax Effect */}
         <motion.div 
@@ -437,13 +421,16 @@ export default function HomePage() {
 
         {/* Error */}
         {error && (
-          <div className="mb-8 bg-gradient-to-r from-yellow-500/10 via-yellow-500/5 to-transparent border-l-4 border-yellow-500 text-yellow-200 px-6 py-5 rounded-r-xl backdrop-blur-sm shadow-lg">
+          <div className="mb-8 bg-gradient-to-r from-red-500/10 via-red-500/5 to-transparent border-l-4 border-red-500 text-red-200 px-6 py-5 rounded-r-xl backdrop-blur-sm shadow-lg">
             <div className="flex items-start gap-4">
-              <span className="text-3xl">⚠️</span>
+              <span className="text-3xl">❌</span>
               <div className="space-y-2">
-                <p className="font-semibold text-lg">Rust API недоступен</p>
-                <p className="text-sm text-yellow-300/80 leading-relaxed">
-                  Показаны демонстрационные данные. Запустите Rust backend для полного функционала.
+                <p className="font-semibold text-lg">Shuttle Backend недоступен</p>
+                <p className="text-sm text-red-300/80 leading-relaxed">
+                  Не удалось подключиться к Shuttle API. Проверьте подключение к интернету или попробуйте позже.
+                </p>
+                <p className="text-xs text-red-400/60 font-mono">
+                  URL: https://bot-fodifood-lcon.shuttle.app
                 </p>
               </div>
             </div>
@@ -526,11 +513,10 @@ export default function HomePage() {
                 transition={{ delay: 0.2 }}
               >
                 <h2 className="text-3xl sm:text-4xl font-bold bg-gradient-to-r from-orange-400 to-yellow-300 bg-clip-text text-transparent">
-                  Владеете бизнесом?
+                  {t("home:cta.businessTitle")}
                 </h2>
                 <p className="text-gray-300 text-base sm:text-lg max-w-2xl mx-auto leading-relaxed font-light">
-                  Зарегистрируйтесь и создайте витрину вашего заведения <span className="text-orange-400 font-semibold">бесплатно</span>!<br/>
-                  Привлекайте новых клиентов и увеличивайте продажи.
+                  {t("home:cta.businessSubtitle")}
                 </p>
               </motion.div>
               
@@ -545,8 +531,8 @@ export default function HomePage() {
                   size="lg"
                   className="bg-gradient-to-r from-orange-500 to-orange-600 hover:from-orange-400 hover:to-orange-500 text-white font-semibold px-10 py-7 text-lg shadow-xl hover:shadow-2xl hover:shadow-orange-500/50 transition-all duration-300 transform hover:scale-105 rounded-xl relative group"
                 >
-                  <Link href="/auth/signup" className="flex items-center gap-2">
-                    Создать бизнес-аккаунт
+                  <Link href="/business/new" className="flex items-center gap-2">
+                    {t("home:cta.businessButton")}
                     <motion.span 
                       className="text-xl"
                       animate={{ x: [0, 5, 0] }}
@@ -583,7 +569,7 @@ export default function HomePage() {
               FODI MARKET
             </span>
             {" • "}
-            <span className="text-gray-600">Powered by Rust AI Gateway</span>
+            <span className="text-gray-600">{t("common:footer.poweredBy")} Rust AI Gateway</span>
           </p>
         </div>
       </footer>

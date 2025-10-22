@@ -1,0 +1,80 @@
+{
+  "title": "Profil",
+  "tabs": {
+    "overview": "Przegląd",
+    "orders": "Zamówienia",
+    "favorites": "Ulubione",
+    "settings": "Ustawienia"
+  },
+  "overview": {
+    "welcomeBack": "Witaj ponownie",
+    "memberSince": "Członek od",
+    "stats": {
+      "totalOrders": "Wszystkie zamówienia",
+      "totalSpent": "Wydane",
+      "favoriteRestaurants": "Ulubione restauracje",
+      "rewardPoints": "Punkty"
+    }
+  },
+  "orders": {
+    "title": "Historia zamówień",
+    "empty": "Nie masz jeszcze żadnych zamówień",
+    "orderNumber": "Zamówienie #",
+    "date": "Data",
+    "total": "Suma",
+    "status": "Status",
+    "viewDetails": "Szczegóły",
+    "reorder": "Zamów ponownie",
+    "trackOrder": "Śledź zamówienie"
+  },
+  "favorites": {
+    "title": "Ulubione restauracje",
+    "empty": "Brak ulubionych restauracji",
+    "addFavorite": "Dodaj do ulubionych"
+  },
+  "settings": {
+    "title": "Ustawienia profilu",
+    "personalInfo": {
+      "title": "Informacje osobiste",
+      "name": "Imię",
+      "email": "Email",
+      "phone": "Telefon",
+      "updateButton": "Aktualizuj"
+    },
+    "addresses": {
+      "title": "Adresy dostawy",
+      "addNew": "Dodaj adres",
+      "default": "Domyślny",
+      "edit": "Edytuj",
+      "delete": "Usuń"
+    },
+    "payments": {
+      "title": "Metody płatności",
+      "addCard": "Dodaj kartę",
+      "endingIn": "kończy się na"
+    },
+    "notifications": {
+      "title": "Powiadomienia",
+      "orderUpdates": "Aktualizacje zamówień",
+      "promotions": "Promocje i oferty",
+      "newsletter": "Newsletter",
+      "sms": "Powiadomienia SMS"
+    },
+    "security": {
+      "title": "Bezpieczeństwo",
+      "changePassword": "Zmień hasło",
+      "twoFactor": "Uwierzytelnianie dwuskładnikowe",
+      "loginHistory": "Historia logowań"
+    }
+  },
+  "aiChat": {
+    "title": "Asystent AI",
+    "placeholder": "Zapytaj o menu, rekomendacje...",
+    "suggestions": {
+      "recommendations": "Co polecasz dzisiaj?",
+      "dietaryInfo": "Czy są opcje wegetariańskie?",
+      "orderHistory": "Co zamawiałem wcześniej?",
+      "deals": "Czy są teraz promocje?"
+    }
+  }
+}
