@@ -92,12 +92,16 @@ i18n
       escapeValue: false,
     },
     detection: {
-      // Порядок определения языка
-      order: ['localStorage', 'navigator', 'htmlTag'],
-      // Ключ для хранения языка в localStorage
-      lookupLocalStorage: 'i18nextLng',
-      // Кэшировать выбранный язык
-      caches: ['localStorage'],
+      // Порядок определения языка: Cookie → localStorage → Accept-Language → браузер
+      order: ['cookie', 'localStorage', 'navigator', 'htmlTag'],
+      // Ключи для поиска
+      lookupCookie: 'NEXT_LOCALE', // Cookie для языка (SSR-friendly)
+      lookupLocalStorage: 'i18nextLng', // localStorage для клиента
+      // Кэшировать выбранный язык в обоих местах
+      caches: ['cookie', 'localStorage'],
+      // Настройки cookie
+      cookieMinutes: 525600, // 1 год (60 * 24 * 365)
+      cookieDomain: typeof window !== 'undefined' ? window.location.hostname : undefined,
     },
   });
 
