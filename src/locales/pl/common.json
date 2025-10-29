@@ -50,5 +50,28 @@
     "privacyPolicy": "Polityka prywatności",
     "termsOfService": "Warunki użytkowania",
     "poweredBy": "Powered by"
+  },
+  "testing": {
+    "title": "🧪 Panel testowania",
+    "subtitle": "Testuj wszystkie ulepszenia: API fallbacks, Toaster system, Error Logger",
+    "languageTesting": "🌍 Testowanie języków",
+    "languageDescription": "Testuj przełączanie między językami: Rosyjski ↔ Polski ↔ Angielski",
+    "languageInstructions": "Użyj pływającego przycisku z globusem w lewym dolnym rogu, aby przełączać języki. Zmiany są zapisywane w cookie i localStorage.",
+    "apiStatus": "🔌 Status API",
+    "mockApi": "✅ Mock API: Zawsze dostępny",
+    "rustBackend": "🔄 Rust Backend: Sprawdź logi konsoli",
+    "sessionCache": "💾 Session Cache: Włączony",
+    "gracefulFallback": "⚡ Graceful Fallback: Aktywny",
+    "errorLogger": "📝 Polecenia Error Logger",
+    "viewLogs": "— Wyświetl wszystkie logi",
+    "downloadLogs": "— Pobierz logi jako JSON",
+    "clearLogs": "— Wyczyść wszystkie logi",
+    "activeProviders": "🏗️ Aktywni dostawcy",
+    "authProvider": "✅ AuthProvider — Uwierzytelnianie użytkowników",
+    "roleProvider": "✅ RoleProvider — Dostęp oparty na rolach",
+    "businessProvider": "✅ BusinessProvider — Kontekst biznesowy",
+    "i18nextProvider": "✅ I18nextProvider — Wielojęzyczne wsparcie",
+    "uiEvents": "✅ UI Events — Aktualizacje w czasie rzeczywistym",
+    "toaster": "✅ Toaster (Sonner) — Globalne powiadomienia"
   }
 }

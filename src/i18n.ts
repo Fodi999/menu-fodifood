@@ -17,6 +17,7 @@ import business_en from "./locales/en/business.json";
 import invest_en from "./locales/en/invest.json";
 import cart_en from "./locales/en/cart.json";
 import admin_en from "./locales/en/admin.json";
+import about_en from "./locales/en/about.json";
 
 // Модульные файлы переводов - Русский
 import common_ru from "./locales/ru/common.json";
@@ -28,6 +29,7 @@ import business_ru from "./locales/ru/business.json";
 import invest_ru from "./locales/ru/invest.json";
 import cart_ru from "./locales/ru/cart.json";
 import admin_ru from "./locales/ru/admin.json";
+import about_ru from "./locales/ru/about.json";
 
 // Модульные файлы переводов - Польский
 import common_pl from "./locales/pl/common.json";
@@ -39,6 +41,7 @@ import business_pl from "./locales/pl/business.json";
 import invest_pl from "./locales/pl/invest.json";
 import cart_pl from "./locales/pl/cart.json";
 import admin_pl from "./locales/pl/admin.json";
+import about_pl from "./locales/pl/about.json";
 
 const resources = {
   en: { 
@@ -51,7 +54,8 @@ const resources = {
     business: business_en,
     invest: invest_en,
     cart: cart_en,
-    admin: admin_en
+    admin: admin_en,
+    about: about_en
   },
   ru: { 
     ns1: ns1_ru,
@@ -63,7 +67,8 @@ const resources = {
     business: business_ru,
     invest: invest_ru,
     cart: cart_ru,
-    admin: admin_ru
+    admin: admin_ru,
+    about: about_ru
   },
   pl: { 
     ns1: ns1_pl,
@@ -75,7 +80,8 @@ const resources = {
     business: business_pl,
     invest: invest_pl,
     cart: cart_pl,
-    admin: admin_pl
+    admin: admin_pl,
+    about: about_pl
   },
 };
 
@@ -86,7 +92,7 @@ i18n
     resources,
     lng: "ru", // Язык по умолчанию (русский для FODI)
     fallbackLng: "en", // Запасной язык
-    ns: ["ns1", "common", "home", "auth", "profile", "chat", "business", "invest", "cart", "admin"], // Все пространства имен
+    ns: ["ns1", "common", "home", "auth", "profile", "chat", "business", "invest", "cart", "admin", "about"], // Все пространства имен
     defaultNS: "common", // Namespace по умолчанию (общие переводы)
     interpolation: {
       escapeValue: false,

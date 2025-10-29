@@ -9,6 +9,9 @@ import invest_ru from "./src/locales/ru/invest.json";
 import cart_ru from "./src/locales/ru/cart.json";
 import admin_ru from "./src/locales/ru/admin.json";
 import ns1_ru from "./src/locales/ru/ns1.json";
+import about_ru from "./src/locales/ru/about.json";
+import about_en from "./src/locales/en/about.json";
+import about_pl from "./src/locales/pl/about.json";
 
 declare module "i18next" {
   interface CustomTypeOptions {
@@ -24,6 +27,7 @@ declare module "i18next" {
       cart: typeof cart_ru;
       admin: typeof admin_ru;
       ns1: typeof ns1_ru;
+      about: typeof about_ru;
     };
   }
 }

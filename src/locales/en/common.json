@@ -50,5 +50,28 @@
     "privacyPolicy": "Privacy Policy",
     "termsOfService": "Terms of Service",
     "poweredBy": "Powered by"
+  },
+  "testing": {
+    "title": "🧪 Testing Dashboard",
+    "subtitle": "Test all improvements: API fallbacks, Toaster system, Error Logger",
+    "languageTesting": "🌍 Language Testing",
+    "languageDescription": "Test switching between languages: Russian ↔ Polish ↔ English",
+    "languageInstructions": "Use the floating globe button in the bottom left corner to switch languages. Changes are saved in cookie and localStorage.",
+    "apiStatus": "🔌 API Status",
+    "mockApi": "✅ Mock API: Always available",
+    "rustBackend": "🔄 Rust Backend: Check console logs",
+    "sessionCache": "💾 Session Cache: Enabled",
+    "gracefulFallback": "⚡ Graceful Fallback: Active",
+    "errorLogger": "📝 Error Logger Commands",
+    "viewLogs": "— View all logs",
+    "downloadLogs": "— Download logs as JSON",
+    "clearLogs": "— Clear all logs",
+    "activeProviders": "🏗️ Active Providers",
+    "authProvider": "✅ AuthProvider — User authentication",
+    "roleProvider": "✅ RoleProvider — Role-based access",
+    "businessProvider": "✅ BusinessProvider — Business context",
+    "i18nextProvider": "✅ I18nextProvider — Multi-language support",
+    "uiEvents": "✅ UI Events — Real-time updates",
+    "toaster": "✅ Toaster (Sonner) — Global notifications"
   }
 }

@@ -1,0 +1,276 @@
+{
+  "hero": {
+    "problem": "Restaurants lose profits due to inefficient processes",
+    "name": "Dmitry Fomin",
+    "role": "FOODI.AI developer",
+    "tagline": "Chef experience. AI power. Results for your business.",
+    "mission": "Mission: Making restaurant business efficient through technology",
+    "solution": "FOODI.AI solves this with artificial intelligence",
+    "benefits": "25% cost reduction • 30% profit growth • Process automation",
+    "description": "Chef-technologist with over 22 years of experience in Japanese cuisine and restaurant management. I create FOODI.AI — a platform tailored to your business."
+  },
+  "experience": {
+    "title": "Experience and Mission",
+    "subtitle": "Over 22 years, I've gone from sushi bar chef to international network technologist. Today I turn this experience into digital tools for restaurants.",
+    "stats": {
+      "experience": {
+        "title": "22+ years of experience",
+        "subtitle": "in Japanese cuisine and restaurant business"
+      },
+      "mission": {
+        "title": "Mission",
+        "subtitle": "combine practical experience with modern technologies"
+      },
+      "value": {
+        "title": "Value",
+        "subtitle": "help businesses grow and develop"
+      },
+      "goal": {
+        "title": "Goal",
+        "subtitle": "create smart tools for restaurants"
+      }
+    }
+  },
+  "features": {
+    "title": "What FOODI.AI does",
+    "subtitle": "The platform helps restaurant owners automate processes, train staff, and optimize menus",
+    "problem": "Problem:",
+    "solution": "Solution:",
+    "result": "Result:",
+    "items": [
+      {
+        "problem": "Hard to manage recipes",
+        "solution": "Store and update all technical cards in one place",
+        "result": "Kitchen workflow acceleration"
+      },
+      {
+        "problem": "Don't know dish cost price",
+        "solution": "AI calculates margin automatically",
+        "result": "Profit control"
+      },
+      {
+        "problem": "Staff makes mistakes",
+        "solution": "Training and tests",
+        "result": "Qualification growth and stability"
+      },
+      {
+        "problem": "Inefficient sales accounting",
+        "solution": "Automatic analytics and reports",
+        "result": "Better business understanding"
+      },
+      {
+        "problem": "Hard to train new employees",
+        "solution": "Interactive courses and tests",
+        "result": "Quick onboarding"
+      },
+      {
+        "problem": "No delivery system integration",
+        "solution": "Connection with delivery systems",
+        "result": "Full order control"
+      }
+    ]
+  },
+  "ai": {
+    "title": "FOODI.AI — smart ecosystem",
+    "subtitle": "for restaurants",
+    "description": "AI + tokens = digital economy where customers and business win together",
+    "helper": {
+      "title": "Smart assistant",
+      "description": "FOODI.AI analyzes data to predict demand, suggest recipe improvements, and optimize purchases.",
+      "features": [
+        "Dish demand prediction",
+        "Ingredient procurement optimization",
+        "Recipe improvement recommendations"
+      ]
+    },
+    "analysis": {
+      "title": "AI analyzes:",
+      "items": [
+        "Sales and dish popularity",
+        "Seasonal trends and customer preferences",
+        "Recipe effectiveness and cost price",
+        "Optimal procurement volumes",
+        "New dish suggestions"
+      ]
+    },
+    "results": {
+      "title": "Result:",
+      "items": [
+        "15-25% cost reduction",
+        "Menu profit growth",
+        "Food waste reduction",
+        "Better customer understanding"
+      ]
+    },
+    "promotion": {
+      "title": "New feature: promotion through customers",
+      "subtitle": "FOODI.AI motivates guests to help promote your business",
+      "description": "Customers can share reviews and posts about your restaurant on social networks and receive unique FOODI.AI tokens as a reward.",
+      "example": "Example: Guest posted a review about your restaurant → received 50 tokens → ordered dessert with 30% discount",
+      "usage": {
+        "title": "These tokens can be used for:",
+        "items": [
+          "Food and delivery orders",
+          "Getting bonuses and discounts",
+          "Participating in exclusive promotions and loyalty programs"
+        ]
+      },
+      "businessResults": {
+        "title": "Business result:",
+        "items": [
+          "Brand awareness growth through real recommendations",
+          "Active community of loyal customers",
+          "Combining marketing, IT and restaurant practice in one system"
+        ]
+      }
+    }
+  },
+  "token": {
+    "title": "Built-in token bank",
+    "subtitle": "and internal economy",
+    "description": "FOODI.AI is not just an automation platform, but a digital ecosystem where customers and restaurants interact through their own economy.",
+    "wallet": {
+      "title": "Personal FOODI.AI wallet",
+      "description": "Every user has a personal FOODI.AI wallet where platform tokens are stored.",
+      "features": [
+        "Use for order and delivery payment",
+        "Receive as reward for activity and promotion",
+        "Purchase through built-in payment system"
+      ]
+    },
+    "economy": {
+      "title": "Closed internal economy:",
+      "items": [
+        {
+          "title": "Customers are motivated",
+          "subtitle": "to share content and return to your restaurant",
+          "benefit": "+20% returning customers"
+        },
+        {
+          "title": "Restaurants get",
+          "subtitle": "stable marketing channel and loyal audience",
+          "benefit": "+30% social media engagement"
+        },
+        {
+          "title": "All participants win",
+          "subtitle": "creating mutual value in the ecosystem"
+        }
+      ]
+    }
+  },
+  "consulting": {
+    "title": "Training and Consulting",
+    "subtitle": "FOODI.AI is not just software. We accompany your restaurant at every stage: from process setup to team training.",
+    "stats": {
+      "restaurants": "5+",
+      "subtitle1": "restaurants implemented",
+      "satisfaction": "98%",
+      "subtitle2": "satisfied with training"
+    },
+    "testimonial": "\"FOODI.AI helped us optimize processes and train staff. The results exceeded expectations!\"",
+    "author": "— Restaurant owner who implemented the system",
+    "services": {
+      "title": "Professional services",
+      "subtitle": "My team helps implement FOODI.AI and adapt solutions to specific business.",
+      "items": [
+        "Online menu and accounting setup",
+        "Technical card development",
+        "Staff training",
+        "Kitchen process optimization",
+        "Consulting for new restaurants"
+      ]
+    },
+    "forRestaurants": {
+      "title": "For restaurants:",
+      "items": [
+        "Accounting system implementation",
+        "Recipe standardization",
+        "Staff training",
+        "Process optimization"
+      ]
+    },
+    "forProjects": {
+      "title": "For new projects:",
+      "items": [
+        "Launch consultations",
+        "Concept development",
+        "Equipment selection",
+        "Team formation"
+      ]
+    }
+  },
+  "audience": {
+    "title": "Who this is",
+    "subtitle": "suitable for",
+    "items": [
+      {
+        "title": "Restaurant and delivery service owners",
+        "subtitle": "Business management and process optimization"
+      },
+      {
+        "title": "Head chefs and managers",
+        "subtitle": "Professional development and standardization"
+      },
+      {
+        "title": "Training centers and franchises",
+        "subtitle": "Learning and standards scaling"
+      },
+      {
+        "title": "HoReCa solution developers",
+        "subtitle": "Integration and platform solution development"
+      }
+    ]
+  },
+  "tech": {
+    "title": "Technologies",
+    "subtitle": "Built with modern technologies for stable, fast, and secure operation.",
+    "stack": "Next.js + Rust AI Gateway • OpenAI Integration • Web3 Tokenization Module • Mobile and Web Interfaces",
+    "items": [
+      "Next.js + Rust AI Gateway",
+      "OpenAI Integration",
+      "Web3 tokenization module for loyalty programs",
+      "Mobile and web interfaces"
+    ]
+  },
+  "goal": {
+    "title": "Project",
+    "subtitle": "goal",
+    "description": "Create understandable, accessible, and useful tools that help restaurants work efficiently and chefs develop professionally.",
+    "values": [
+      {
+        "title": "Efficiency",
+        "subtitle": "Work simpler and faster"
+      },
+      {
+        "title": "Growth",
+        "subtitle": "Increase profits"
+      },
+      {
+        "title": "Development",
+        "subtitle": "Professional growth"
+      }
+    ]
+  },
+  "cta": {
+    "title": "Don't lose profits!",
+    "subtitle": "Start using FOODI.AI right now",
+    "description": "Join restaurants that have already increased profits by 30% with our AI",
+    "offer": {
+      "title": "Limited offer: Free trial period + personal consultation",
+      "subtitle": "First 10 restaurants will receive free system setup and team training"
+    },
+    "buttons": {
+      "start": "START FREE",
+      "consultation": "Get consultation"
+    }
+  },
+  "footer": {
+    "brand": "FOODI.AI",
+    "subtitle": "Smart tools for restaurants and food delivery",
+    "copyright": "© 2025 FOODI.AI",
+    "email": "fodi85999@gmail.com",
+    "instagram": "@fodifood",
+    "credits": "Developed and created by Dmitry Fomin — chef and developer with 22 years of experience in the restaurant business"
+  },
+  "backToHome": "Back to home"
+}
