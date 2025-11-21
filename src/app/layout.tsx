@@ -1,6 +1,6 @@
 import "./globals.css";
 import { Providers } from "./providers";
-import LayoutContent from "@/components/LayoutContent";
+import { AnimatedBackground } from "@/components/AnimatedBackground";
 
 export default function RootLayout({
   children,
@@ -8,11 +8,10 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="ru">
-      <body className="antialiased bg-gradient-to-br from-[#090909] via-[#0d0d0d] to-[#1a1a1a] text-gray-100">
-        <Providers>
-          <LayoutContent>{children}</LayoutContent>
-        </Providers>
+    <html lang="ru" suppressHydrationWarning>
+      <body className="antialiased">
+        <AnimatedBackground />
+        <Providers>{children}</Providers>
       </body>
     </html>
   );
