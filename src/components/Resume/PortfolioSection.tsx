@@ -1,59 +1,35 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, AnimatePresence } from "framer-motion";
 import Image from "next/image";
 import { useState } from "react";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
-import { Palette, Star, Folder, Sparkles } from "lucide-react";
-
-const portfolioItems = [
-  {
-    id: 1,
-    title: "Филадельфия",
-    category: "Суши",
-    image: "/products/philadelphia.jpg",
-  },
-  {
-    id: 2,
-    title: "Калифорния",
-    category: "Суши",
-    image: "/products/california.jpg",
-  },
-  {
-    id: 3,
-    title: "Нигири с лососем",
-    category: "Суши",
-    image: "/products/nigiri-salmon.jpg",
-  },
-  {
-    id: 4,
-    title: "Микс сет",
-    category: "Сеты",
-    image: "/products/mix-set.jpg",
-  },
-  {
-    id: 5,
-    title: "Напиток Cola",
-    category: "Напитки",
-    image: "/products/cola.jpg",
-  },
-  {
-    id: 6,
-    title: "Авторское блюдо",
-    category: "Основное",
-    image: "/products/california.jpg",
-  },
-];
+import { Palette, Star, Folder, Sparkles, Plus, Trash2 } from "lucide-react";
+import { useResume } from "@/contexts/ResumeContext";
+import { EditableText } from "@/components/EditableText";
+import { EditableImage } from "@/components/EditableImage";
+import { Button } from "@/components/ui/button";
+import { Card } from "@/components/ui/card";
 
 function PortfolioCard({
   item,
   index,
+  onUpdate,
+  onDelete,
 }: {
-  item: (typeof portfolioItems)[0];
+  item: {
+    id: string;
+    title: string;
+    category: string;
+    image: string;
+  };
   index: number;
+  onUpdate: (field: string, value: any) => void;
+  onDelete?: () => void;
 }) {
   const ref = useRef(null);
+  const { isEditMode } = useResume();
   const isInView = useInView(ref, { once: true, margin: "-50px" });
   const [imageError, setImageError] = useState(false);
   const [isHovered, setIsHovered] = useState(false);
@@ -80,14 +56,26 @@ function PortfolioCard({
         transition={{ duration: 0.7, ease: "easeOut" }}
         className="relative w-full h-full"
       >
-        <Image
-          src={imageError ? "/placeholder.jpg" : item.image}
-          alt={item.title}
-          fill
-          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
-          className="object-cover"
-          onError={() => setImageError(true)}
-        />
+        {isEditMode ? (
+          <EditableImage
+            src={imageError ? "/placeholder.jpg" : item.image}
+            alt={item.title}
+            onSave={(newSrc) => onUpdate('image', newSrc)}
+            className="object-cover"
+            width={400}
+            height={400}
+            variant="portfolio"
+          />
+        ) : (
+          <Image
+            src={imageError ? "/placeholder.jpg" : item.image}
+            alt={item.title}
+            fill
+            sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+            className="object-cover"
+            onError={() => setImageError(true)}
+          />
+        )}
       </motion.div>
 
       {/* Animated corner accent */}
@@ -110,7 +98,10 @@ function PortfolioCard({
           className="px-3 py-1 rounded-full bg-primary/90 backdrop-blur-sm text-primary-foreground text-xs font-semibold shadow-lg"
           whileHover={{ scale: 1.1 }}
         >
-          {item.category}
+          <EditableText
+            value={item.category}
+            onSave={(newValue) => onUpdate('category', newValue)}
+          />
         </motion.span>
       </motion.div>
 
@@ -133,7 +124,10 @@ function PortfolioCard({
             >
               <Star className="w-5 h-5" />
             </motion.div>
-            {item.title}
+            <EditableText
+              value={item.title}
+              onSave={(newValue) => onUpdate('title', newValue)}
+            />
           </h3>
           <p className="text-white/90 text-sm flex items-center gap-2">
             <Folder className="w-4 h-4" />
@@ -181,14 +175,58 @@ function PortfolioCard({
       >
         <Sparkles className="w-10 h-10" />
       </motion.div>
+
+      {/* Delete button (only in edit mode) */}
+      {isEditMode && onDelete && (
+        <motion.div
+          initial={{ opacity: 0, scale: 0 }}
+          animate={{ opacity: 1, scale: 1 }}
+          className="absolute top-4 right-4 z-20"
+        >
+          <Button
+            size="sm"
+            variant="destructive"
+            onClick={onDelete}
+            className="h-8 w-8 p-0 rounded-full shadow-lg"
+          >
+            <Trash2 className="w-4 h-4" />
+          </Button>
+        </motion.div>
+      )}
     </motion.div>
   );
 }
 
 export function PortfolioSection() {
+  const { resumeData, updateData, isEditMode } = useResume();
+  const { portfolio } = resumeData;
+
+  const handleUpdatePortfolio = (portfolioId: string, field: string, value: any) => {
+    const updatedPortfolio = portfolio.map(item => 
+      item.id === portfolioId ? { ...item, [field]: value } : item
+    );
+    updateData({ portfolio: updatedPortfolio });
+  };
+
+  const handleDeletePortfolio = (portfolioId: string) => {
+    const updatedPortfolio = portfolio.filter(item => item.id !== portfolioId);
+    updateData({ portfolio: updatedPortfolio });
+  };
+
+  const handleAddPortfolio = () => {
+    const newId = `portfolio-${Date.now()}`;
+    const newItem = {
+      id: newId,
+      title: "Nowe danie",
+      category: "Kategoria",
+      image: "/placeholder.jpg",
+    };
+    updateData({ portfolio: [...portfolio, newItem] });
+  };
+
   return (
-    <section id="portfolio" className="py-12 sm:py-16 md:py-20 px-4 relative overflow-hidden">
-      <div className="max-w-6xl mx-auto">
+    <section id="portfolio" className="min-h-screen flex items-center py-12 sm:py-16 md:py-20 px-4 relative overflow-hidden">
+      <div className="max-w-6xl mx-auto w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -217,9 +255,52 @@ export function PortfolioSection() {
         </motion.div>
 
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5 md:gap-6">
-          {portfolioItems.map((item, index) => (
-            <PortfolioCard key={item.id} item={item} index={index} />
-          ))}
+          <AnimatePresence mode="popLayout">
+            {portfolio.map((item, index) => (
+              <PortfolioCard 
+                key={item.id} 
+                item={item} 
+                index={index}
+                onUpdate={(field, value) => handleUpdatePortfolio(item.id, field, value)}
+                onDelete={portfolio.length > 1 ? () => handleDeletePortfolio(item.id) : undefined}
+              />
+            ))}
+          </AnimatePresence>
+
+          {/* Add new portfolio item button */}
+          {isEditMode && (
+            <motion.div
+              initial={{ opacity: 0, scale: 0.9 }}
+              animate={{ opacity: 1, scale: 1 }}
+              transition={{ duration: 0.3 }}
+              className="aspect-square"
+            >
+              <Card 
+                onClick={handleAddPortfolio}
+                className="h-full w-full border-2 border-dashed border-primary/30 hover:border-primary hover:bg-primary/5 transition-all duration-300 cursor-pointer flex items-center justify-center group"
+              >
+                <motion.div 
+                  className="text-center"
+                  whileHover={{ scale: 1.1 }}
+                  whileTap={{ scale: 0.95 }}
+                >
+                  <motion.div
+                    className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors"
+                    whileHover={{ rotate: 90 }}
+                    transition={{ duration: 0.3 }}
+                  >
+                    <Plus className="w-8 h-8 text-primary" />
+                  </motion.div>
+                  <p className="text-sm font-semibold text-muted-foreground group-hover:text-primary transition-colors">
+                    Dodaj nowe danie
+                  </p>
+                  <p className="text-xs text-muted-foreground mt-1">
+                    Kliknij aby dodać
+                  </p>
+                </motion.div>
+              </Card>
+            </motion.div>
+          )}
         </div>
       </div>
     </section>

@@ -12,8 +12,28 @@
   /* Background colors */
   --color-background-light: #ffffff;
   --color-foreground-light: #171717;
-  --color-background-dark: #0a0a0a;
-  --color-foreground-dark: #ededed;
+  --color-background-dark: /* Minimal - минималистичная монохромная тема */
+body[data-background-theme="minimal"] {
+  --background: oklch(0.96 0 0);
+  --foreground: oklch(0.2 0 0);
+  --card: oklch(0.99 0 0);
+  --card-foreground: oklch(0.15 0 0);
+  --muted: oklch(0.92 0 0);
+  --muted-foreground: oklch(0.5 0 0);
+  --border: oklch(0.88 0 0);
+  background-color: oklch(0.96 0 0);
+}
+
+body[data-background-theme="minimal"] .dark {
+  --background: oklch(0.15 0 0);
+  --foreground: oklch(0.92 0 0);
+  --card: oklch(0.2 0 0);
+  --card-foreground: oklch(0.92 0 0);
+  --muted: oklch(0.25 0 0);
+  --muted-foreground: oklch(0.65 0 0);
+  --border: oklch(0.3 0 0);
+  background-color: oklch(0.15 0 0);
+}or-foreground-dark: #ededed;
 }
 
 /* Убрано - используем @layer base */
@@ -178,6 +198,46 @@ html {
   }
 }
 
+/* Улучшенная поддержка touch для мобильных устройств */
+@media (hover: none) and (pointer: coarse) {
+  /* Делаем элементы редактирования всегда видимыми на мобильных */
+  .group:hover .opacity-0 {
+    opacity: 0.8 !important;
+  }
+  
+  .opacity-0.group-hover\:opacity-100 {
+    opacity: 0.8 !important;
+  }
+  
+  /* Увеличиваем кликабельную область для кнопок */
+  button, a {
+    -webkit-tap-highlight-color: rgba(0, 0, 0, 0.1);
+    min-height: 36px; /* Минимум 36px для touch targets */
+  }
+  
+  /* Улучшенная видимость для редактирования */
+  .border-dashed.border-transparent {
+    border-color: rgba(var(--primary), 0.2) !important;
+  }
+}
+
+/* Убираем выделение при тапе */
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+/* Touch manipulation для всех интерактивных элементов */
+.touch-manipulation {
+  touch-action: manipulation;
+  -webkit-user-select: none;
+  user-select: none;
+}
+
+/* Плавная прокрутка */
+html {
+  scroll-behavior: smooth;
+}
+
 /* Chat animations */
 @keyframes fade-in {
   from { 
@@ -203,4 +263,209 @@ html {
 
 .animate-shake {
   animation: shake 0.3s ease-in-out;
+}
+
+/* Предотвращение выхода контента за границы */
+.overflow-x-hidden {
+  overflow-x: hidden;
+  max-width: 100%;
+}
+
+/* Ограничение ширины инпутов в режиме редактирования */
+input[type="text"],
+input[type="email"],
+input[type="tel"],
+textarea {
+  max-width: 100%;
+  min-width: 0;
+}
+
+/* Автоматический перенос длинных слов и URL */
+.break-words {
+  word-wrap: break-word;
+  word-break: break-word;
+  overflow-wrap: break-word;
+  hyphens: auto;
+}
+
+/* Предотвращение горизонтального скролла */
+body, html {
+  overflow-x: hidden;
+  max-width: 100vw;
+}
+
+/* ============================================ */
+/*         BACKGROUND THEME VARIANTS            */
+/* ============================================ */
+
+/* Default - стандартная тема, унаследованная от текущего light/dark режима */
+body[data-background-theme="default"] {
+  /* Используются стандартные CSS-переменные */
+}
+
+/* Elegant - элегантная светлая тема с мягкими градиентами */
+body[data-background-theme="elegant"] {
+  --background: oklch(0.98 0.005 280);
+  --foreground: oklch(0.18 0.02 264);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.02 264);
+  --muted: oklch(0.95 0.01 280);
+  --muted-foreground: oklch(0.5 0.03 264);
+  background: linear-gradient(135deg, 
+    oklch(0.98 0.01 280) 0%, 
+    oklch(0.99 0.005 320) 50%, 
+    oklch(0.98 0.01 280) 100%
+  );
+  background-attachment: fixed;
+}
+
+body[data-background-theme="elegant"].dark {
+  --background: oklch(0.2 0.02 280);
+  --foreground: oklch(0.95 0.01 264);
+  --card: oklch(0.25 0.03 280);
+  --card-foreground: oklch(0.95 0.01 264);
+  --muted: oklch(0.3 0.03 280);
+  --muted-foreground: oklch(0.65 0.02 264);
+  background: linear-gradient(135deg, 
+    oklch(0.18 0.03 280) 0%, 
+    oklch(0.2 0.02 320) 50%, 
+    oklch(0.18 0.03 280) 100%
+  );
+  background-attachment: fixed;
+}
+
+/* Dark - темная тема с глубоким черным фоном */
+body[data-background-theme="dark"] {
+  --background: oklch(0.12 0.01 240);
+  --foreground: oklch(0.95 0 0);
+  --card: oklch(0.18 0.02 240);
+  --muted: oklch(0.25 0.02 240);
+  background-color: oklch(0.12 0.01 240);
+}
+
+/* Minimal - минималистичная тема с нейтральными цветами */
+body[data-background-theme="minimal"] {
+  --background: oklch(0.96 0 0);
+  --foreground: oklch(0.2 0 0);
+  --card: oklch(0.99 0 0);
+  --border: oklch(0.88 0 0);
+  background-color: oklch(0.96 0 0);
+}
+
+body[data-background-theme="minimal"] .dark {
+  --background: oklch(0.15 0 0);
+  --foreground: oklch(0.92 0 0);
+  --card: oklch(0.2 0 0);
+  --border: oklch(0.3 0 0);
+  background-color: oklch(0.15 0 0);
+}
+
+/* Gradient - яркая градиентная тема */
+body[data-background-theme="gradient"] {
+  --foreground: oklch(0.15 0.03 240);
+  --card: oklch(1 0 0 / 0.9);
+  --card-foreground: oklch(0.12 0.03 240);
+  --muted: oklch(0.94 0.05 240);
+  --muted-foreground: oklch(0.45 0.05 240);
+  background: linear-gradient(
+    135deg,
+    oklch(0.95 0.08 330) 0%,
+    oklch(0.92 0.12 280) 25%,
+    oklch(0.90 0.15 220) 50%,
+    oklch(0.92 0.12 180) 75%,
+    oklch(0.95 0.08 140) 100%
+  );
+  background-attachment: fixed;
+}
+
+body[data-background-theme="gradient"].dark {
+  --foreground: oklch(0.95 0.02 240);
+  --card: oklch(0.2 0.03 240 / 0.85);
+  --card-foreground: oklch(0.95 0.02 240);
+  --muted: oklch(0.3 0.04 240);
+  --muted-foreground: oklch(0.65 0.03 240);
+  background: linear-gradient(
+    135deg,
+    oklch(0.25 0.08 330) 0%,
+    oklch(0.22 0.12 280) 25%,
+    oklch(0.20 0.15 220) 50%,
+    oklch(0.22 0.12 180) 75%,
+    oklch(0.25 0.08 140) 100%
+  );
+  background-attachment: fixed;
+}
+
+/* Warm - теплая тема с оранжево-желтыми оттенками */
+body[data-background-theme="warm"] {
+  --background: oklch(0.97 0.03 60);
+  --foreground: oklch(0.2 0.05 40);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.06 40);
+  --muted: oklch(0.93 0.04 60);
+  --muted-foreground: oklch(0.48 0.08 40);
+  --primary: oklch(0.6 0.2 40);
+  --accent: oklch(0.85 0.12 50);
+  background: linear-gradient(
+    135deg,
+    oklch(0.98 0.02 50) 0%,
+    oklch(0.96 0.04 60) 50%,
+    oklch(0.98 0.02 70) 100%
+  );
+  background-attachment: fixed;
+}
+
+body[data-background-theme="warm"] .dark {
+  --background: oklch(0.25 0.05 40);
+  --foreground: oklch(0.92 0.03 50);
+  --card: oklch(0.3 0.06 40);
+  --card-foreground: oklch(0.92 0.03 50);
+  --muted: oklch(0.35 0.06 45);
+  --muted-foreground: oklch(0.68 0.05 50);
+  --primary: oklch(0.65 0.2 50);
+  background: linear-gradient(
+    135deg,
+    oklch(0.22 0.06 40) 0%,
+    oklch(0.25 0.05 50) 50%,
+    oklch(0.22 0.06 60) 100%
+  );
+}
+
+/* Cool - холодная тема с сине-фиолетовыми оттенками */
+body[data-background-theme="cool"] {
+  --background: oklch(0.96 0.02 240);
+  --foreground: oklch(0.18 0.04 260);
+  --card: oklch(1 0 0);
+  --card-foreground: oklch(0.15 0.05 260);
+  --muted: oklch(0.93 0.03 240);
+  --muted-foreground: oklch(0.45 0.08 260);
+  --primary: oklch(0.55 0.2 260);
+  --accent: oklch(0.85 0.08 240);
+  background: linear-gradient(
+    135deg,
+    oklch(0.97 0.03 250) 0%,
+    oklch(0.95 0.04 240) 50%,
+    oklch(0.97 0.03 230) 100%
+  );
+  background-attachment: fixed;
+}
+
+body[data-background-theme="cool"] .dark {
+  --background: oklch(0.2 0.04 250);
+  --foreground: oklch(0.93 0.02 240);
+  --card: oklch(0.25 0.05 250);
+  --card-foreground: oklch(0.93 0.02 240);
+  --muted: oklch(0.3 0.05 245);
+  --muted-foreground: oklch(0.68 0.05 250);
+  --primary: oklch(0.6 0.2 260);
+  background: linear-gradient(
+    135deg,
+    oklch(0.18 0.05 260) 0%,
+    oklch(0.2 0.04 250) 50%,
+    oklch(0.18 0.05 240) 100%
+  );
+}
+
+/* Плавные переходы между темами */
+body {
+  transition: background-color 0.3s ease, background 0.5s ease;
 }

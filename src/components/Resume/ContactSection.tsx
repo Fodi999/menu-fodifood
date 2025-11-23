@@ -10,9 +10,10 @@ import { Mail, MessageCircle, Phone, MapPin, Send, User, MessageSquare, Clock, A
 import { useState } from "react";
 import { toast } from "sonner";
 import { useResume } from "@/contexts/ResumeContext";
+import { EditableText } from "@/components/EditableText";
 
 export function ContactSection() {
-  const { resumeData } = useResume();
+  const { resumeData, updateData, isEditMode } = useResume();
   const { contact } = resumeData;
 
   const [formData, setFormData] = useState({
@@ -77,8 +78,8 @@ export function ContactSection() {
   ];
 
   return (
-    <section id="contact" className="py-12 sm:py-16 md:py-20 px-4 bg-muted/30 relative overflow-hidden">
-      <div className="max-w-5xl mx-auto">
+    <section id="contact" className="min-h-screen flex items-center py-12 sm:py-16 md:py-20 px-4 bg-muted/30 relative overflow-hidden">
+      <div className="max-w-5xl mx-auto w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -114,8 +115,8 @@ export function ContactSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <Card className="h-full border-primary/10 shadow-xl hover:shadow-2xl transition-shadow">
-              <CardContent className="pt-6">
+            <Card className="h-full border-primary/10 shadow-xl hover:shadow-2xl transition-shadow overflow-hidden">
+              <CardContent className="pt-6 overflow-x-hidden">
                 <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
                   <motion.div
                     animate={{ rotate: [0, 360] }}
@@ -127,9 +128,8 @@ export function ContactSection() {
                 </h3>
                 <div className="space-y-3">
                   {contactInfo.map((info, index) => (
-                    <motion.a
+                    <motion.div
                       key={index}
-                      href={info.href}
                       initial={{ opacity: 0, x: -20 }}
                       whileInView={{ opacity: 1, x: 0 }}
                       viewport={{ once: true }}
@@ -138,28 +138,50 @@ export function ContactSection() {
                       className={`flex items-center gap-4 p-4 rounded-xl bg-gradient-to-r ${info.color} hover:shadow-lg transition-all group border border-primary/5`}
                     >
                       <motion.div 
-                        className="p-3 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 shadow-md"
+                        className="p-3 rounded-xl bg-gradient-to-br from-primary/20 to-primary/10 shadow-md flex-shrink-0"
                         whileHover={{ rotate: [0, -10, 10, 0] }}
                         transition={{ duration: 0.5 }}
                       >
                         <info.icon className="w-5 h-5 text-primary" />
                       </motion.div>
-                      <div className="flex-1">
+                      <div className="flex-1 min-w-0 overflow-hidden">
                         <p className="text-sm text-muted-foreground font-medium">
                           {info.label}
                         </p>
-                        <p className="font-semibold group-hover:text-primary transition-colors">
-                          {info.value}
-                        </p>
+                        <div className="font-semibold group-hover:text-primary transition-colors break-words">
+                          {isEditMode ? (
+                            <EditableText
+                              value={info.value}
+                              multiline={info.label === "Lokalizacja"}
+                              onSave={(newValue) => {
+                                if (info.label === "Email") {
+                                  updateData({ contact: { email: newValue } });
+                                } else if (info.label === "Telefon") {
+                                  updateData({ contact: { phone: newValue } });
+                                } else if (info.label === "Telegram") {
+                                  updateData({ contact: { telegram: newValue } });
+                                } else if (info.label === "Lokalizacja") {
+                                  updateData({ contact: { location: newValue } });
+                                }
+                              }}
+                            />
+                          ) : (
+                            <a href={info.href} className="hover:underline break-words block">
+                              {info.value}
+                            </a>
+                          )}
+                        </div>
                       </div>
-                      <motion.div
-                        initial={{ opacity: 0, x: -10 }}
-                        whileHover={{ opacity: 1, x: 0 }}
-                        className="text-primary"
-                      >
-                        <ArrowRight className="w-4 h-4" />
-                      </motion.div>
-                    </motion.a>
+                      {!isEditMode && (
+                        <motion.div
+                          initial={{ opacity: 0, x: -10 }}
+                          whileHover={{ opacity: 1, x: 0 }}
+                          className="text-primary flex-shrink-0"
+                        >
+                          <ArrowRight className="w-4 h-4" />
+                        </motion.div>
+                      )}
+                    </motion.div>
                   ))}
                 </div>
               </CardContent>
@@ -173,8 +195,8 @@ export function ContactSection() {
             viewport={{ once: true }}
             transition={{ duration: 0.6 }}
           >
-            <Card className="h-full border-primary/10 shadow-xl hover:shadow-2xl transition-shadow">
-              <CardContent className="pt-6">
+            <Card className="h-full border-primary/10 shadow-xl hover:shadow-2xl transition-shadow overflow-hidden">
+              <CardContent className="pt-6 overflow-x-hidden">
                 <h3 className="text-xl font-bold mb-6 flex items-center gap-2">
                   <motion.div
                     animate={{ scale: [1, 1.2, 1] }}

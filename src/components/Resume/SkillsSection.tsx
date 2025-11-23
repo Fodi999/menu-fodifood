@@ -6,6 +6,7 @@ import { ChefHat, Users, Award, Cpu, Zap } from "lucide-react";
 import { useInView } from "framer-motion";
 import { useRef } from "react";
 import { useResume } from "@/contexts/ResumeContext";
+import { EditableSkillsList } from "@/components/EditableSkillsList";
 
 const cardVariants = {
   hidden: { opacity: 0, scale: 0.9 },
@@ -20,11 +21,13 @@ function SkillCard({
   icon: Icon,
   items,
   delay = 0,
+  onUpdate,
 }: {
   title: string;
   icon: any;
   items: string[];
   delay?: number;
+  onUpdate?: (newItems: string[]) => void;
 }) {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-100px" });
@@ -38,7 +41,7 @@ function SkillCard({
       transition={{ delay, duration: 0.5, type: "spring", stiffness: 100 }}
       whileHover={{ y: -8, transition: { duration: 0.2 } }}
     >
-      <Card className="h-full hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 border-primary/10 bg-gradient-to-br from-card to-card/50">
+      <Card className="h-full hover:shadow-2xl hover:shadow-primary/10 transition-all duration-300 border-primary/10 bg-gradient-to-br from-card to-card/50 overflow-hidden">
         <CardHeader>
           <CardTitle className="flex items-center gap-3">
             <motion.div
@@ -52,29 +55,33 @@ function SkillCard({
             </span>
           </CardTitle>
         </CardHeader>
-        <CardContent>
-          <ul className="space-y-3">
-            {items.map((item, index) => (
-              <motion.li
-                key={index}
-                initial={{ opacity: 0, x: -20 }}
-                animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
-                transition={{ delay: delay + index * 0.1 }}
-                className="flex items-start gap-3 group"
-              >
-                <motion.span 
-                  className="text-primary mt-1 text-lg"
-                  whileHover={{ scale: 1.3, rotate: 90 }}
-                  transition={{ type: "spring", stiffness: 300 }}
+        <CardContent className="overflow-x-hidden">
+          {onUpdate ? (
+            <EditableSkillsList items={items} onUpdate={onUpdate} />
+          ) : (
+            <ul className="space-y-3">
+              {items.map((item, index) => (
+                <motion.li
+                  key={index}
+                  initial={{ opacity: 0, x: -20 }}
+                  animate={isInView ? { opacity: 1, x: 0 } : { opacity: 0, x: -20 }}
+                  transition={{ delay: delay + index * 0.1 }}
+                  className="flex items-start gap-3 group"
                 >
-                  •
-                </motion.span>
-                <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
-                  {item}
-                </span>
-              </motion.li>
-            ))}
-          </ul>
+                  <motion.span 
+                    className="text-primary mt-1 text-lg"
+                    whileHover={{ scale: 1.3, rotate: 90 }}
+                    transition={{ type: "spring", stiffness: 300 }}
+                  >
+                    •
+                  </motion.span>
+                  <span className="text-sm text-muted-foreground group-hover:text-foreground transition-colors">
+                    {item}
+                  </span>
+                </motion.li>
+              ))}
+            </ul>
+          )}
         </CardContent>
       </Card>
     </motion.div>
@@ -82,12 +89,12 @@ function SkillCard({
 }
 
 export function SkillsSection() {
-  const { resumeData } = useResume();
+  const { resumeData, updateData } = useResume();
   const { skills } = resumeData;
 
   return (
-    <section id="skills" className="py-12 sm:py-16 md:py-20 px-4 relative">
-      <div className="max-w-6xl mx-auto">
+    <section id="skills" className="min-h-screen flex items-center py-12 sm:py-16 md:py-20 px-4 relative">
+      <div className="max-w-6xl mx-auto w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -122,24 +129,28 @@ export function SkillsSection() {
             icon={ChefHat}
             items={skills.culinary}
             delay={0}
+            onUpdate={(newItems) => updateData({ skills: { culinary: newItems } })}
           />
           <SkillCard
             title="Soft Skills"
             icon={Users}
             items={skills.soft}
             delay={0.15}
+            onUpdate={(newItems) => updateData({ skills: { soft: newItems } })}
           />
           <SkillCard
             title="Certyfikaty"
             icon={Award}
             items={skills.certificates}
             delay={0.3}
+            onUpdate={(newItems) => updateData({ skills: { certificates: newItems } })}
           />
           <SkillCard
             title="Technologie"
             icon={Cpu}
             items={skills.technical}
             delay={0.45}
+            onUpdate={(newItems) => updateData({ skills: { technical: newItems } })}
           />
         </div>
       </div>

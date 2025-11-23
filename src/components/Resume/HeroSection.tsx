@@ -7,6 +7,7 @@ import { Download, Mail, Star, ChevronDown, Send, Phone } from "lucide-react";
 import { useResume } from "@/contexts/ResumeContext";
 import { EditableText } from "@/components/EditableText";
 import { EditableImage } from "@/components/EditableImage";
+import { useGeneratePDF } from "@/hooks/useGeneratePDF";
 
 const fadeIn = {
   hidden: { opacity: 0, y: 20 },
@@ -35,6 +36,41 @@ const scaleIn = {
 export function HeroSection() {
   const { resumeData, updateData } = useResume();
   const { hero } = resumeData;
+  const { generatePDF, isGenerating } = useGeneratePDF();
+
+  const sections = ['hero', 'skills', 'experience', 'portfolio', 'contact'];
+
+  const scrollToNextSection = () => {
+    // Определяем текущую секцию
+    const scrollPosition = window.scrollY + 100;
+    let currentSectionIndex = 0;
+
+    for (let i = 0; i < sections.length; i++) {
+      const element = document.getElementById(sections[i]);
+      if (element) {
+        const offsetTop = element.offsetTop;
+        const offsetBottom = offsetTop + element.offsetHeight;
+        
+        if (scrollPosition >= offsetTop && scrollPosition < offsetBottom) {
+          currentSectionIndex = i;
+          break;
+        }
+      }
+    }
+
+    // Прокручиваем к следующей секции
+    const nextSectionIndex = (currentSectionIndex + 1) % sections.length;
+    const nextSection = document.getElementById(sections[nextSectionIndex]);
+    
+    if (nextSection) {
+      const offset = 80;
+      const elementPosition = nextSection.offsetTop - offset;
+      window.scrollTo({
+        top: elementPosition,
+        behavior: "smooth",
+      });
+    }
+  };
 
   return (
     <motion.section
@@ -129,10 +165,17 @@ export function HeroSection() {
           className="flex flex-wrap gap-2 sm:gap-3 md:gap-4 justify-center px-4"
         >
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
-            <Button size="sm" className="gap-2 shadow-lg shadow-primary/20 sm:size-default md:size-lg">
+            <Button 
+              size="sm" 
+              className="gap-2 shadow-lg shadow-primary/20 sm:size-default md:size-lg"
+              onClick={() => generatePDF()}
+              disabled={isGenerating}
+            >
               <Download className="w-3 h-3 sm:w-4 sm:h-4" />
-              <span className="hidden sm:inline">Pobierz CV</span>
-              <span className="sm:hidden">CV</span>
+              <span className="hidden sm:inline">
+                {isGenerating ? 'Generowanie...' : 'Pobierz CV'}
+              </span>
+              <span className="sm:hidden">{isGenerating ? '...' : 'CV'}</span>
             </Button>
           </motion.div>
           <motion.div whileHover={{ scale: 1.05 }} whileTap={{ scale: 0.95 }}>
@@ -182,33 +225,38 @@ export function HeroSection() {
             </Button>
           </motion.div>
         </motion.div>
+      </div>
 
-        {/* Scroll indicator */}
+      {/* Fixed Scroll indicator - always visible */}
+      <motion.div
+        initial={{ opacity: 0 }}
+        animate={{ opacity: 1 }}
+        transition={{ delay: 1 }}
+        className="fixed bottom-8 left-1/2 -translate-x-1/2 z-40 scroll-indicator"
+      >
         <motion.div
-          variants={fadeIn}
-          className="absolute bottom-10 left-1/2 -translate-x-1/2"
+          onClick={scrollToNextSection}
+          animate={{ y: [0, 10, 0] }}
+          transition={{
+            duration: 2,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+          className="w-6 h-10 border-2 border-primary/40 bg-background/80 backdrop-blur-sm rounded-full flex items-start justify-center p-2 cursor-pointer hover:border-primary/70 hover:bg-background transition-all shadow-lg"
+          whileHover={{ scale: 1.15 }}
+          whileTap={{ scale: 0.9 }}
         >
           <motion.div
-            animate={{ y: [0, 10, 0] }}
+            animate={{ opacity: [0, 1, 0] }}
             transition={{
               duration: 2,
               repeat: Infinity,
               ease: "easeInOut",
             }}
-            className="w-6 h-10 border-2 border-primary/30 rounded-full flex items-start justify-center p-2"
-          >
-            <motion.div
-              animate={{ opacity: [0, 1, 0] }}
-              transition={{
-                duration: 2,
-                repeat: Infinity,
-                ease: "easeInOut",
-              }}
-              className="w-1.5 h-1.5 bg-primary rounded-full"
-            />
-          </motion.div>
+            className="w-1.5 h-1.5 bg-primary rounded-full"
+          />
         </motion.div>
-      </div>
+      </motion.div>
     </motion.section>
   );
 }

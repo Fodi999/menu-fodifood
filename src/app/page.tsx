@@ -7,6 +7,7 @@ import { ContactSection } from "@/components/Resume/ContactSection";
 import { ResumeNavbar } from "@/components/Resume/ResumeNavbar";
 import { ResumeFooter } from "@/components/Resume/ResumeFooter";
 import { ScrollToTop } from "@/components/Resume/ScrollToTop";
+import { StructuredData } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
   title: "Dmytro Fomin - Szef Kuchni | Professional Chef",
@@ -33,6 +34,7 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="min-h-screen">
+      <StructuredData />
       <ResumeNavbar />
       <main>
         <HeroSection />
