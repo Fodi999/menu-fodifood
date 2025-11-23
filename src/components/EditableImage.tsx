@@ -140,9 +140,12 @@ export function EditableImage({
     );
   }
 
+  // В режиме редактирования используем fill для заполнения контейнера
+  const isPortfolio = variant === "portfolio";
+
   return (
     <motion.div
-      className={`relative ${className}`}
+      className={`relative ${className} ${isPortfolio ? 'w-full h-full' : ''}`}
       onMouseEnter={() => setIsHovered(true)}
       onMouseLeave={() => setIsHovered(false)}
       onDragEnter={handleDragEnter}
@@ -151,13 +154,23 @@ export function EditableImage({
       onDrop={handleDrop}
       whileHover={{ scale: 1.02 }}
     >
-      <Image
-        src={imageUrl}
-        alt={alt}
-        width={width}
-        height={height}
-        className={`transition-all ${isDragging ? 'opacity-30' : isHovered ? 'opacity-70' : 'opacity-100'}`}
-      />
+      {isPortfolio ? (
+        <Image
+          src={imageUrl}
+          alt={alt}
+          fill
+          sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
+          className={`object-cover transition-all ${isDragging ? 'opacity-30' : isHovered ? 'opacity-70' : 'opacity-100'}`}
+        />
+      ) : (
+        <Image
+          src={imageUrl}
+          alt={alt}
+          width={width}
+          height={height}
+          className={`transition-all ${isDragging ? 'opacity-30' : isHovered ? 'opacity-70' : 'opacity-100'}`}
+        />
+      )}
       
       {/* Drag & Drop overlay */}
       <AnimatePresence>
@@ -168,9 +181,9 @@ export function EditableImage({
             exit={{ opacity: 0 }}
             className="absolute inset-0 border-4 border-dashed border-primary bg-primary/10 flex items-center justify-center rounded-lg"
           >
-            <div className="text-center">
-              <Upload className="w-8 h-8 text-primary mx-auto mb-2" />
-              <p className="text-sm font-semibold text-primary">Upuść zdjęcie tutaj</p>
+            <div className="text-center px-2">
+              <Upload className="w-6 h-6 sm:w-8 sm:h-8 text-primary mx-auto mb-1 sm:mb-2" />
+              <p className="text-xs sm:text-sm font-semibold text-primary">Upuść zdjęcie tutaj</p>
             </div>
           </motion.div>
         )}
@@ -178,29 +191,29 @@ export function EditableImage({
 
       {/* Edit buttons */}
       <AnimatePresence>
-        {isHovered && !isEditing && !isDragging && (
+        {(isHovered || isEditMode) && !isEditing && !isDragging && (
           <motion.div
             initial={{ opacity: 0, scale: 0.9 }}
             animate={{ opacity: 1, scale: 1 }}
             exit={{ opacity: 0, scale: 0.9 }}
-            className="absolute inset-0 flex items-center justify-center gap-2 bg-black/40 rounded-lg"
+            className="absolute inset-0 flex items-center justify-center gap-1.5 sm:gap-2 bg-black/40 rounded-lg [@media(hover:none)]:opacity-90"
           >
             <Button
               size="sm"
-              className="h-9 w-9 sm:h-10 sm:w-10 p-0 rounded-full shadow-lg"
+              className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 p-0 rounded-full shadow-lg touch-manipulation active:scale-90"
               onClick={() => fileInputRef.current?.click()}
               title="Загрузить файл"
             >
-              <Upload className="w-4 h-4" />
+              <Upload className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </Button>
             <Button
               size="sm"
               variant="secondary"
-              className="h-9 w-9 sm:h-10 sm:w-10 p-0 rounded-full shadow-lg"
+              className="h-8 w-8 sm:h-9 sm:w-9 md:h-10 md:w-10 p-0 rounded-full shadow-lg touch-manipulation active:scale-90"
               onClick={() => setIsEditing(true)}
               title="Вставить URL"
             >
-              <Link2 className="w-4 h-4" />
+              <Link2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             </Button>
           </motion.div>
         )}
@@ -213,12 +226,12 @@ export function EditableImage({
             initial={{ opacity: 0, y: -10 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -10 }}
-            className="absolute inset-0 bg-card border-2 border-primary rounded-lg p-3 shadow-2xl z-10"
+            className="absolute inset-0 bg-card border-2 border-primary rounded-lg p-2 sm:p-3 shadow-2xl z-10"
           >
-            <div className="flex flex-col gap-2 h-full">
-              <div className="flex items-center gap-2 mb-1">
-                <ImageIcon className="w-4 h-4 text-primary" />
-                <span className="text-sm font-semibold">URL obrazu</span>
+            <div className="flex flex-col gap-1.5 sm:gap-2 h-full">
+              <div className="flex items-center gap-1.5 sm:gap-2 mb-0.5 sm:mb-1">
+                <ImageIcon className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary flex-shrink-0" />
+                <span className="text-xs sm:text-sm font-semibold truncate">URL obrazu</span>
               </div>
               <Input
                 type="url"
@@ -229,26 +242,26 @@ export function EditableImage({
                   if (e.key === 'Enter') handleUrlSave();
                   if (e.key === 'Escape') handleCancel();
                 }}
-                className="text-xs sm:text-sm"
+                className="text-xs sm:text-sm h-8 sm:h-9"
                 autoFocus
               />
-              <div className="flex gap-2 mt-auto">
+              <div className="flex gap-1.5 sm:gap-2 mt-auto">
                 <Button
                   size="sm"
                   onClick={handleUrlSave}
-                  className="flex-1 h-8"
+                  className="flex-1 h-7 sm:h-8 text-xs touch-manipulation active:scale-95"
                   disabled={!urlInput.trim()}
                 >
-                  <Check className="w-3 h-3 mr-1" />
+                  <Check className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1" />
                   OK
                 </Button>
                 <Button
                   size="sm"
                   variant="outline"
                   onClick={handleCancel}
-                  className="flex-1 h-8"
+                  className="flex-1 h-7 sm:h-8 text-xs touch-manipulation active:scale-95"
                 >
-                  <X className="w-3 h-3 mr-1" />
+                  <X className="w-3 h-3 sm:w-3.5 sm:h-3.5 mr-1" />
                   Anuluj
                 </Button>
               </div>

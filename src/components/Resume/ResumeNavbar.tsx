@@ -216,59 +216,6 @@ export function ResumeNavbar() {
                         )}
                       </div>
 
-                      <Separator />
-
-                      <div className="flex flex-col gap-3">
-                        <label className="text-sm font-medium text-muted-foreground">
-                          Тема оформления
-                        </label>
-                        <div className="grid grid-cols-2 gap-2">
-                          {themeOptions.map((theme) => (
-                            <Button
-                              key={theme.id}
-                              onClick={() => setBackgroundTheme(theme.id)}
-                              variant={backgroundTheme === theme.id ? "default" : "outline"}
-                              size="sm"
-                              className="gap-2 justify-start h-auto py-2 flex-col items-start"
-                              title={theme.description}
-                            >
-                              <div className="flex items-center gap-2 w-full">
-                                {theme.icon}
-                                <span className="text-xs font-medium">{theme.label}</span>
-                              </div>
-                            </Button>
-                          ))}
-                        </div>
-                      </div>
-
-                      <Separator />
-
-                      <div className="flex flex-col gap-2">
-                        <label className="text-sm font-medium text-muted-foreground">
-                          Дополнительные действия
-                        </label>
-                        <Button
-                          onClick={() => {
-                            if (confirm("Сбросить все данные к значениям по умолчанию (Dmytro Fomin)?")) {
-                              resetToDefault();
-                            }
-                          }}
-                          variant="secondary"
-                          className="gap-2 w-full justify-start"
-                        >
-                          <RotateCcw className="w-4 h-4" />
-                          Сбросить к значениям по умолчанию
-                        </Button>
-                        <Button
-                          onClick={handleLock}
-                          variant="destructive"
-                          className="gap-2 w-full justify-start"
-                        >
-                          <Lock className="w-4 h-4" />
-                          Заблокировать доступ
-                        </Button>
-                      </div>
-
                       <div className="mt-4 p-3 bg-muted/50 rounded-lg">
                         <h4 className="text-xs font-semibold mb-2">ℹ️ Справка</h4>
                         <ul className="text-xs text-muted-foreground space-y-1">
@@ -396,27 +343,31 @@ export function ResumeNavbar() {
                   )}
                 </div>
 
-                <Separator className="my-3" />
+                {!isLocked && (
+                  <>
+                    <Separator className="my-3" />
 
-                {/* Theme Settings */}
-                <div className="flex flex-col gap-2 pb-4">
-                  <h3 className="text-xs font-semibold text-muted-foreground px-2 mb-1">Тема оформления</h3>
-                  <div className="grid grid-cols-2 gap-1.5 px-2">
-                    {themeOptions.map((theme) => (
-                      <Button
-                        key={theme.id}
-                        onClick={() => setBackgroundTheme(theme.id)}
-                        variant={backgroundTheme === theme.id ? "default" : "outline"}
-                        size="sm"
-                        className="gap-1.5 justify-start h-9 py-1.5 px-2"
-                        title={theme.description}
-                      >
-                        <span className="w-3.5 h-3.5 flex-shrink-0">{theme.icon}</span>
-                        <span className="text-xs truncate">{theme.label}</span>
-                      </Button>
-                    ))}
-                  </div>
-                </div>
+                    {/* Theme Settings */}
+                    <div className="flex flex-col gap-2 pb-4">
+                      <h3 className="text-xs font-semibold text-muted-foreground px-2 mb-1">Тема оформления</h3>
+                      <div className="grid grid-cols-2 gap-1.5 px-2">
+                        {themeOptions.map((theme) => (
+                          <Button
+                            key={theme.id}
+                            onClick={() => setBackgroundTheme(theme.id)}
+                            variant={backgroundTheme === theme.id ? "default" : "outline"}
+                            size="sm"
+                            className="gap-1.5 justify-start h-9 py-1.5 px-2"
+                            title={theme.description}
+                          >
+                            <span className="w-3.5 h-3.5 flex-shrink-0">{theme.icon}</span>
+                            <span className="text-xs truncate">{theme.label}</span>
+                          </Button>
+                        ))}
+                      </div>
+                    </div>
+                  </>
+                )}
               </SheetContent>
             </Sheet>
           </div>

@@ -92,10 +92,10 @@ function PortfolioCard({
         initial={{ opacity: 0, y: -10 }}
         animate={isInView ? { opacity: 1, y: 0 } : { opacity: 0, y: -10 }}
         transition={{ delay: index * 0.1 + 0.3 }}
-        className="absolute top-4 left-4 z-10"
+        className="absolute top-2 sm:top-3 md:top-4 left-2 sm:left-3 md:left-4 z-10"
       >
         <motion.span 
-          className="px-3 py-1 rounded-full bg-primary/90 backdrop-blur-sm text-primary-foreground text-xs font-semibold shadow-lg"
+          className="px-2 py-0.5 sm:px-2.5 sm:py-1 md:px-3 md:py-1 rounded-full bg-primary/90 backdrop-blur-sm text-primary-foreground text-[10px] sm:text-xs font-semibold shadow-lg"
           whileHover={{ scale: 1.1 }}
         >
           <EditableText
@@ -110,27 +110,27 @@ function PortfolioCard({
         initial={{ opacity: 0 }}
         animate={{ opacity: isHovered ? 1 : 0 }}
         transition={{ duration: 0.4 }}
-        className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent flex flex-col justify-end p-6"
+        className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/60 to-transparent flex flex-col justify-end p-3 sm:p-4 md:p-6"
       >
         <motion.div
           initial={{ y: 20, opacity: 0 }}
           animate={isHovered ? { y: 0, opacity: 1 } : { y: 20, opacity: 0 }}
           transition={{ delay: 0.1, duration: 0.4 }}
         >
-          <h3 className="text-white font-bold text-xl mb-2 flex items-center gap-2">
+          <h3 className="text-white font-bold text-base sm:text-lg md:text-xl mb-1 sm:mb-2 flex items-center gap-1.5 sm:gap-2">
             <motion.div
               animate={{ rotate: isHovered ? [0, -10, 10, 0] : 0 }}
               transition={{ duration: 0.5 }}
             >
-              <Star className="w-5 h-5" />
+              <Star className="w-4 h-4 sm:w-5 sm:h-5" />
             </motion.div>
             <EditableText
               value={item.title}
               onSave={(newValue) => onUpdate('title', newValue)}
             />
           </h3>
-          <p className="text-white/90 text-sm flex items-center gap-2">
-            <Folder className="w-4 h-4" />
+          <p className="text-white/90 text-xs sm:text-sm flex items-center gap-1.5 sm:gap-2">
+            <Folder className="w-3 h-3 sm:w-4 sm:h-4" />
             {item.category}
           </p>
         </motion.div>
@@ -142,7 +142,7 @@ function PortfolioCard({
           transition={{ delay: 0.2, duration: 0.4 }}
           whileHover={{ scale: 1.05 }}
           whileTap={{ scale: 0.95 }}
-          className="mt-4 px-4 py-2 bg-primary text-primary-foreground rounded-lg text-sm font-semibold hover:bg-primary/90 transition-colors"
+          className="mt-2 sm:mt-3 md:mt-4 px-3 py-1.5 sm:px-4 sm:py-2 bg-primary text-primary-foreground rounded-lg text-xs sm:text-sm font-semibold hover:bg-primary/90 transition-colors touch-manipulation"
         >
           Подробнее →
         </motion.button>
@@ -181,15 +181,15 @@ function PortfolioCard({
         <motion.div
           initial={{ opacity: 0, scale: 0 }}
           animate={{ opacity: 1, scale: 1 }}
-          className="absolute top-4 right-4 z-20"
+          className="absolute top-2 sm:top-3 md:top-4 right-2 sm:right-3 md:right-4 z-20"
         >
           <Button
             size="sm"
             variant="destructive"
             onClick={onDelete}
-            className="h-8 w-8 p-0 rounded-full shadow-lg"
+            className="h-7 w-7 sm:h-8 sm:w-8 p-0 rounded-full shadow-lg touch-manipulation active:scale-90"
           >
-            <Trash2 className="w-4 h-4" />
+            <Trash2 className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
           </Button>
         </motion.div>
       )}
@@ -277,24 +277,24 @@ export function PortfolioSection() {
             >
               <Card 
                 onClick={handleAddPortfolio}
-                className="h-full w-full border-2 border-dashed border-primary/30 hover:border-primary hover:bg-primary/5 transition-all duration-300 cursor-pointer flex items-center justify-center group"
+                className="h-full w-full border-2 border-dashed border-primary/30 hover:border-primary hover:bg-primary/5 transition-all duration-300 cursor-pointer flex items-center justify-center group touch-manipulation active:scale-95"
               >
                 <motion.div 
-                  className="text-center"
-                  whileHover={{ scale: 1.1 }}
+                  className="text-center px-4"
+                  whileHover={{ scale: 1.05 }}
                   whileTap={{ scale: 0.95 }}
                 >
                   <motion.div
-                    className="w-16 h-16 mx-auto mb-4 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors"
+                    className="w-12 h-12 sm:w-14 sm:h-14 md:w-16 md:h-16 mx-auto mb-2 sm:mb-3 md:mb-4 rounded-full bg-primary/10 flex items-center justify-center group-hover:bg-primary/20 transition-colors"
                     whileHover={{ rotate: 90 }}
                     transition={{ duration: 0.3 }}
                   >
-                    <Plus className="w-8 h-8 text-primary" />
+                    <Plus className="w-6 h-6 sm:w-7 sm:h-7 md:w-8 md:h-8 text-primary" />
                   </motion.div>
-                  <p className="text-sm font-semibold text-muted-foreground group-hover:text-primary transition-colors">
+                  <p className="text-xs sm:text-sm font-semibold text-muted-foreground group-hover:text-primary transition-colors">
                     Dodaj nowe danie
                   </p>
-                  <p className="text-xs text-muted-foreground mt-1">
+                  <p className="text-[10px] sm:text-xs text-muted-foreground mt-0.5 sm:mt-1">
                     Kliknij aby dodać
                   </p>
                 </motion.div>
