@@ -1,32 +1,33 @@
 import type { Metadata } from "next";
-import { HeroSection } from "@/components/Resume/HeroSection";
-import { SkillsSection } from "@/components/Resume/SkillsSection";
-import { ExperienceSection } from "@/components/Resume/ExperienceSection";
-import { PortfolioSection } from "@/components/Resume/PortfolioSection";
-import { ContactSection } from "@/components/Resume/ContactSection";
-import { ResumeNavbar } from "@/components/Resume/ResumeNavbar";
-import { ResumeFooter } from "@/components/Resume/ResumeFooter";
+import { RestaurantHero } from "@/components/Restaurant/RestaurantHero";
+import { MenuWithCategories } from "@/components/Restaurant/MenuWithCategories";
+import { AboutRestaurant } from "@/components/Restaurant/AboutRestaurant";
+import { OurTeam } from "@/components/Restaurant/OurTeam";
+import { TableReservation } from "@/components/Restaurant/TableReservation";
+import { Delivery } from "@/components/Restaurant/Delivery";
+import { RestaurantNavbar } from "@/components/Restaurant/RestaurantNavbar";
+import { RestaurantFooter } from "@/components/Restaurant/RestaurantFooter";
 import { ScrollToTop } from "@/components/Resume/ScrollToTop";
-import { StructuredData } from "@/components/StructuredData";
 
 export const metadata: Metadata = {
-  title: "Dmytro Fomin - Szef Kuchni | Professional Chef",
+  title: "FodiFood - Японская кухня с доставкой | Japanese Restaurant",
   description:
-    "Profesjonalny kucharz z 20-letnim doświadczeniem w pracy w restauracjach w Polsce, Litwie, Estonii, Niemczech, Francji i Kanadzie. Specjalizacja: owoce morza, kuchnia autorska, boulangerie.",
+    "Заказывайте суши, роллы и японскую кухню с доставкой. Свежие продукты, быстрая доставка. Order sushi and Japanese cuisine online. Fresh ingredients, fast delivery.",
   keywords: [
-    "kucharz",
-    "szef kuchni",
-    "chef",
-    "owoce morza",
-    "kuchnia autorska",
-    "Gdańsk",
-    "Dmytro Fomin",
+    "суши",
+    "роллы",
+    "японская кухня",
+    "доставка еды",
+    "sushi",
+    "rolls",
+    "japanese food",
+    "food delivery",
     "FodiFood",
   ],
   openGraph: {
-    title: "Dmytro Fomin - Professional Chef",
+    title: "FodiFood - Japanese Restaurant & Delivery",
     description:
-      "Profesjonalny kucharz z 20-letnim międzynarodowym doświadczeniem",
+      "Заказывайте лучшие суши и роллы с доставкой. Order the best sushi and rolls with delivery.",
     type: "website",
   },
 };
@@ -34,16 +35,16 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="min-h-screen">
-      <StructuredData />
-      <ResumeNavbar />
-      <main>
-        <HeroSection />
-        <SkillsSection />
-        <ExperienceSection />
-        <PortfolioSection />
-        <ContactSection />
+      <RestaurantNavbar />
+      <main className="pt-14 sm:pt-16 lg:pt-20">
+        <RestaurantHero />
+        <MenuWithCategories />
+        <AboutRestaurant />
+        <OurTeam />
+        <TableReservation />
+        <Delivery />
       </main>
-      <ResumeFooter />
+      <RestaurantFooter />
       <ScrollToTop />
     </div>
   );

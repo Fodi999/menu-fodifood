@@ -48,6 +48,14 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
+# Uploaded images (stored in Cloudinary)
+public/uploads/
+public/products/
+*.jpg
+*.png
+*.jpeg
+!public/placeholder.jpg
+
 # Development logs and PIDs
 backend.log
 frontend.log
@@ -59,7 +67,11 @@ archive/
 keep-docs.txt
 
 /src/generated/prisma
-/backend
+
+# Rust Backend
+/backend/target
+/backend/Secrets.toml
+/backend/.env
 
 # MCP Server
 /mcp-server/node_modules

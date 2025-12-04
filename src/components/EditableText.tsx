@@ -2,7 +2,7 @@
 
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
-import { useResume } from "@/contexts/ResumeContext";
+import { useRestaurant } from "@/contexts/RestaurantContext";
 import { Check, X, Edit2 } from "lucide-react";
 
 interface EditableTextProps {
@@ -20,7 +20,8 @@ export function EditableText({
   multiline = false,
   placeholder = "Введите текст...",
 }: EditableTextProps) {
-  const { isEditMode } = useResume();
+  const { isEditMode } = useRestaurant();
+  
   const [isEditing, setIsEditing] = useState(false);
   const [editValue, setEditValue] = useState(value);
   const inputRef = useRef<HTMLInputElement | HTMLTextAreaElement>(null);
@@ -67,16 +68,16 @@ export function EditableText({
     const buttonsBelow = multiline || value.length > 30;
     
     return (
-      <span className={`relative group block w-full max-w-full ${buttonsBelow ? '' : 'pr-14 sm:pr-16 md:pr-20'}`}>
+      <span className={`relative group block w-full max-w-full ${buttonsBelow ? 'p-3' : 'pr-24 sm:pr-28 p-2'}`}>
         {multiline ? (
           <textarea
             ref={inputRef as React.RefObject<HTMLTextAreaElement>}
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            className={`${className} w-full max-w-full bg-muted/50 border-2 border-primary rounded-lg px-2 py-2 sm:px-3 sm:py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none box-border min-h-[80px]`}
+            className={`${className} w-full max-w-full bg-background/95 backdrop-blur-sm border-2 border-primary rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none box-border min-h-[100px] shadow-lg`}
             placeholder={placeholder}
-            rows={3}
+            rows={4}
           />
         ) : (
           <input
@@ -85,28 +86,28 @@ export function EditableText({
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            className={`${className} w-full max-w-full bg-muted/50 border-2 border-primary rounded-lg px-2 py-2 sm:px-3 sm:py-2 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-primary/20 box-border h-9 sm:h-10`}
+            className={`${className} w-full max-w-full bg-background/95 backdrop-blur-sm border-2 border-primary rounded-xl px-4 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 box-border h-11 shadow-lg`}
             placeholder={placeholder}
           />
         )}
-        <span className={`flex gap-1 sm:gap-1.5 flex-shrink-0 ${
+        <span className={`flex gap-2 flex-shrink-0 ${
           buttonsBelow 
-            ? 'justify-end mt-2' 
-            : 'absolute right-0 top-1/2 -translate-y-1/2'
+            ? 'justify-end mt-3' 
+            : 'absolute right-2 top-1/2 -translate-y-1/2'
         }`}>
           <button
             onClick={handleSave}
-            className="h-9 w-9 sm:h-10 sm:w-10 p-0 inline-flex items-center justify-center rounded-md bg-primary text-primary-foreground hover:bg-primary/90 active:scale-95 transition-all flex-shrink-0 touch-manipulation"
+            className="h-10 w-10 p-0 inline-flex items-center justify-center rounded-xl bg-primary text-primary-foreground hover:bg-primary/90 shadow-lg hover:shadow-xl transition-all flex-shrink-0"
             type="button"
           >
-            <Check className="w-4 h-4 sm:w-4 sm:h-4" />
+            <Check className="w-5 h-5" />
           </button>
           <button
             onClick={handleCancel}
-            className="h-9 w-9 sm:h-10 sm:w-10 p-0 inline-flex items-center justify-center rounded-md border border-input bg-background hover:bg-accent hover:text-accent-foreground active:scale-95 transition-all flex-shrink-0 touch-manipulation"
+            className="h-10 w-10 p-0 inline-flex items-center justify-center rounded-xl border-2 border-input bg-background hover:bg-accent hover:text-accent-foreground shadow-lg hover:shadow-xl transition-all flex-shrink-0"
             type="button"
           >
-            <X className="w-4 h-4 sm:w-4 sm:h-4" />
+            <X className="w-5 h-5" />
           </button>
         </span>
       </span>
@@ -116,14 +117,19 @@ export function EditableText({
   return (
     <span
       className={`relative group cursor-pointer inline-block ${isEditMode ? 'hover:scale-105 transition-transform' : ''}`}
-      onClick={() => isEditMode && setIsEditing(true)}
+      onClick={() => {
+        console.log('✏️ EditableText clicked! isEditMode:', isEditMode);
+        if (isEditMode) {
+          setIsEditing(true);
+        }
+      }}
     >
-      <span className={`${className} ${isEditMode ? 'border-2 border-dashed border-transparent group-hover:border-primary/30 rounded px-2 py-1 transition-colors' : ''}`}>
+      <span className={`${className} ${isEditMode ? 'border-2 border-dashed border-primary/50 group-hover:border-primary rounded-lg px-3 py-1.5 transition-colors' : ''}`}>
         {value}
       </span>
       {isEditMode && (
-        <span className="absolute -right-7 sm:-right-8 top-1/2 -translate-y-1/2 opacity-0 group-hover:opacity-100 [@media(hover:none)]:opacity-70 transition-opacity">
-          <Edit2 className="w-3.5 h-3.5 sm:w-4 sm:h-4 text-primary" />
+        <span className="absolute -right-8 sm:-right-9 top-1/2 -translate-y-1/2 opacity-100 transition-opacity">
+          <Edit2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary animate-pulse" />
         </span>
       )}
     </span>
