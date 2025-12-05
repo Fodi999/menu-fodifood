@@ -1,0 +1,160 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        UPDATE restaurant_info\n        SET name = $1, name_ru = $2, name_pl = $3,\n            description = $4, description_ru = $5, description_pl = $6,\n            logo = $7, phone = $8, email = $9, address = $10, city = $11, postal_code = $12,\n            opening_hours = $13, delivery_radius = $14, minimum_order = $15,\n            delivery_fee = $16, free_delivery_from = $17, average_delivery_time = $18,\n            social_media = $19\n        WHERE id = 1\n        RETURNING id, name, name_ru, name_pl, description, description_ru, description_pl,\n                  logo, phone, email, address, city, postal_code, opening_hours,\n                  delivery_radius, minimum_order, delivery_fee, free_delivery_from,\n                  average_delivery_time, social_media, updated_at\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 2,
+        "name": "name_ru",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "name_pl",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 5,
+        "name": "description_ru",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "description_pl",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "logo",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "phone",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 9,
+        "name": "email",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 10,
+        "name": "address",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 11,
+        "name": "city",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 12,
+        "name": "postal_code",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 13,
+        "name": "opening_hours",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 14,
+        "name": "delivery_radius",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 15,
+        "name": "minimum_order",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 16,
+        "name": "delivery_fee",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 17,
+        "name": "free_delivery_from",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 18,
+        "name": "average_delivery_time",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 19,
+        "name": "social_media",
+        "type_info": "Jsonb"
+      },
+      {
+        "ordinal": 20,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Varchar",
+        "Jsonb",
+        "Int4",
+        "Numeric",
+        "Numeric",
+        "Numeric",
+        "Int4",
+        "Jsonb"
+      ]
+    },
+    "nullable": [
+      false,
+      false,
+      false,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false
+    ]
+  },
+  "hash": "4c40e48f2db095a610a9be2e57a885a7c414c9ed85b08b1ebed321991f74a94a"
+}

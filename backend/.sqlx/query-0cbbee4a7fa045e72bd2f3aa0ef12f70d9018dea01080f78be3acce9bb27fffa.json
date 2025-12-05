@@ -1,0 +1,69 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n            INSERT INTO order_items (\n                order_id, menu_item_id, menu_item_name, menu_item_price, \n                quantity, special_instructions\n            )\n            VALUES ($1, $2, $3, $4, $5, $6)\n            RETURNING id, order_id, menu_item_id, menu_item_name, menu_item_price,\n                      quantity, special_instructions, created_at\n            ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "order_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "menu_item_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 3,
+        "name": "menu_item_name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "menu_item_price",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 5,
+        "name": "quantity",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 6,
+        "name": "special_instructions",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4",
+        "Int4",
+        "Varchar",
+        "Numeric",
+        "Int4",
+        "Text"
+      ]
+    },
+    "nullable": [
+      false,
+      true,
+      true,
+      false,
+      false,
+      false,
+      true,
+      false
+    ]
+  },
+  "hash": "0cbbee4a7fa045e72bd2f3aa0ef12f70d9018dea01080f78be3acce9bb27fffa"
+}

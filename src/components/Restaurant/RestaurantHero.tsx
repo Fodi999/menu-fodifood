@@ -6,11 +6,15 @@ import { ShoppingCart, Clock, Star, Utensils } from 'lucide-react';
 import Link from 'next/link';
 import Image from 'next/image';
 import { useRestaurant } from '@/contexts/RestaurantContext';
+import { useCart } from '@/contexts/CartContext';
 import { EditableText } from '@/components/EditableText';
+import { EditableImage } from '@/components/EditableImage';
 import { useState } from 'react';
+import { toast } from 'sonner';
 
 export function RestaurantHero() {
   const { isEditMode, restaurantInfo, updateRestaurantInfo } = useRestaurant();
+  const { addItem } = useCart();
   
   // Local state for hero content
   const [heroData, setHeroData] = useState({
@@ -24,9 +28,40 @@ export function RestaurantHero() {
     rating: '4.9/5',
   });
 
+  // Featured dish card data
+  const [featuredDish, setFeaturedDish] = useState({
+    image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=1200&h=1200&fit=crop',
+    imageAlt: 'Fresh Sushi',
+    title: 'Популярный сет',
+    description: '24 шт • Калифорния, Филадельфия',
+    price: '85 zł',
+  });
+
   const handleUpdate = (field: string, value: string) => {
     setHeroData(prev => ({ ...prev, [field]: value }));
   };
+
+  const handleFeaturedDishUpdate = (field: string, value: string) => {
+    setFeaturedDish(prev => ({ ...prev, [field]: value }));
+  };
+
+  const handleAddToCart = () => {
+    // Извлекаем цену из строки (например "85 zł" -> 85)
+    const priceValue = parseFloat(featuredDish.price.replace(/[^0-9.]/g, ''));
+    
+    const cartItem = {
+      id: Date.now(), // Уникальный ID для карточки
+      name: featuredDish.title,
+      description: featuredDish.description,
+      price: priceValue,
+      image: featuredDish.image,
+      weight: '', // Можно добавить если нужно
+    };
+
+    addItem(cartItem as any);
+    toast.success(`${featuredDish.title} добавлен в корзину!`);
+  };
+  
   return (
     <section className="relative min-h-[calc(100vh-3.5rem)] sm:min-h-[calc(100vh-4rem)] lg:min-h-screen flex items-center justify-center overflow-hidden bg-gradient-to-br from-background via-background to-primary/5 py-12 sm:py-16 lg:py-0">
       {/* Background Pattern */}
@@ -110,13 +145,13 @@ export function RestaurantHero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.5 }}
-              className="flex flex-col gap-3 sm:gap-4 mb-6 sm:mb-10"
+              className={`flex flex-col ${isEditMode ? 'gap-6' : 'gap-3'} sm:gap-4 mb-6 sm:mb-10`}
             >
-              <div className="flex items-center gap-3 sm:gap-4">
+              <div className={`flex items-center gap-3 sm:gap-4 ${isEditMode ? 'pb-4' : ''}`}>
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <div className="font-bold text-base sm:text-lg">
                     <EditableText
                       value={heroData.deliveryTime}
@@ -125,15 +160,15 @@ export function RestaurantHero() {
                       className="font-bold text-base sm:text-lg"
                     />
                   </div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Доставка</div>
+                  <div className={`text-xs sm:text-sm text-muted-foreground ${isEditMode ? 'mt-2' : ''}`}>Доставка</div>
                 </div>
               </div>
               
-              <div className="flex items-center gap-3 sm:gap-4">
+              <div className={`flex items-center gap-3 sm:gap-4 ${isEditMode ? 'pb-4' : ''}`}>
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <Utensils className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <div className="font-bold text-base sm:text-lg">
                     <EditableText
                       value={heroData.dishCount}
@@ -142,15 +177,15 @@ export function RestaurantHero() {
                       className="font-bold text-base sm:text-lg"
                     />
                   </div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">В меню</div>
+                  <div className={`text-xs sm:text-sm text-muted-foreground ${isEditMode ? 'mt-2' : ''}`}>В меню</div>
                 </div>
               </div>
               
-              <div className="flex items-center gap-3 sm:gap-4">
+              <div className={`flex items-center gap-3 sm:gap-4 ${isEditMode ? 'pb-4' : ''}`}>
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-xl bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <Star className="w-5 h-5 sm:w-6 sm:h-6 text-primary fill-primary" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <div className="font-bold text-base sm:text-lg">
                     <EditableText
                       value={heroData.rating}
@@ -159,7 +194,7 @@ export function RestaurantHero() {
                       className="font-bold text-base sm:text-lg"
                     />
                   </div>
-                  <div className="text-xs sm:text-sm text-muted-foreground">Рейтинг</div>
+                  <div className={`text-xs sm:text-sm text-muted-foreground ${isEditMode ? 'mt-2' : ''}`}>Рейтинг</div>
                 </div>
               </div>
             </motion.div>
@@ -212,15 +247,13 @@ export function RestaurantHero() {
             className="relative lg:block"
           >
             <div className="relative w-full h-[300px] sm:h-[400px] lg:h-[600px] rounded-2xl lg:rounded-3xl overflow-hidden shadow-2xl bg-gradient-to-br from-muted to-muted/50">
-              <Image
-                src="https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=1200&h=1200&fit=crop"
-                alt="Fresh Sushi"
-                fill
-                className="object-cover"
-                priority
+              <EditableImage
+                src={featuredDish.image}
+                alt={featuredDish.imageAlt}
+                onSave={(value) => handleFeaturedDishUpdate('image', value)}
+                variant="portfolio"
+                className="w-full h-full object-cover"
                 sizes="(max-width: 1024px) 100vw, 50vw"
-                placeholder="blur"
-                blurDataURL="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAYAAAAfFcSJAAAADUlEQVR42mN8/5+hHgAHggJ/PchI7wAAAABJRU5ErkJggg=="
               />
               
               {/* Floating Card */}
@@ -232,12 +265,36 @@ export function RestaurantHero() {
               >
                 <div className="flex items-center justify-between">
                   <div>
-                    <h3 className="font-bold text-sm sm:text-base lg:text-lg mb-1">Популярный сет</h3>
-                    <p className="text-xs sm:text-sm text-muted-foreground">24 шт • Калифорния, Филадельфия</p>
+                    <h3 className="font-bold text-sm sm:text-base lg:text-lg mb-1">
+                      <EditableText
+                        value={featuredDish.title}
+                        onSave={(value) => handleFeaturedDishUpdate('title', value)}
+                        className="font-bold text-sm sm:text-base lg:text-lg"
+                      />
+                    </h3>
+                    <p className="text-xs sm:text-sm text-muted-foreground">
+                      <EditableText
+                        value={featuredDish.description}
+                        onSave={(value) => handleFeaturedDishUpdate('description', value)}
+                        className="text-xs sm:text-sm text-muted-foreground"
+                      />
+                    </p>
                   </div>
                   <div className="text-right">
-                    <div className="text-lg sm:text-xl lg:text-2xl font-bold text-primary">85 zł</div>
-                    <Button size="sm" className="mt-2 text-xs sm:text-sm">Заказать</Button>
+                    <div className="text-lg sm:text-xl lg:text-2xl font-bold text-primary">
+                      <EditableText
+                        value={featuredDish.price}
+                        onSave={(value) => handleFeaturedDishUpdate('price', value)}
+                        className="text-lg sm:text-xl lg:text-2xl font-bold text-primary"
+                      />
+                    </div>
+                    <Button 
+                      size="sm" 
+                      className="mt-2 text-xs sm:text-sm"
+                      onClick={handleAddToCart}
+                    >
+                      Заказать
+                    </Button>
                   </div>
                 </div>
               </motion.div>

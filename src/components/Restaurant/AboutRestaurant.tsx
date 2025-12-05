@@ -63,7 +63,7 @@ export function AboutRestaurant() {
                 className="text-3xl sm:text-4xl font-bold"
               />
             </h2>
-            <p className="text-base sm:text-lg text-muted-foreground mb-4 sm:mb-6">
+            <div className={`text-base sm:text-lg text-muted-foreground ${isEditMode ? 'mb-12' : 'mb-4'} sm:mb-6`}>
               <EditableText
                 value={aboutData.description1}
                 onSave={(value) => handleUpdate('description1', value)}
@@ -71,8 +71,8 @@ export function AboutRestaurant() {
                 multiline
                 className="text-base sm:text-lg text-muted-foreground"
               />
-            </p>
-            <p className="text-base sm:text-lg text-muted-foreground mb-6 sm:mb-8">
+            </div>
+            <div className={`text-base sm:text-lg text-muted-foreground ${isEditMode ? 'mb-14' : 'mb-6'} sm:mb-8`}>
               <EditableText
                 value={aboutData.description2}
                 onSave={(value) => handleUpdate('description2', value)}
@@ -80,16 +80,16 @@ export function AboutRestaurant() {
                 multiline
                 className="text-base sm:text-lg text-muted-foreground"
               />
-            </p>
+            </div>
 
-            <div className="space-y-3 sm:space-y-4">
-              <div className="flex items-start gap-3 sm:gap-4">
+            <div className={`${isEditMode ? 'space-y-6' : 'space-y-3'} sm:space-y-4`}>
+              <div className={`flex items-start gap-3 sm:gap-4 ${isEditMode ? 'pb-4' : ''}`}>
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <h4 className="font-semibold mb-1 text-sm sm:text-base">Часы работы</h4>
-                  <p className="text-sm sm:text-base text-muted-foreground">
+                  <p className={`text-sm sm:text-base text-muted-foreground ${isEditMode ? 'mt-2' : ''}`}>
                     <EditableText
                       value={aboutData.hours}
                       onSave={(value) => handleUpdate('hours', value)}
@@ -100,13 +100,13 @@ export function AboutRestaurant() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 sm:gap-4">
+              <div className={`flex items-start gap-3 sm:gap-4 ${isEditMode ? 'pb-4' : ''}`}>
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <h4 className="font-semibold mb-1 text-sm sm:text-base">Адрес</h4>
-                  <p className="text-sm sm:text-base text-muted-foreground">
+                  <p className={`text-sm sm:text-base text-muted-foreground ${isEditMode ? 'mt-2' : ''}`}>
                     <EditableText
                       value={aboutData.address}
                       onSave={(value) => handleUpdate('address', value)}
@@ -117,13 +117,13 @@ export function AboutRestaurant() {
                 </div>
               </div>
 
-              <div className="flex items-start gap-3 sm:gap-4">
+              <div className={`flex items-start gap-3 sm:gap-4 ${isEditMode ? 'pb-4' : ''}`}>
                 <div className="w-10 h-10 sm:w-12 sm:h-12 rounded-full bg-primary/10 flex items-center justify-center flex-shrink-0">
                   <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
-                <div>
+                <div className="flex-1">
                   <h4 className="font-semibold mb-1 text-sm sm:text-base">Телефон</h4>
-                  <p className="text-sm sm:text-base text-muted-foreground">
+                  <p className={`text-sm sm:text-base text-muted-foreground ${isEditMode ? 'mt-2' : ''}`}>
                     <EditableText
                       value={aboutData.phone}
                       onSave={(value) => handleUpdate('phone', value)}

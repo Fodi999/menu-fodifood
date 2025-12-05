@@ -1,0 +1,56 @@
+[package]
+name = "portfolio-api"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# Shuttle
+shuttle-runtime = "0.57.0"
+shuttle-axum = "0.57.0"
+shuttle-shared-db = { version = "0.57.0", features = ["postgres"] }
+
+# Web Framework - добавляем axum 0.8 для multipart feature
+axum = { version = "0.8", features = ["multipart", "ws"] }
+tokio = { version = "1", features = ["full"] }
+tower = { version = "0.4", features = ["util"] }
+tower-http = { version = "0.5", features = ["cors", "trace"] }
+futures = "0.3"
+tokio-stream = "0.1"
+
+# Database
+sqlx = { version = "0.8", features = ["runtime-tokio-rustls", "postgres", "uuid", "chrono", "json", "macros", "bigdecimal"], default-features = false }
+bigdecimal = { version = "0.4", features = ["serde"] }
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+
+# Authentication
+jsonwebtoken = "9"
+bcrypt = "0.15"
+
+# UUID
+uuid = { version = "1.6", features = ["v4", "serde"] }
+
+# Time
+chrono = { version = "0.4", features = ["serde"] }
+
+# Environment
+dotenvy = "0.15"
+
+# Error handling
+anyhow = "1.0"
+thiserror = "1.0"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Image Upload (Cloudinary)
+reqwest = { version = "0.11", features = ["json", "multipart"] }
+base64 = "0.21"
+sha1 = "0.10"
+
+# Random number generation for order numbers
+rand = "0.8"
+

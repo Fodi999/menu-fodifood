@@ -16,6 +16,13 @@ export function OurTeam() {
     subtitle: 'Профессионалы своего дела с многолетним опытом работы в японской кухне',
   });
 
+  const [stats, setStats] = useState([
+    { id: 1, value: '15+', label: 'Сотрудников', icon: Users },
+    { id: 2, value: '20+', label: 'Лет опыта', icon: Award },
+    { id: 3, value: '100%', label: 'Профессионалы', icon: Star },
+    { id: 4, value: '5★', label: 'Рейтинг команды', icon: ChefHat },
+  ]);
+
   const [team, setTeam] = useState([
     {
       id: 1,
@@ -80,6 +87,12 @@ export function OurTeam() {
   const handleTeamUpdate = (id: number, field: string, value: string) => {
     setTeam(prev => prev.map(member => 
       member.id === id ? { ...member, [field]: value } : member
+    ));
+  };
+
+  const handleStatsUpdate = (id: number, field: string, value: string) => {
+    setStats(prev => prev.map(stat =>
+      stat.id === id ? { ...stat, [field]: value } : stat
     ));
   };
 
@@ -189,22 +202,24 @@ export function OurTeam() {
           viewport={{ once: true }}
           className="mt-10 sm:mt-12 lg:mt-16 grid grid-cols-2 md:grid-cols-4 gap-4 sm:gap-5 lg:gap-6"
         >
-          <div className="text-center p-4 sm:p-5 lg:p-6 bg-card rounded-xl sm:rounded-2xl border border-border/50">
-            <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary mb-1 sm:mb-2">15+</div>
-            <div className="text-xs sm:text-sm text-muted-foreground">Сотрудников</div>
-          </div>
-          <div className="text-center p-4 sm:p-5 lg:p-6 bg-card rounded-xl sm:rounded-2xl border border-border/50">
-            <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary mb-1 sm:mb-2">20+</div>
-            <div className="text-xs sm:text-sm text-muted-foreground">Лет опыта</div>
-          </div>
-          <div className="text-center p-4 sm:p-5 lg:p-6 bg-card rounded-xl sm:rounded-2xl border border-border/50">
-            <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary mb-1 sm:mb-2">100%</div>
-            <div className="text-xs sm:text-sm text-muted-foreground">Профессионалы</div>
-          </div>
-          <div className="text-center p-4 sm:p-5 lg:p-6 bg-card rounded-xl sm:rounded-2xl border border-border/50">
-            <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary mb-1 sm:mb-2">5★</div>
-            <div className="text-xs sm:text-sm text-muted-foreground">Рейтинг команды</div>
-          </div>
+          {stats.map((stat) => (
+            <div key={stat.id} className="text-center p-4 sm:p-5 lg:p-6 bg-card rounded-xl sm:rounded-2xl border border-border/50">
+              <div className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary mb-1 sm:mb-2">
+                <EditableText
+                  value={stat.value}
+                  onSave={(value) => handleStatsUpdate(stat.id, 'value', value)}
+                  className="text-2xl sm:text-3xl lg:text-4xl font-bold text-primary"
+                />
+              </div>
+              <div className="text-xs sm:text-sm text-muted-foreground">
+                <EditableText
+                  value={stat.label}
+                  onSave={(value) => handleStatsUpdate(stat.id, 'label', value)}
+                  className="text-xs sm:text-sm text-muted-foreground"
+                />
+              </div>
+            </div>
+          ))}
         </motion.div>
       </div>
     </section>

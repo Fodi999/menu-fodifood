@@ -1,0 +1,7 @@
+.env
+target/
+.DS_Store
+*.log
+/target
+.shuttle*
+Secrets*.toml

@@ -5,9 +5,10 @@ import { AboutRestaurant } from "@/components/Restaurant/AboutRestaurant";
 import { OurTeam } from "@/components/Restaurant/OurTeam";
 import { TableReservation } from "@/components/Restaurant/TableReservation";
 import { Delivery } from "@/components/Restaurant/Delivery";
-import { RestaurantNavbar } from "@/components/Restaurant/RestaurantNavbar";
+import { Navigation } from "@/components/Navigation";
 import { RestaurantFooter } from "@/components/Restaurant/RestaurantFooter";
 import { ScrollToTop } from "@/components/Resume/ScrollToTop";
+import { AnalyticsTracker } from "@/components/AnalyticsTracker";
 
 export const metadata: Metadata = {
   title: "FodiFood - Японская кухня с доставкой | Japanese Restaurant",
@@ -35,7 +36,8 @@ export const metadata: Metadata = {
 export default function HomePage() {
   return (
     <div className="min-h-screen">
-      <RestaurantNavbar />
+      <AnalyticsTracker />
+      <Navigation />
       <main className="pt-14 sm:pt-16 lg:pt-20">
         <RestaurantHero />
         <MenuWithCategories />

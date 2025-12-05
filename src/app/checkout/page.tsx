@@ -8,7 +8,8 @@ import { motion } from 'framer-motion';
 import { 
   ShoppingBag, 
   MapPin, 
-  User, 
+  User,
+  Users,
   Phone, 
   Mail, 
   CreditCard,
@@ -22,6 +23,8 @@ import Link from 'next/link';
 import { useRouter } from 'next/navigation';
 import { toast } from 'sonner';
 import { PaymentMethod } from '@/types/restaurant';
+import { ordersAPI } from '@/lib/restaurant-api';
+import { analytics } from '@/lib/analytics';
 
 export default function CheckoutPage() {
   const router = useRouter();
@@ -32,6 +35,7 @@ export default function CheckoutPage() {
     name: '',
     phone: '',
     email: '',
+    numberOfPeople: '2',
     address: '',
     apartment: '',
     entrance: '',
@@ -57,26 +61,74 @@ export default function CheckoutPage() {
       return;
     }
 
+    // Validate required fields
+    if (!formData.name.trim() || !formData.phone.trim() || !formData.address.trim()) {
+      toast.error('Заполните обязательные поля!');
+      return;
+    }
+
+    // Validate number of people
+    const numPeople = parseInt(formData.numberOfPeople);
+    if (!numPeople || numPeople < 1 || numPeople > 20) {
+      toast.error('Укажите корректное количество персон (от 1 до 20)');
+      return;
+    }
+
     setIsSubmitting(true);
 
     try {
-      // TODO: Отправить заказ на backend
-      console.log('📦 Order Data:', {
-        ...formData,
-        items,
-        totalPrice,
-        deliveryFee,
-        totalWithDelivery,
-      });
+      // Parse address (simple split by comma or space)
+      const addressParts = formData.address.split(/,|\s+/);
+      const street = addressParts.slice(0, -1).join(' ') || formData.address;
+      const building = addressParts[addressParts.length - 1] || '1';
 
-      // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1500));
+      // Add number of people to special instructions
+      const specialInstructions = [
+        `👥 Количество персон: ${formData.numberOfPeople}`,
+        formData.comment
+      ].filter(Boolean).join('\n');
 
-      toast.success('Заказ успешно оформлен! Мы свяжемся с вами для подтверждения.');
+      // Prepare order data for API
+      const orderData = {
+        customer_name: formData.name,
+        customer_phone: formData.phone,
+        customer_email: formData.email || undefined,
+        delivery_street: street,
+        delivery_building: building,
+        delivery_apartment: formData.apartment || undefined,
+        delivery_floor: formData.floor || undefined,
+        delivery_entrance: formData.entrance || undefined,
+        delivery_intercom: formData.intercom || undefined,
+        delivery_city: 'Warszawa', // TODO: Add city selection
+        delivery_postal_code: '00-001', // TODO: Add postal code input
+        delivery_country: 'Poland',
+        payment_method: formData.paymentMethod,
+        special_instructions: specialInstructions || undefined,
+        items: items.map(item => ({
+          menu_item_id: item.id,
+          quantity: item.quantity,
+          special_instructions: undefined,
+        })),
+      };
+
+      console.log('📦 Sending order to backend:', orderData);
+
+      // Send order to backend
+      const createdOrder = await ordersAPI.create(orderData);
+
+      console.log('✅ Order created successfully:', createdOrder);
+
+      // Track order in analytics
+      analytics.trackOrder();
+
+      toast.success(`Заказ #${createdOrder.order_number} успешно оформлен! Мы свяжемся с вами для подтверждения.`);
       clearCart();
-      router.push('/order-success');
+      
+      // Redirect to success page with order number
+      router.push(`/order-success?order=${createdOrder.order_number}`);
     } catch (error) {
-      toast.error('Ошибка при оформлении заказа. Попробуйте снова.');
+      console.error('❌ Error creating order:', error);
+      toast.error(error instanceof Error ? error.message : 'Ошибка при оформлении заказа. Попробуйте снова.');
     } finally {
       setIsSubmitting(false);
     }
@@ -157,6 +209,21 @@ export default function CheckoutPage() {
                     value={formData.email}
                     onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                     placeholder="example@email.com"
+                  />
+                </div>
+                <div>
+                  <label className="block text-sm font-medium mb-2 flex items-center gap-2">
+                    <Users className="w-4 h-4 text-primary" />
+                    Количество персон *
+                  </label>
+                  <Input
+                    required
+                    type="number"
+                    min="1"
+                    max="20"
+                    value={formData.numberOfPeople}
+                    onChange={(e) => setFormData({ ...formData, numberOfPeople: e.target.value })}
+                    placeholder="2"
                   />
                 </div>
               </div>
@@ -337,6 +404,15 @@ export default function CheckoutPage() {
               </div>
 
               <div className="border-t border-border pt-4 space-y-2 mb-4">
+                {formData.numberOfPeople && (
+                  <div className="flex items-center justify-between text-sm mb-3 pb-2 border-b border-border/50">
+                    <span className="text-muted-foreground flex items-center gap-2">
+                      <Users className="w-4 h-4" />
+                      Количество персон
+                    </span>
+                    <span className="font-semibold">{formData.numberOfPeople}</span>
+                  </div>
+                )}
                 <div className="flex items-center justify-between text-sm">
                   <span className="text-muted-foreground">Товары</span>
                   <span className="font-semibold">{totalPrice.toFixed(2)} zł</span>
@@ -362,7 +438,7 @@ export default function CheckoutPage() {
 
               <Button
                 onClick={handleSubmit}
-                disabled={isSubmitting || !formData.name || !formData.phone || !formData.address}
+                disabled={isSubmitting || !formData.name || !formData.phone || !formData.address || !formData.numberOfPeople}
                 size="lg"
                 className="w-full gap-2"
               >

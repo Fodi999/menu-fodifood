@@ -2,6 +2,8 @@
 
 import React, { createContext, useContext, useState, useEffect } from 'react';
 import { MenuItem } from '@/types/restaurant';
+import { analytics } from '@/lib/analytics';
+import { toast } from 'sonner';
 
 export interface CartItem extends MenuItem {
   quantity: number;
@@ -32,32 +34,77 @@ export function CartProvider({ children }: { children: React.ReactNode }) {
     const savedCart = localStorage.getItem('restaurant_cart');
     if (savedCart) {
       try {
-        setItems(JSON.parse(savedCart));
+        const parsedCart = JSON.parse(savedCart);
+        
+        // Validate cart items - clear if any ID is > 100 (old mock data)
+        const hasInvalidIds = parsedCart.some((item: CartItem) => item.id > 100);
+        
+        if (hasInvalidIds) {
+          console.warn('🧹 Clearing cart - found old mock data');
+          localStorage.removeItem('restaurant_cart');
+          setItems([]);
+          
+          // Show notification to user
+          toast.info('Корзина была очищена из-за обновления меню', {
+            description: 'Пожалуйста, добавьте товары заново',
+            duration: 5000,
+          });
+        } else {
+          setItems(parsedCart);
+        }
       } catch (e) {
         console.error('Failed to load cart:', e);
+        localStorage.removeItem('restaurant_cart');
       }
     }
   }, []);
 
+  // Additional safety check - validate items before any cart operation
+  const validateAndCleanCart = (cartItems: CartItem[]): CartItem[] => {
+    const validItems = cartItems.filter(item => item.id <= 100);
+    if (validItems.length !== cartItems.length) {
+      console.warn('🧹 Removed invalid items from cart');
+      toast.warning('Некоторые товары были удалены из корзины', {
+        description: 'Устаревшие позиции больше не доступны',
+      });
+    }
+    return validItems;
+  };
+
   // Save cart to localStorage whenever it changes
   useEffect(() => {
     localStorage.setItem('restaurant_cart', JSON.stringify(items));
+    
+    // Update analytics with current cart count
+    const totalCount = items.reduce((sum, item) => sum + item.quantity, 0);
+    analytics.updateCartItems(totalCount);
   }, [items]);
 
   const addItem = (item: MenuItem) => {
+    // Validate item ID before adding
+    if (item.id > 100) {
+      console.error('❌ Attempted to add invalid item with ID:', item.id);
+      toast.error('Невозможно добавить товар', {
+        description: 'Пожалуйста, обновите страницу и попробуйте снова',
+      });
+      return;
+    }
+    
     setItems(prevItems => {
-      const existingItem = prevItems.find(i => i.id === item.id);
+      // Clean cart before adding
+      const cleanedItems = validateAndCleanCart(prevItems);
+      const existingItem = cleanedItems.find(i => i.id === item.id);
       
       if (existingItem) {
         // Increment quantity if item already exists
-        return prevItems.map(i =>
+        return cleanedItems.map(i =>
           i.id === item.id
             ? { ...i, quantity: i.quantity + 1 }
             : i
         );
       } else {
         // Add new item with quantity 1
-        return [...prevItems, { ...item, quantity: 1 }];
+        return [...cleanedItems, { ...item, quantity: 1 }];
       }
     });
     

@@ -2,18 +2,40 @@
 
 import { motion } from 'framer-motion';
 import { Button } from '@/components/ui/button';
-import { ShoppingCart, Heart, Fish, Package, Soup, Salad, Coffee, Cake } from 'lucide-react';
+import { ShoppingCart, Heart, Fish, Package, Soup, Salad, Coffee, Cake, Plus } from 'lucide-react';
 import Image from 'next/image';
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { toast } from 'sonner';
 import { useRestaurant } from '@/contexts/RestaurantContext';
 import { EditableText } from '@/components/EditableText';
 import { EditableImage } from '@/components/EditableImage';
 
+// Типы данных
+interface MenuItem {
+  id: number;
+  name: string;
+  description: string;
+  price: number;
+  image_url?: string;
+  category_id: number;
+  weight?: string;
+}
+
+interface Category {
+  id: number;
+  name: string;
+  slug: string;
+  icon: any;
+  description: string;
+  items: MenuItem[];
+}
+
 export function MenuWithCategories() {
   const [favorites, setFavorites] = useState<number[]>([]);
   const [activeCategory, setActiveCategory] = useState<number>(1);
+  const [menuByCategories, setMenuByCategories] = useState<Category[]>([]);
+  const [loading, setLoading] = useState(true);
   const { addItem } = useCart();
   const { isEditMode } = useRestaurant();
   
@@ -26,87 +48,63 @@ export function MenuWithCategories() {
     setSectionData(prev => ({ ...prev, [field]: value }));
   };
 
-  // Данные меню по категориям
-  const [menuByCategories, setMenuByCategories] = useState([
-  {
-    id: 1,
-    name: 'Суши',
-    slug: 'sushi',
-    icon: Fish,
-    description: 'Свежие суши и сашими',
-    items: [
-      { id: 101, name: 'Нигири с лососем', description: 'Свежий лосось на рисе', price: 12, image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop', weight: '2 шт' },
-      { id: 102, name: 'Нигири с тунцом', description: 'Свежий тунец на рисе', price: 14, image: 'https://images.unsplash.com/photo-1553621042-f6e147245754?w=400&h=300&fit=crop', weight: '2 шт' },
-      { id: 103, name: 'Нигири с угрем', description: 'Угорь на рисе с соусом', price: 13, image: 'https://images.unsplash.com/photo-1617196034183-421b4917c92d?w=400&h=300&fit=crop', weight: '2 шт' },
-      { id: 104, name: 'Нигири с креветкой', description: 'Креветка на рисе', price: 11, image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop', weight: '2 шт' },
-    ]
-  },
-  {
-    id: 2,
-    name: 'Роллы',
-    slug: 'rolls',
-    icon: Package,
-    description: 'Классические и авторские роллы',
-    items: [
-      { id: 201, name: 'Калифорния', description: 'Краб, авокадо, огурец, икра тобико', price: 28, image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop', weight: '8 шт' },
-      { id: 202, name: 'Филадельфия', description: 'Лосось, сливочный сыр, огурец', price: 32, image: 'https://images.unsplash.com/photo-1617196034796-ca04dd458c0d?w=400&h=300&fit=crop', weight: '8 шт' },
-      { id: 203, name: 'Микс сет', description: 'Ассорти из популярных роллов', price: 85, originalPrice: 95, image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=400&h=300&fit=crop', weight: '24 шт', isNew: true },
-      { id: 204, name: 'Спайси тунец', description: 'Тунец, огурец, спайси соус', price: 30, image: 'https://images.unsplash.com/photo-1617196034183-421b4917c92d?w=400&h=300&fit=crop', weight: '8 шт' },
-    ]
-  },
-  {
-    id: 3,
-    name: 'Супы',
-    slug: 'soups',
-    icon: Soup,
-    description: 'Традиционные японские супы',
-    items: [
-      { id: 301, name: 'Мисо суп', description: 'Традиционный японский суп', price: 8, image: 'https://images.unsplash.com/photo-1617093727343-374698b1b08d?w=400&h=300&fit=crop', weight: '300 мл' },
-      { id: 302, name: 'Том ям', description: 'Острый тайский суп', price: 15, image: 'https://images.unsplash.com/photo-1547592166-23ac45744acd?w=400&h=300&fit=crop', weight: '400 мл' },
-      { id: 303, name: 'Рамен', description: 'Лапша в бульоне', price: 18, image: 'https://images.unsplash.com/photo-1569718212165-3a8278d5f624?w=400&h=300&fit=crop', weight: '450 мл' },
-      { id: 304, name: 'Удон суп', description: 'Суп с лапшой удон', price: 16, image: 'https://images.unsplash.com/photo-1582878826629-29b7ad1cdc43?w=400&h=300&fit=crop', weight: '400 мл' },
-    ]
-  },
-  {
-    id: 4,
-    name: 'Салаты',
-    slug: 'salads',
-    icon: Salad,
-    description: 'Свежие салаты и закуски',
-    items: [
-      { id: 401, name: 'Чука', description: 'Салат из водорослей', price: 10, image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop', weight: '150 г' },
-      { id: 402, name: 'Кайсо', description: 'Микс водорослей', price: 12, image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop', weight: '150 г' },
-      { id: 403, name: 'Салат с лососем', description: 'Свежий лосось с овощами', price: 18, image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=400&h=300&fit=crop', weight: '200 г' },
-      { id: 404, name: 'Салат с креветкой', description: 'Креветки с овощами', price: 16, image: 'https://images.unsplash.com/photo-1512621776951-a57141f2eefd?w=400&h=300&fit=crop', weight: '200 г' },
-    ]
-  },
-  {
-    id: 5,
-    name: 'Напитки',
-    slug: 'drinks',
-    icon: Coffee,
-    description: 'Освежающие напитки',
-    items: [
-      { id: 501, name: 'Кока-кола', description: 'Классическая кола', price: 5, image: 'https://images.unsplash.com/photo-1554866585-cd94860890b7?w=400&h=300&fit=crop', weight: '330 мл' },
-      { id: 502, name: 'Зеленый чай', description: 'Японский зеленый чай', price: 6, image: 'https://images.unsplash.com/photo-1564890369478-c89ca6d9cde9?w=400&h=300&fit=crop', weight: '250 мл' },
-      { id: 503, name: 'Сок апельсиновый', description: 'Свежевыжатый сок', price: 8, image: 'https://images.unsplash.com/photo-1600271886742-f049cd451bba?w=400&h=300&fit=crop', weight: '250 мл' },
-      { id: 504, name: 'Лимонад', description: 'Домашний лимонад', price: 7, image: 'https://images.unsplash.com/photo-1523677011781-c91d1bbe1f28?w=400&h=300&fit=crop', weight: '300 мл' },
-    ]
-  },
-  {
-    id: 6,
-    name: 'Десерты',
-    slug: 'desserts',
-    icon: Cake,
-    description: 'Сладкие десерты',
-    items: [
-      { id: 601, name: 'Моти', description: 'Японские рисовые пирожные', price: 8, image: 'https://images.unsplash.com/photo-1582716401301-b2407dc7563d?w=400&h=300&fit=crop', weight: '3 шт' },
-      { id: 602, name: 'Тирамису', description: 'Классический итальянский десерт', price: 12, image: 'https://images.unsplash.com/photo-1571877227200-a0d98ea607e9?w=400&h=300&fit=crop', weight: '150 г' },
-      { id: 603, name: 'Чизкейк', description: 'Нежный чизкейк', price: 11, image: 'https://images.unsplash.com/photo-1524351199678-941a58a3df50?w=400&h=300&fit=crop', weight: '120 г' },
-      { id: 604, name: 'Мороженое', description: 'Ванильное мороженое', price: 7, image: 'https://images.unsplash.com/photo-1563805042-7684c019e1cb?w=400&h=300&fit=crop', weight: '100 г' },
-    ]
-  },
-  ]);
+  // Иконки для категорий
+  const categoryIcons: Record<number, any> = {
+    1: Fish,
+    2: Package,
+    3: Soup,
+    4: Salad,
+    5: Coffee,
+    6: Cake,
+  };
+
+  // Загрузка данных меню из API
+  useEffect(() => {
+    const loadMenu = async () => {
+      try {
+        setLoading(true);
+        
+        // Загрузка категорий
+        const categoriesRes = await fetch('https://portfolio-a4yb.shuttle.app/api/restaurant/categories');
+        const categoriesData = await categoriesRes.json();
+        
+        // Загрузка блюд
+        const itemsRes = await fetch('https://portfolio-a4yb.shuttle.app/api/restaurant/menu');
+        const itemsData = await itemsRes.json();
+        
+        // Группировка блюд по категориям
+        const categoriesWithItems: Category[] = categoriesData.map((cat: any) => ({
+          id: cat.id,
+          name: cat.name,
+          slug: cat.slug || cat.name.toLowerCase(),
+          icon: categoryIcons[cat.id] || Package,
+          description: cat.description || '',
+          items: itemsData
+            .filter((item: any) => item.category_id === cat.id)
+            .map((item: any) => ({
+              id: item.id,
+              name: item.name,
+              description: item.description || '',
+              price: parseFloat(item.price),
+              image_url: item.image_url || '/placeholder.jpg',
+              category_id: item.category_id,
+            }))
+        }));
+        
+        setMenuByCategories(categoriesWithItems);
+        if (categoriesWithItems.length > 0) {
+          setActiveCategory(categoriesWithItems[0].id);
+        }
+      } catch (error) {
+        console.error('Failed to load menu:', error);
+        toast.error('Ошибка загрузки меню');
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    loadMenu();
+  }, []);
 
   // Handlers for updating categories and items
   const handleCategoryUpdate = (categoryId: number, field: string, value: string) => {
@@ -128,6 +126,44 @@ export function MenuWithCategories() {
     ));
   };
 
+  // Add new category
+  const handleAddCategory = () => {
+    const newId = Math.max(...menuByCategories.map(c => c.id)) + 1;
+    const newCategory = {
+      id: newId,
+      name: 'Новая категория',
+      slug: `category-${newId}`,
+      icon: Package,
+      description: 'Описание категории',
+      items: []
+    };
+    setMenuByCategories(prev => [...prev, newCategory]);
+    setActiveCategory(newId);
+    toast.success('Категория создана!');
+  };
+
+  // Add new item to current category
+  const handleAddItem = () => {
+    const newItemId = Date.now();
+    const newItem = {
+      id: newItemId,
+      name: 'Новое блюдо',
+      description: 'Кликните чтобы изменить описание блюда',
+      price: 100,
+      originalPrice: undefined,
+      image: 'https://images.unsplash.com/photo-1546069901-ba9599a7e63c?w=800&h=600&fit=crop',
+      weight: '250 г',
+      isNew: false
+    };
+    
+    setMenuByCategories(prev => prev.map(cat =>
+      cat.id === activeCategory
+        ? { ...cat, items: [...cat.items, newItem as any] }
+        : cat
+    ));
+    toast.success('Блюдо создано! Кликните на текст или изображение для редактирования');
+  };
+
   const toggleFavorite = (id: number) => {
     setFavorites(prev =>
       prev.includes(id) ? prev.filter(fav => fav !== id) : [...prev, id]
@@ -144,18 +180,36 @@ export function MenuWithCategories() {
       descriptionRu: item.description,
       descriptionPl: item.description,
       price: item.price,
-      image: item.image,
-      weight: item.weight || '',
-      categoryId: 1,
+      image: item.image_url || '/placeholder.jpg',
+      weight: '',
+      categoryId: item.category_id,
       isPopular: false,
       isAvailable: true,
-      isNew: item.isNew || false,
+      isNew: false,
     });
     toast.success(`${item.name} добавлен в корзину`);
   };
 
+  // Loading state
+  if (loading) {
+    return (
+      <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-muted/20">
+        <div className="container mx-auto max-w-7xl">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
+            <p className="text-muted-foreground">Загрузка меню...</p>
+          </div>
+        </div>
+      </section>
+    );
+  }
+
   // Get active category data
-  const currentCategory = menuByCategories.find(cat => cat.id === activeCategory)!;
+  const currentCategory = menuByCategories.find(cat => cat.id === activeCategory);
+  
+  if (!currentCategory) {
+    return null;
+  }
 
   return (
     <section className="py-12 sm:py-16 lg:py-20 px-4 sm:px-6 lg:px-8 bg-muted/20">
@@ -210,6 +264,20 @@ export function MenuWithCategories() {
                 <span className="text-xs opacity-70">({category.items.length})</span>
               </motion.button>
             ))}
+            
+            {/* Create Category Button */}
+            {isEditMode && (
+              <motion.button
+                onClick={handleAddCategory}
+                className="flex items-center gap-1.5 sm:gap-2 px-3 sm:px-4 md:px-6 py-2 sm:py-3 rounded-full font-semibold text-sm sm:text-base
+                  transition-all duration-300 border-2 border-dashed border-primary/50 bg-background hover:border-primary hover:bg-primary/5"
+                whileHover={{ scale: 1.05 }}
+                whileTap={{ scale: 0.95 }}
+              >
+                <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
+                <span>Создать категорию</span>
+              </motion.button>
+            )}
           </div>
         </motion.div>
 
@@ -263,9 +331,9 @@ export function MenuWithCategories() {
                     {/* Image */}
                     <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted to-muted/50">
                       <EditableImage
-                        src={item.image}
+                        src={item.image_url || '/placeholder.jpg'}
                         alt={item.name}
-                        onSave={(value) => handleItemUpdate(currentCategory.id, item.id, 'image', value)}
+                        onSave={(value) => handleItemUpdate(currentCategory.id, item.id, 'image_url', value)}
                         variant="portfolio"
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                         sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 25vw"
@@ -360,6 +428,28 @@ export function MenuWithCategories() {
                   </div>
                 </motion.div>
             ))}
+            
+            {/* Create Item Card */}
+            {isEditMode && (
+              <motion.div
+                initial={{ opacity: 0, scale: 0.9 }}
+                whileInView={{ opacity: 1, scale: 1 }}
+                viewport={{ once: true }}
+                className="group relative"
+              >
+                <button
+                  onClick={handleAddItem}
+                  className="w-full h-full min-h-[350px] sm:min-h-[400px] bg-card rounded-xl sm:rounded-2xl overflow-hidden border-2 border-dashed border-primary/50 hover:border-primary hover:bg-primary/5 transition-all duration-300 flex flex-col items-center justify-center gap-3 sm:gap-4 p-6"
+                >
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 rounded-full bg-primary/10 flex items-center justify-center">
+                    <Plus className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
+                  </div>
+                  <span className="text-base sm:text-lg font-semibold text-primary">
+                    Создать блюдо
+                  </span>
+                </button>
+              </motion.div>
+            )}
           </div>
         </motion.div>
       </div>

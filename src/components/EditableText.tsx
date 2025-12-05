@@ -3,7 +3,7 @@
 import { useState, useRef, useEffect } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { useRestaurant } from "@/contexts/RestaurantContext";
-import { Check, X, Edit2 } from "lucide-react";
+import { Check, X } from "lucide-react";
 
 interface EditableTextProps {
   value: string;
@@ -11,6 +11,7 @@ interface EditableTextProps {
   className?: string;
   multiline?: boolean;
   placeholder?: string;
+  onEditingChange?: (isEditing: boolean) => void;
 }
 
 export function EditableText({
@@ -19,6 +20,7 @@ export function EditableText({
   className = "",
   multiline = false,
   placeholder = "Введите текст...",
+  onEditingChange,
 }: EditableTextProps) {
   const { isEditMode } = useRestaurant();
   
@@ -31,7 +33,9 @@ export function EditableText({
       inputRef.current.focus();
       inputRef.current.select();
     }
-  }, [isEditing]);
+    // Notify parent about editing state change
+    onEditingChange?.(isEditing);
+  }, [isEditing, onEditingChange]);
 
   useEffect(() => {
     setEditValue(value);
@@ -75,7 +79,7 @@ export function EditableText({
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            className={`${className} w-full max-w-full bg-background/95 backdrop-blur-sm border-2 border-primary rounded-xl px-4 py-3 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none box-border min-h-[100px] shadow-lg`}
+            className={`w-full max-w-full bg-background/95 backdrop-blur-sm border-2 border-primary rounded-xl px-4 py-3 text-base text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 resize-none box-border min-h-[100px] shadow-lg ${className}`}
             placeholder={placeholder}
             rows={4}
           />
@@ -86,7 +90,7 @@ export function EditableText({
             value={editValue}
             onChange={(e) => setEditValue(e.target.value)}
             onKeyDown={handleKeyDown}
-            className={`${className} w-full max-w-full bg-background/95 backdrop-blur-sm border-2 border-primary rounded-xl px-4 py-2.5 text-base focus:outline-none focus:ring-2 focus:ring-primary/20 box-border h-11 shadow-lg`}
+            className={`w-full max-w-full bg-background/95 backdrop-blur-sm border-2 border-primary rounded-xl px-4 py-2.5 text-base text-foreground focus:outline-none focus:ring-2 focus:ring-primary/20 box-border h-11 shadow-lg ${className}`}
             placeholder={placeholder}
           />
         )}
@@ -124,14 +128,9 @@ export function EditableText({
         }
       }}
     >
-      <span className={`${className} ${isEditMode ? 'border-2 border-dashed border-primary/50 group-hover:border-primary rounded-lg px-3 py-1.5 transition-colors' : ''}`}>
+      <span className={`${className} ${isEditMode ? `border-2 border-dashed border-primary/50 group-hover:border-primary rounded-lg ${multiline ? 'px-4 py-3' : 'px-3 py-1.5'} transition-colors block` : ''}`}>
         {value}
       </span>
-      {isEditMode && (
-        <span className="absolute -right-8 sm:-right-9 top-1/2 -translate-y-1/2 opacity-100 transition-opacity">
-          <Edit2 className="w-4 h-4 sm:w-5 sm:h-5 text-primary animate-pulse" />
-        </span>
-      )}
     </span>
   );
 }

@@ -1,0 +1,166 @@
+{
+  "db_name": "PostgreSQL",
+  "query": "\n        SELECT id, category_id, name, name_ru, name_pl, \n               description, description_ru, description_pl,\n               price, original_price, image, images,\n               is_available, is_popular, is_new, is_vegetarian, is_spicy,\n               allergens, weight, calories, cooking_time, ingredients, tags,\n               created_at, updated_at\n        FROM menu_items\n        WHERE category_id = $1 AND is_available = true\n        ORDER BY id ASC\n        ",
+  "describe": {
+    "columns": [
+      {
+        "ordinal": 0,
+        "name": "id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 1,
+        "name": "category_id",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 2,
+        "name": "name",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 3,
+        "name": "name_ru",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 4,
+        "name": "name_pl",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 5,
+        "name": "description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 6,
+        "name": "description_ru",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 7,
+        "name": "description_pl",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 8,
+        "name": "price",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 9,
+        "name": "original_price",
+        "type_info": "Numeric"
+      },
+      {
+        "ordinal": 10,
+        "name": "image",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 11,
+        "name": "images",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 12,
+        "name": "is_available",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 13,
+        "name": "is_popular",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 14,
+        "name": "is_new",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 15,
+        "name": "is_vegetarian",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 16,
+        "name": "is_spicy",
+        "type_info": "Bool"
+      },
+      {
+        "ordinal": 17,
+        "name": "allergens",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 18,
+        "name": "weight",
+        "type_info": "Varchar"
+      },
+      {
+        "ordinal": 19,
+        "name": "calories",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 20,
+        "name": "cooking_time",
+        "type_info": "Int4"
+      },
+      {
+        "ordinal": 21,
+        "name": "ingredients",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 22,
+        "name": "tags",
+        "type_info": "TextArray"
+      },
+      {
+        "ordinal": 23,
+        "name": "created_at",
+        "type_info": "Timestamptz"
+      },
+      {
+        "ordinal": 24,
+        "name": "updated_at",
+        "type_info": "Timestamptz"
+      }
+    ],
+    "parameters": {
+      "Left": [
+        "Int4"
+      ]
+    },
+    "nullable": [
+      false,
+      true,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      false,
+      true,
+      false,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      false,
+      false
+    ]
+  },
+  "hash": "7423bb5da6e4adfd09bca51a9baf07fd0bbf761d1e5ad121a2a064c498359f21"
+}
