@@ -153,7 +153,7 @@ export default function DashboardPage() {
                     </Button>
                   </div>
                   <p className="text-xs text-gray-500 mt-3">
-                    Створено: {new Date(portfolio.created_at).toLocaleDateString('uk-UA')}
+                    Створено: {portfolio.created_at ? new Date(portfolio.created_at).toLocaleDateString('uk-UA') : 'Невідомо'}
                   </p>
                 </CardContent>
               </Card>

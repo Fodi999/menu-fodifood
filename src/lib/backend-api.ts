@@ -3,16 +3,26 @@
 // Local Development: http://localhost:8000
 const API_BASE_URL = process.env.NEXT_PUBLIC_API_URL || 'https://portfolio-a4yb.shuttle.app';
 
+export interface User {
+  id: string;
+  username: string;
+  email?: string;
+  plan?: string;
+}
+
 export interface Portfolio {
   id: string;
   slug: string;
   theme: string;
   data: any;
   updated_at: string;
+  created_at?: string;
+  is_public?: boolean;
 }
 
 export interface AuthResponse {
   token: string;
+  user?: any;
 }
 
 export interface BlogPost {
@@ -46,6 +56,21 @@ export const authAPI = {
 
     return response.json();
   },
+
+  async register(email: string, username: string, password: string): Promise<AuthResponse> {
+    const response = await fetch(`${API_BASE_URL}/api/auth/register`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, username, password }),
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Registration failed');
+    }
+
+    return response.json();
+  },
 };
 
 // Portfolio API (Single Portfolio System)
@@ -60,6 +85,23 @@ export const portfolioAPI = {
     }
 
     return response.json();
+  },
+
+  // Protected - get user portfolios (requires admin token)
+  async getUserPortfolios(token: string): Promise<Portfolio[]> {
+    const response = await fetch(`${API_BASE_URL}/api/portfolio`, {
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to fetch portfolios');
+    }
+
+    const data = await response.json();
+    return Array.isArray(data) ? data : [data];
   },
 
   // Protected - update portfolio (requires admin token)
@@ -83,6 +125,21 @@ export const portfolioAPI = {
     }
 
     return response.json();
+  },
+
+  // Protected - delete portfolio (requires admin token)
+  async delete(token: string, id: string): Promise<void> {
+    const response = await fetch(`${API_BASE_URL}/api/portfolio/${id}`, {
+      method: 'DELETE',
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (!response.ok) {
+      const error = await response.json();
+      throw new Error(error.error || 'Failed to delete portfolio');
+    }
   },
 };
 
@@ -183,6 +240,25 @@ export const tokenStorage = {
 
   isAuthenticated(): boolean {
     return !!this.get();
+  },
+};
+
+// User Storage
+export const userStorage = {
+  get(): any | null {
+    if (typeof window === 'undefined') return null;
+    const user = localStorage.getItem('user');
+    return user ? JSON.parse(user) : null;
+  },
+
+  set(user: any): void {
+    if (typeof window === 'undefined') return;
+    localStorage.setItem('user', JSON.stringify(user));
+  },
+
+  remove(): void {
+    if (typeof window === 'undefined') return;
+    localStorage.removeItem('user');
   },
 };
 
