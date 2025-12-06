@@ -12,17 +12,17 @@ export function Categories() {
   const { isEditMode } = useRestaurant();
   
   const [sectionData, setSectionData] = useState({
-    title: 'Категории',
-    subtitle: 'Выберите категорию и найдите свое любимое блюдо'
+    title: 'Kategorie',
+    subtitle: 'Wybierz kategorię i znajdź swoje ulubione danie'
   });
 
   const [categories, setCategories] = useState([
-    { id: 1, name: 'Суши', icon: Fish, slug: 'sushi', count: 12 },
-    { id: 2, name: 'Роллы', icon: Package, slug: 'rolls', count: 24 },
-    { id: 3, name: 'Супы', icon: Soup, slug: 'soups', count: 8 },
-    { id: 4, name: 'Салаты', icon: Salad, slug: 'salads', count: 10 },
-    { id: 5, name: 'Напитки', icon: Coffee, slug: 'drinks', count: 15 },
-    { id: 6, name: 'Десерты', icon: Cake, slug: 'desserts', count: 6 },
+    { id: 1, name: 'Sushi', icon: Fish, slug: 'sushi', count: 12 },
+    { id: 2, name: 'Rolki', icon: Package, slug: 'rolls', count: 24 },
+    { id: 3, name: 'Zupy', icon: Soup, slug: 'soups', count: 8 },
+    { id: 4, name: 'Sałatki', icon: Salad, slug: 'salads', count: 10 },
+    { id: 5, name: 'Napoje', icon: Coffee, slug: 'drinks', count: 15 },
+    { id: 6, name: 'Desery', icon: Cake, slug: 'desserts', count: 6 },
   ]);
 
   const handleSectionUpdate = (field: string, value: string) => {

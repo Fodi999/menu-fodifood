@@ -12,11 +12,11 @@ export function AboutRestaurant() {
   const { isEditMode } = useRestaurant();
   
   const [aboutData, setAboutData] = useState({
-    title: 'О нас',
-    description1: 'FodiFood - это аутентичная японская кухня с профессиональным подходом. Наш шеф-повар с 20-летним опытом готовит каждое блюдо с любовью и вниманием к деталям.',
-    description2: 'Мы используем только свежие ингредиенты и следуем традиционным японским рецептам, чтобы подарить вам незабываемый вкус настоящей Японии.',
+    title: 'O nas',
+    description1: 'FodiFood to autentyczna kuchnia japońska z profesjonalnym podejściem. Nasz szef kuchni z 20-letnim doświadczeniem przygotowuje każde danie z miłością i dbałością o szczegóły.',
+    description2: 'Używamy tylko świeżych składników i postępujemy zgodnie z tradycyjnymi japońskimi przepisami, aby podarować Wam niezapomniany smak prawdziwej Japonii.',
     image: 'https://images.unsplash.com/photo-1414235077428-338989a2e8c0?w=800&h=1000&fit=crop&q=80',
-    hours: 'Пн-Вс: 10:00 - 22:00',
+    hours: 'Pn-Nd: 10:00 - 22:00',
     address: 'ul. Przykładowa 123, Warsaw',
     phone: '+48 123 456 789',
   });
@@ -88,7 +88,7 @@ export function AboutRestaurant() {
                   <Clock className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold mb-1 text-sm sm:text-base">Часы работы</h4>
+                  <h4 className="font-semibold mb-1 text-sm sm:text-base">Godziny otwarcia</h4>
                   <p className={`text-sm sm:text-base text-muted-foreground ${isEditMode ? 'mt-2' : ''}`}>
                     <EditableText
                       value={aboutData.hours}
@@ -105,7 +105,7 @@ export function AboutRestaurant() {
                   <MapPin className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold mb-1 text-sm sm:text-base">Адрес</h4>
+                  <h4 className="font-semibold mb-1 text-sm sm:text-base">Adres</h4>
                   <p className={`text-sm sm:text-base text-muted-foreground ${isEditMode ? 'mt-2' : ''}`}>
                     <EditableText
                       value={aboutData.address}
@@ -122,7 +122,7 @@ export function AboutRestaurant() {
                   <Phone className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 </div>
                 <div className="flex-1">
-                  <h4 className="font-semibold mb-1 text-sm sm:text-base">Телефон</h4>
+                  <h4 className="font-semibold mb-1 text-sm sm:text-base">Telefon</h4>
                   <p className={`text-sm sm:text-base text-muted-foreground ${isEditMode ? 'mt-2' : ''}`}>
                     <EditableText
                       value={aboutData.phone}

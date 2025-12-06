@@ -195,7 +195,7 @@ export function Navigation({ showEditMode = true }: NavigationProps) {
                         className="flex items-center gap-3 px-4 py-3 rounded-lg bg-primary/10 hover:bg-primary/20 transition-colors"
                       >
                         <LayoutDashboard className="h-5 w-5 text-primary" />
-                        <span className="font-medium text-primary">Дашборд</span>
+                        <span className="font-medium text-primary">Panel</span>
                       </Link>
                     </div>
                   )}
@@ -305,7 +305,7 @@ export function Navigation({ showEditMode = true }: NavigationProps) {
                 >
                   <Link href="/admin/dashboard">
                     <LayoutDashboard className="w-4 h-4" />
-                    Дашборд
+                    Panel
                   </Link>
                 </Button>
               )}

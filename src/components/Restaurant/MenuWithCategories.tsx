@@ -40,8 +40,8 @@ export function MenuWithCategories() {
   const { isEditMode } = useRestaurant();
   
   const [sectionData, setSectionData] = useState({
-    title: 'Наше меню',
-    subtitle: 'Выберите категорию и найдите свое любимое блюдо',
+    title: 'Nasze menu',
+    subtitle: 'Wybierz kategorię i znajdź swoje ulubione danie',
   });
 
   const handleUpdate = (field: string, value: string) => {

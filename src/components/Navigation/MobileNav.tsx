@@ -15,10 +15,10 @@ interface MobileNavProps {
 }
 
 const navItems = [
-  { href: '/', label: 'Главная', icon: Home },
-  { href: '/menu', label: 'Меню', icon: UtensilsCrossed },
-  { href: '/orders', label: 'Мои заказы', icon: ShoppingBag },
-  { href: '/profile', label: 'Профиль', icon: User },
+  { href: '/', label: 'Główna', icon: Home },
+  { href: '/menu', label: 'Menu', icon: UtensilsCrossed },
+  { href: '/orders', label: 'Moje zamówienia', icon: ShoppingBag },
+  { href: '/profile', label: 'Profil', icon: User },
 ];
 
 export function MobileNav({ isAuthenticated = false, onLogin, onLogout, userName }: MobileNavProps) {

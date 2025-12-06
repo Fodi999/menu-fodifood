@@ -12,28 +12,28 @@ export function TableReservation() {
   const { isEditMode } = useRestaurant();
   
   const [sectionData, setSectionData] = useState({
-    title: 'Забронировать столик',
-    subtitle: 'Гарантируем вам лучшее место и персональное обслуживание',
+    title: 'Zarezerwuj stolik',
+    subtitle: 'Gwarantujemy najlepsze miejsce i indywidualną obsługę',
   });
 
   const [benefits, setBenefits] = useState([
     {
       id: 1,
       icon: Calendar,
-      title: 'Удобное бронирование',
-      description: 'Выберите удобные дату и время онлайн. Мы подтвердим вашу бронь в течение 15 минут.',
+      title: 'Wygodna rezerwacja',
+      description: 'Wybierz dogodną datę i godzinę online. Potwierdzimy rezerwację w ciągu 15 minut.',
     },
     {
       id: 2,
       icon: Users,
-      title: 'Любое количество гостей',
-      description: 'От романтического ужина на двоих до большого празднования компанией до 20 человек.',
+      title: 'Dowolna liczba gości',
+      description: 'Od romantycznej kolacji dla dwojga po wielkie przyjęcie do 20 osób.',
     },
     {
       id: 3,
       icon: Clock,
-      title: 'Гибкий график',
-      description: 'Работаем каждый день с 10:00 до 22:00. Последнее бронирование - в 21:00.',
+      title: 'Elastyczny harmonogram',
+      description: 'Czynne codziennie od 10:00 do 22:00. Ostatnia rezerwacja o 21:00.',
     },
   ]);
 
@@ -170,7 +170,7 @@ export function TableReservation() {
                 <div>
                   <label className="block text-sm font-medium mb-2">
                     <User className="w-4 h-4 inline mr-2" />
-                    Ваше имя *
+                    Twoje imię *
                   </label>
                   <input
                     type="text"
@@ -178,7 +178,7 @@ export function TableReservation() {
                     value={formData.name}
                     onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                     className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base rounded-xl border-2 border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
-                    placeholder="Иван Иванов"
+                    placeholder="Jan Kowalski"
                   />
                 </div>
 
@@ -186,7 +186,7 @@ export function TableReservation() {
                 <div>
                   <label className="block text-sm font-medium mb-2">
                     <Phone className="w-4 h-4 inline mr-2" />
-                    Телефон *
+                    Telefon *
                   </label>
                   <input
                     type="tel"
@@ -218,7 +218,7 @@ export function TableReservation() {
                   <div>
                     <label className="block text-sm font-medium mb-2">
                       <Calendar className="w-4 h-4 inline mr-2" />
-                      Дата *
+                      Data *
                     </label>
                     <input
                       type="date"
@@ -233,7 +233,7 @@ export function TableReservation() {
                   <div>
                     <label className="block text-sm font-medium mb-2">
                       <Clock className="w-4 h-4 inline mr-2" />
-                      Время *
+                      Godzina *
                     </label>
                     <select
                       required
@@ -241,7 +241,7 @@ export function TableReservation() {
                       onChange={(e) => setFormData({ ...formData, time: e.target.value })}
                       className="w-full px-3 sm:px-4 py-2.5 sm:py-3 text-sm sm:text-base rounded-xl border-2 border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary/50 transition-all"
                     >
-                      <option value="">Выбрать</option>
+                      <option value="">Wybierz</option>
                       <option value="10:00">10:00</option>
                       <option value="11:00">11:00</option>
                       <option value="12:00">12:00</option>
@@ -262,7 +262,7 @@ export function TableReservation() {
                 <div>
                   <label className="block text-sm font-medium mb-2">
                     <Users className="w-4 h-4 inline mr-2" />
-                    Количество гостей *
+                    Liczba gości *
                   </label>
                   <select
                     required
@@ -272,7 +272,7 @@ export function TableReservation() {
                   >
                     {[...Array(20)].map((_, i) => (
                       <option key={i + 1} value={i + 1}>
-                        {i + 1} {i === 0 ? 'гость' : i < 4 ? 'гостя' : 'гостей'}
+                        {i + 1} {i === 0 ? 'gość' : i === 1 || i === 2 || i === 3 ? 'gości' : 'gości'}
                       </option>
                     ))}
                   </select>
@@ -285,11 +285,11 @@ export function TableReservation() {
                   disabled={isSubmitting || !formData.name || !formData.phone || !formData.date || !formData.time}
                 >
                   <Calendar className="w-4 h-4 sm:w-5 sm:h-5" />
-                  {isSubmitting ? 'Отправка...' : 'Забронировать столик'}
+                  {isSubmitting ? 'Wysyłanie...' : 'Zarezerwuj stolik'}
                 </Button>
 
                 <p className="text-xs text-muted-foreground text-center">
-                  * Обязательные поля. Мы свяжемся с вами для подтверждения брони.
+                  * Pola wymagane. Skontaktujemy się w celu potwierdzenia rezerwacji.
                 </p>
               </div>
             </form>

@@ -11,12 +11,12 @@ export function RestaurantFooter() {
   
   const [footerData, setFooterData] = useState({
     brandName: 'FodiFood',
-    brandDescription: 'Аутентичная японская кухня с доставкой. Свежие ингредиенты, традиционные рецепты.',
+    brandDescription: 'Autentyczna kuchnia japońska z dostawą. Świeże składniki, tradycyjne przepisy.',
     address: 'ul. Przykładowa 123, Warsaw, Poland',
     phone: '+48 123 456 789',
     email: 'orders@fodifood.pl',
-    hours: 'Пн-Вс: 10:00 - 22:00',
-    copyright: 'FodiFood. All rights reserved.',
+    hours: 'Pn-Nd: 10:00 - 22:00',
+    copyright: 'FodiFood. Wszelkie prawa zastrzeżone.',
   });
 
   const handleUpdate = (field: string, value: string) => {
@@ -61,7 +61,7 @@ export function RestaurantFooter() {
 
           {/* Contacts */}
           <div>
-            <h3 className="font-bold mb-4">Контакты</h3>
+            <h3 className="font-bold mb-4">Kontakt</h3>
             <ul className="space-y-3 text-sm text-muted-foreground">
               <li className="flex items-start gap-2">
                 <MapPin className="w-4 h-4 mt-0.5 flex-shrink-0" />
@@ -99,7 +99,7 @@ export function RestaurantFooter() {
               </li>
             </ul>
             <div className="mt-4 text-sm">
-              <p className="font-semibold mb-1">Часы работы:</p>
+              <p className="font-semibold mb-1">Godziny otwarcia:</p>
               <p className="text-muted-foreground">
                 <EditableText
                   value={footerData.hours}

@@ -11,36 +11,36 @@ export function Delivery() {
   const { isEditMode } = useRestaurant();
   
   const [deliveryData, setDeliveryData] = useState({
-    title: 'Доставка и оплата',
-    subtitle: 'Мы заботимся о том, чтобы ваш заказ был доставлен быстро и в идеальном состоянии',
-    promoTitle: 'Бесплатная доставка от 100 zł',
-    promoDescription: 'Минимальная сумма заказа - 30 zł. Стоимость доставки - 10 zł.',
+    title: 'Dostawa i płatność',
+    subtitle: 'Dbamy o to, aby zamówienie dotarło szybko i w idealnym stanie',
+    promoTitle: 'Darmowa dostawa od 100 zł',
+    promoDescription: 'Minimalna wartość zamówienia - 30 zł. Koszt dostawy - 10 zł.',
   });
 
   const [features, setFeatures] = useState([
     {
       id: 1,
       icon: Truck,
-      title: 'Быстрая доставка',
-      description: 'Доставим ваш заказ за 30-45 минут',
+      title: 'Szybka dostawa',
+      description: 'Dostarczymy zamówienie w 30-45 minut',
     },
     {
       id: 2,
       icon: Clock,
-      title: 'Работаем до 22:00',
-      description: 'Заказывайте в удобное для вас время',
+      title: 'Czynne do 22:00',
+      description: 'Zamawiaj w dogodnym dla Ciebie czasie',
     },
     {
       id: 3,
       icon: CreditCard,
-      title: 'Удобная оплата',
-      description: 'Наличными, картой или онлайн',
+      title: 'Wygodna płatność',
+      description: 'Gotówką, kartą lub online',
     },
     {
       id: 4,
       icon: Shield,
-      title: 'Гарантия качества',
-      description: 'Свежие продукты и безопасная упаковка',
+      title: 'Gwarancja jakości',
+      description: 'Świeże produkty i bezpieczne opakowanie',
     },
   ]);
 
@@ -139,7 +139,7 @@ export function Delivery() {
             />
           </p>
           <Button size="lg" className="gap-2">
-            Сделать заказ
+            Złóż zamówienie
           </Button>
         </motion.div>
       </div>

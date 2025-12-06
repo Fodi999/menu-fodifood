@@ -24,9 +24,9 @@ interface DesktopNavProps {
 }
 
 const navItems = [
-  { href: '/', label: 'Главная', icon: Home },
-  { href: '/menu', label: 'Меню', icon: UtensilsCrossed },
-  { href: '/orders', label: 'Мои заказы', icon: ShoppingBag },
+  { href: '/', label: 'Główna', icon: Home },
+  { href: '/menu', label: 'Menu', icon: UtensilsCrossed },
+  { href: '/orders', label: 'Moje zamówienia', icon: ShoppingBag },
 ];
 
 export function DesktopNav({ 
@@ -96,13 +96,13 @@ export function DesktopNav({
               <DropdownMenuItem asChild>
                 <Link href="/profile" className="cursor-pointer">
                   <User className="mr-2 h-4 w-4" />
-                  Профиль
+                  Profil
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuItem asChild>
                 <Link href="/orders" className="cursor-pointer">
                   <ShoppingBag className="mr-2 h-4 w-4" />
-                  Мои заказы
+                  Moje zamówienia
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
