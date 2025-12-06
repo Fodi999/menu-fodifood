@@ -18,13 +18,13 @@ export function RestaurantHero() {
   
   // Local state for hero content
   const [heroData, setHeroData] = useState({
-    badge: 'Лучшие суши в городе',
-    title: 'Свежие суши',
-    titleHighlight: 'суши',
-    subtitle: 'с доставкой',
-    description: 'Аутентичная японская кухня от профессионального шеф-повара. Только свежие ингредиенты и традиционные рецепты.',
-    deliveryTime: '30-45 мин',
-    dishCount: '100+ блюд',
+    badge: 'Najlepsze sushi w mieście',
+    title: 'Świeże sushi',
+    titleHighlight: 'sushi',
+    subtitle: 'z dostawą',
+    description: 'Autentyczna kuchnia japońska od profesjonalnego szefa kuchni. Tylko świeże składniki i tradycyjne przepisy.',
+    deliveryTime: '30-45 min',
+    dishCount: '100+ dań',
     rating: '4.9/5',
   });
 
@@ -32,8 +32,8 @@ export function RestaurantHero() {
   const [featuredDish, setFeaturedDish] = useState({
     image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=1200&h=1200&fit=crop',
     imageAlt: 'Fresh Sushi',
-    title: 'Популярный сет',
-    description: '24 шт • Калифорния, Филадельфия',
+    title: 'Popularny zestaw',
+    description: '24 szt. • California, Philadelphia',
     price: '85 zł',
   });
 
@@ -59,7 +59,7 @@ export function RestaurantHero() {
     };
 
     addItem(cartItem as any);
-    toast.success(`${featuredDish.title} добавлен в корзину!`);
+    toast.success(`${featuredDish.title} dodano do koszyka!`);
   };
   
   return (
@@ -160,7 +160,7 @@ export function RestaurantHero() {
                       className="font-bold text-base sm:text-lg"
                     />
                   </div>
-                  <div className={`text-xs sm:text-sm text-muted-foreground ${isEditMode ? 'mt-2' : ''}`}>Доставка</div>
+                  <div className={`text-xs sm:text-sm text-muted-foreground ${isEditMode ? 'mt-2' : ''}`}>Dostawa</div>
                 </div>
               </div>
               
@@ -177,7 +177,7 @@ export function RestaurantHero() {
                       className="font-bold text-base sm:text-lg"
                     />
                   </div>
-                  <div className={`text-xs sm:text-sm text-muted-foreground ${isEditMode ? 'mt-2' : ''}`}>В меню</div>
+                  <div className={`text-xs sm:text-sm text-muted-foreground ${isEditMode ? 'mt-2' : ''}`}>W menu</div>
                 </div>
               </div>
               
@@ -194,7 +194,7 @@ export function RestaurantHero() {
                       className="font-bold text-base sm:text-lg"
                     />
                   </div>
-                  <div className={`text-xs sm:text-sm text-muted-foreground ${isEditMode ? 'mt-2' : ''}`}>Рейтинг</div>
+                  <div className={`text-xs sm:text-sm text-muted-foreground ${isEditMode ? 'mt-2' : ''}`}>Ocena</div>
                 </div>
               </div>
             </motion.div>
@@ -209,12 +209,12 @@ export function RestaurantHero() {
               <Link href="/menu" className="w-full sm:w-auto">
                 <Button size="lg" className="w-full sm:w-auto gap-2 text-sm sm:text-base md:text-lg px-6 sm:px-8 py-4 sm:py-5 md:py-6 shadow-xl shadow-primary/20 hover:shadow-2xl hover:shadow-primary/30 transition-all">
                   <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5" />
-                  Заказать сейчас
+                  Zamów teraz
                 </Button>
               </Link>
               <Link href="/menu" className="w-full sm:w-auto">
                 <Button size="lg" variant="outline" className="w-full sm:w-auto text-sm sm:text-base md:text-lg px-6 sm:px-8 py-4 sm:py-5 md:py-6">
-                  Посмотреть меню
+                  Zobacz menu
                 </Button>
               </Link>
             </motion.div>
@@ -229,11 +229,11 @@ export function RestaurantHero() {
               <div className="flex flex-wrap items-center gap-3 sm:gap-4 md:gap-6 text-xs sm:text-sm text-muted-foreground">
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                  <span>Свежие продукты</span>
+                  <span>Świeże produkty</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-2 h-2 rounded-full bg-green-500 animate-pulse"></div>
-                  <span>Бесплатная доставка от 100 zł</span>
+                  <span>Darmowa dostawa od 100 zł</span>
                 </div>
               </div>
             </motion.div>
@@ -293,7 +293,7 @@ export function RestaurantHero() {
                       className="mt-2 text-xs sm:text-sm"
                       onClick={handleAddToCart}
                     >
-                      Заказать
+                      Zamów
                     </Button>
                   </div>
                 </div>

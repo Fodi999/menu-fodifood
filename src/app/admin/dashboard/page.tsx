@@ -192,48 +192,48 @@ export default function AdminDashboardPage() {
           {/* Total Orders */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs sm:text-sm font-medium">Заказов</CardTitle>
+              <CardTitle className="text-xs sm:text-sm font-medium">Zamówień</CardTitle>
               <ShoppingCart className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-xl sm:text-2xl font-bold">{stats.totalOrders}</div>
-              <p className="text-xs text-muted-foreground hidden sm:block">Скоро доступно</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">Wkrótce dostępne</p>
             </CardContent>
           </Card>
 
           {/* Total Revenue */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs sm:text-sm font-medium">Доход</CardTitle>
+              <CardTitle className="text-xs sm:text-sm font-medium">Przychód</CardTitle>
               <DollarSign className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-xl sm:text-2xl font-bold">{stats.totalRevenue.toFixed(2)} zł</div>
-              <p className="text-xs text-muted-foreground hidden sm:block">Скоро доступно</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">Wkrótce dostępne</p>
             </CardContent>
           </Card>
 
           {/* Total Categories */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs sm:text-sm font-medium">Категории</CardTitle>
+              <CardTitle className="text-xs sm:text-sm font-medium">Kategorie</CardTitle>
               <Package className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-xl sm:text-2xl font-bold">{stats.totalCategories}</div>
-              <p className="text-xs text-muted-foreground hidden sm:block">Активных</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">Aktywnych</p>
             </CardContent>
           </Card>
 
           {/* Total Menu Items */}
           <Card>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-              <CardTitle className="text-xs sm:text-sm font-medium">Блюда</CardTitle>
+              <CardTitle className="text-xs sm:text-sm font-medium">Dania</CardTitle>
               <UtensilsCrossed className="h-3 w-3 sm:h-4 sm:w-4 text-muted-foreground" />
             </CardHeader>
             <CardContent>
               <div className="text-xl sm:text-2xl font-bold">{stats.totalMenuItems}</div>
-              <p className="text-xs text-muted-foreground hidden sm:block">В меню</p>
+              <p className="text-xs text-muted-foreground hidden sm:block">W menu</p>
             </CardContent>
           </Card>
         </div>
@@ -243,37 +243,37 @@ export default function AdminDashboardPage() {
           <div className="mb-8">
             <h2 className="text-2xl font-bold mb-4 flex items-center gap-2">
               <TrendingUp className="w-6 h-6 text-primary" />
-              Аналитика посещаемости
+              Analityka odwiedzin
             </h2>
             <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-4">
               {/* Total Visits */}
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Посещения сайта</CardTitle>
+                  <CardTitle className="text-sm font-medium">Wizyty na stronie</CardTitle>
                   <Eye className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{analyticsData.totalVisits}</div>
-                  <p className="text-xs text-muted-foreground">Всего посещений</p>
+                  <p className="text-xs text-muted-foreground">Łącznie wizyt</p>
                 </CardContent>
               </Card>
 
               {/* Total Orders from Analytics */}
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Заказы (локально)</CardTitle>
+                  <CardTitle className="text-sm font-medium">Zamówienia (lokalnie)</CardTitle>
                   <ShoppingCart className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{analyticsData.totalOrders}</div>
-                  <p className="text-xs text-muted-foreground">Оформлено заказов</p>
+                  <p className="text-xs text-muted-foreground">Złożonych zamówień</p>
                 </CardContent>
               </Card>
 
               {/* Cart Items */}
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Товаров в корзине</CardTitle>
+                  <CardTitle className="text-sm font-medium">Produkty w koszyku</CardTitle>
                   <Package className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
@@ -358,11 +358,11 @@ export default function AdminDashboardPage() {
                           {order.status === 'ready' && <CheckCircle2 className="w-3 h-3" />}
                           {order.status === 'delivered' && <TruckIcon className="w-3 h-3" />}
                           {order.status === 'cancelled' && <XCircle className="w-3 h-3" />}
-                          {order.status === 'pending' ? 'Ожидает' :
-                           order.status === 'preparing' ? 'Готовится' :
-                           order.status === 'ready' ? 'Готов' :
-                           order.status === 'delivered' ? 'Доставлен' :
-                           'Отменен'}
+                          {order.status === 'pending' ? 'Oczekuje' :
+                           order.status === 'preparing' ? 'Przygotowywane' :
+                           order.status === 'ready' ? 'Gotowe' :
+                           order.status === 'delivered' ? 'Dostarczone' :
+                           'Anulowane'}
                         </span>
                       </div>
                       <p className="text-xs sm:text-sm text-muted-foreground">
@@ -377,9 +377,9 @@ export default function AdminDashboardPage() {
                         <p className="text-base sm:text-lg font-bold text-primary">${order.total}</p>
                         <p className="text-xs text-muted-foreground flex items-center gap-1">
                           {order.delivery_type === 'delivery' ? (
-                            <><TruckIcon className="w-3 h-3" /> Доставка</>
+                            <><TruckIcon className="w-3 h-3" /> Dostawa</>
                           ) : (
-                            <><Store className="w-3 h-3" /> Самовывоз</>
+                            <><Store className="w-3 h-3" /> Odbiór osobisty</>
                           )}
                         </p>
                       </div>
@@ -390,7 +390,7 @@ export default function AdminDashboardPage() {
                         className="shrink-0"
                       >
                         <Eye className="w-4 h-4 sm:mr-1" />
-                        <span className="hidden sm:inline">Детали</span>
+                        <span className="hidden sm:inline">Szczegóły</span>
                       </Button>
                     </div>
                   </div>
@@ -399,8 +399,8 @@ export default function AdminDashboardPage() {
             ) : (
               <div className="text-center py-8 text-muted-foreground">
                 <ShoppingCart className="w-12 h-12 mx-auto mb-3 opacity-50" />
-                <p className="font-medium">Нет заказов</p>
-                <p className="text-sm mt-2">Заказы появятся здесь автоматически</p>
+                <p className="font-medium">Brak zamówień</p>
+                <p className="text-sm mt-2">Zamówienia pojawią się tutaj automatycznie</p>
               </div>
             )}
           </CardContent>
@@ -488,13 +488,13 @@ export default function AdminDashboardPage() {
               {isLoadingDetails ? (
                   <div className="text-center py-12">
                     <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-primary mx-auto"></div>
-                    <p className="mt-4 text-sm text-muted-foreground">Загрузка деталей...</p>
+                    <p className="mt-4 text-sm text-muted-foreground">Ładowanie szczegółów...</p>
                   </div>
                 ) : orderDetails ? (
                   <div className="space-y-4 sm:space-y-6">
                     {/* Order Status */}
                     <div>
-                      <h3 className="font-semibold mb-2 text-sm sm:text-base">Статус заказа</h3>
+                      <h3 className="font-semibold mb-2 text-sm sm:text-base">Status zamówienia</h3>
                       <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
                         orderDetails.status === 'pending' ? 'bg-green-100 text-green-800' :
                         orderDetails.status === 'preparing' ? 'bg-blue-100 text-blue-800' :
@@ -507,20 +507,20 @@ export default function AdminDashboardPage() {
                         {orderDetails.status === 'ready' && <CheckCircle2 className="w-3.5 h-3.5" />}
                         {orderDetails.status === 'delivered' && <TruckIcon className="w-3.5 h-3.5" />}
                         {orderDetails.status === 'cancelled' && <XCircle className="w-3.5 h-3.5" />}
-                        {orderDetails.status === 'pending' ? 'Ожидает подтверждения' :
-                         orderDetails.status === 'preparing' ? 'Готовится' :
-                         orderDetails.status === 'ready' ? 'Готов к выдаче' :
-                         orderDetails.status === 'delivered' ? 'Доставлен' :
-                         'Отменен'}
+                        {orderDetails.status === 'pending' ? 'Oczekuje na potwierdzenie' :
+                         orderDetails.status === 'preparing' ? 'Przygotowywane' :
+                         orderDetails.status === 'ready' ? 'Gotowe do odbioru' :
+                         orderDetails.status === 'delivered' ? 'Dostarczone' :
+                         'Anulowane'}
                       </span>
                     </div>
 
                     {/* Customer Info */}
                     <div>
-                      <h3 className="font-semibold mb-2 text-sm sm:text-base">Информация о клиенте</h3>
+                      <h3 className="font-semibold mb-2 text-sm sm:text-base">Dane klienta</h3>
                       <div className="space-y-1 text-xs sm:text-sm">
-                        <p><strong>Имя:</strong> {orderDetails.customer_name}</p>
-                        <p><strong>Телефон:</strong> {orderDetails.customer_phone}</p>
+                        <p><strong>Imię:</strong> {orderDetails.customer_name}</p>
+                        <p><strong>Telefon:</strong> {orderDetails.customer_phone}</p>
                         {orderDetails.customer_email && (
                           <p><strong>Email:</strong> {orderDetails.customer_email}</p>
                         )}
@@ -537,13 +537,13 @@ export default function AdminDashboardPage() {
                             <p>Квартира: {orderDetails.delivery_apartment}</p>
                           )}
                           {orderDetails.delivery_floor && (
-                            <p>Этаж: {orderDetails.delivery_floor}</p>
+                            <p>Piętro: {orderDetails.delivery_floor}</p>
                           )}
                           {orderDetails.delivery_entrance && (
-                            <p>Подъезд: {orderDetails.delivery_entrance}</p>
+                            <p>Klatka: {orderDetails.delivery_entrance}</p>
                           )}
                           {orderDetails.delivery_intercom && (
-                            <p>Домофон: {orderDetails.delivery_intercom}</p>
+                            <p>Domofon: {orderDetails.delivery_intercom}</p>
                           )}
                           <p>{orderDetails.delivery_city}, {orderDetails.delivery_postal_code}</p>
                         </div>
@@ -552,7 +552,7 @@ export default function AdminDashboardPage() {
 
                     {/* Order Items */}
                     <div>
-                      <h3 className="font-semibold mb-3 text-sm sm:text-base">Состав заказа</h3>
+                      <h3 className="font-semibold mb-3 text-sm sm:text-base">Zawartość zamówienia</h3>
                       <div className="space-y-2 sm:space-y-3">
                         {orderDetails.items.map((item: any) => (
                           <div key={item.id} className="flex items-center justify-between p-2 sm:p-3 bg-muted rounded-lg">
@@ -563,7 +563,7 @@ export default function AdminDashboardPage() {
                               </p>
                               {item.special_instructions && (
                                 <p className="text-xs text-muted-foreground mt-1">
-                                  Примечание: {item.special_instructions}
+                                  Uwaga: {item.special_instructions}
                                 </p>
                               )}
                             </div>
@@ -580,7 +580,7 @@ export default function AdminDashboardPage() {
                     {/* Special Instructions */}
                     {orderDetails.special_instructions && (
                       <div>
-                        <h3 className="font-semibold mb-2 text-sm sm:text-base">Особые пожелания</h3>
+                        <h3 className="font-semibold mb-2 text-sm sm:text-base">Uwagi specjalne</h3>
                         <p className="text-sm text-muted-foreground whitespace-pre-wrap">
                           {orderDetails.special_instructions}
                         </p>
@@ -589,33 +589,33 @@ export default function AdminDashboardPage() {
 
                     {/* Order Summary */}
                     <div className="border-t pt-4">
-                      <h3 className="font-semibold mb-3 text-sm sm:text-base">Итого</h3>
+                      <h3 className="font-semibold mb-3 text-sm sm:text-base">Razem</h3>
                       <div className="space-y-2 text-xs sm:text-sm">
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Подитог:</span>
+                          <span className="text-muted-foreground">Suma częściowa:</span>
                           <span>${orderDetails.subtotal}</span>
                         </div>
                         <div className="flex justify-between">
-                          <span className="text-muted-foreground">Доставка:</span>
+                          <span className="text-muted-foreground">Dostawa:</span>
                           <span>${orderDetails.delivery_fee}</span>
                         </div>
                         {parseFloat(orderDetails.tax) > 0 && (
                           <div className="flex justify-between">
-                            <span className="text-muted-foreground">Налог:</span>
+                            <span className="text-muted-foreground">Podatek:</span>
                             <span>${orderDetails.tax}</span>
                           </div>
                         )}
                         <div className="flex justify-between text-base sm:text-lg font-bold border-t pt-2">
-                          <span>Всего:</span>
+                          <span>Razem:</span>
                           <span className="text-primary">${orderDetails.total}</span>
                         </div>
                         <div className="flex justify-between text-xs sm:text-sm">
-                          <span className="text-muted-foreground">Способ оплаты:</span>
+                          <span className="text-muted-foreground">Metoda płatności:</span>
                           <span className="font-medium flex items-center gap-1.5">
                             {orderDetails.payment_method === 'card' ? (
-                              <><CreditCard className="w-3.5 h-3.5" /> Карта</>
+                              <><CreditCard className="w-3.5 h-3.5" /> Karta</>
                             ) : orderDetails.payment_method === 'cash' ? (
-                              <><Banknote className="w-3.5 h-3.5" /> Наличные</>
+                              <><Banknote className="w-3.5 h-3.5" /> Gotówka</>
                             ) : (
                               orderDetails.payment_method
                             )}
@@ -626,7 +626,7 @@ export default function AdminDashboardPage() {
                   </div>
                 ) : (
                   <div className="text-center py-12 text-muted-foreground">
-                    <p>Не удалось загрузить детали заказа</p>
+                    <p>Nie udało się załadować szczegółów zamówienia</p>
                   </div>
                 )}
               </div>

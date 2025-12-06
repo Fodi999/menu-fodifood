@@ -34,11 +34,11 @@ import { authAPI } from '@/lib/api-client';
 import { toast } from 'sonner';
 
 const navItems = [
-  { label: 'Главная', href: '/', icon: Home },
-  { label: 'Меню', href: '/menu', icon: UtensilsCrossed },
-  { label: 'О нас', href: '#about', icon: User },
-  { label: 'Доставка', href: '#delivery', icon: ShoppingBag },
-  { label: 'Контакты', href: '#contacts', icon: Phone },
+  { label: 'Główna', href: '/', icon: Home },
+  { label: 'Menu', href: '/menu', icon: UtensilsCrossed },
+  { label: 'O nas', href: '#about', icon: User },
+  { label: 'Dostawa', href: '#delivery', icon: ShoppingBag },
+  { label: 'Kontakt', href: '#contacts', icon: Phone },
 ];
 
 interface NavigationProps {
@@ -147,7 +147,7 @@ export function Navigation({ showEditMode = true }: NavigationProps) {
                 <SheetTrigger asChild>
                   <Button variant="ghost" size="icon" className="lg:hidden">
                     <Menu className="h-6 w-6" />
-                    <span className="sr-only">Открыть меню</span>
+                    <span className="sr-only">Otwórz menu</span>
                   </Button>
                 </SheetTrigger>
                 <SheetContent side="left" className="w-[300px] sm:w-[350px]">
@@ -158,7 +158,7 @@ export function Navigation({ showEditMode = true }: NavigationProps) {
                       </Link>
                     </SheetTitle>
                     <SheetDescription className="text-left">
-                      Меню навигации
+                      Menu nawigacji
                     </SheetDescription>
                   </SheetHeader>
 
@@ -243,7 +243,7 @@ export function Navigation({ showEditMode = true }: NavigationProps) {
                         }}
                       >
                         <LogIn className="h-5 w-5" />
-                        Войти
+                        Zaloguj się
                       </Button>
                     ) : (
                       <Button
@@ -255,7 +255,7 @@ export function Navigation({ showEditMode = true }: NavigationProps) {
                         }}
                       >
                         <LogOut className="h-5 w-5" />
-                        Выйти
+                        Wyloguj
                       </Button>
                     )}
                   </div>
@@ -346,7 +346,7 @@ export function Navigation({ showEditMode = true }: NavigationProps) {
                   className="hidden lg:flex gap-2"
                 >
                   <Lock className="w-4 h-4" />
-                  Войти
+                  Zaloguj się
                 </Button>
               ) : (
                 <DropdownMenu>
@@ -358,18 +358,18 @@ export function Navigation({ showEditMode = true }: NavigationProps) {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent className="w-56" align="end">
-                    <DropdownMenuLabel>Администратор</DropdownMenuLabel>
+                    <DropdownMenuLabel>Administrator</DropdownMenuLabel>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem asChild>
                       <Link href="/admin/dashboard" className="cursor-pointer">
                         <LayoutDashboard className="mr-2 h-4 w-4" />
-                        Дашборд
+                        Panel
                       </Link>
                     </DropdownMenuItem>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600">
                       <LogOut className="mr-2 h-4 w-4" />
-                      Выйти
+                      Wyloguj
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>
@@ -429,7 +429,7 @@ export function Navigation({ showEditMode = true }: NavigationProps) {
                   onClick={handleLogin}
                   className="flex-1 h-12"
                 >
-                  Войти
+                  Zaloguj się
                 </Button>
                 <Button
                   variant="outline"
@@ -439,7 +439,7 @@ export function Navigation({ showEditMode = true }: NavigationProps) {
                   }}
                   className="h-12"
                 >
-                  Отмена
+                  Anuluj
                 </Button>
               </div>
             </div>

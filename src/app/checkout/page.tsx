@@ -52,7 +52,7 @@ export default function CheckoutPage() {
     e.preventDefault();
     
     if (items.length === 0) {
-      toast.error('Корзина пуста!');
+      toast.error('Koszyk jest pusty!');
       return;
     }
 
@@ -139,9 +139,9 @@ export default function CheckoutPage() {
       <div className="min-h-screen flex items-center justify-center p-4">
         <div className="text-center max-w-md">
           <ShoppingBag className="w-16 h-16 mx-auto text-muted-foreground/50 mb-4" />
-          <h1 className="text-2xl font-bold mb-2">Корзина пуста</h1>
+          <h1 className="text-2xl font-bold mb-2">Koszyk jest pusty</h1>
           <p className="text-muted-foreground mb-6">
-            Добавьте блюда из меню, чтобы оформить заказ
+            Dodaj dania z menu, aby złożyć zamówienie
           </p>
           <Button asChild>
             <Link href="/menu">Перейти в меню</Link>
@@ -160,7 +160,7 @@ export default function CheckoutPage() {
             <ArrowLeft className="w-4 h-4" />
             Вернуться на главную
           </Link>
-          <h1 className="text-3xl font-bold">Оформление заказа</h1>
+          <h1 className="text-3xl font-bold">Przetwarzanie...каза</h1>
         </div>
 
         <div className="grid lg:grid-cols-3 gap-8">
@@ -174,12 +174,12 @@ export default function CheckoutPage() {
             >
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <User className="w-5 h-5 text-primary" />
-                Контактная информация
+                Dane kontaktowe
               </h2>
               <div className="grid sm:grid-cols-2 gap-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Имя *
+                    Imię *
                   </label>
                   <Input
                     required
@@ -190,7 +190,7 @@ export default function CheckoutPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Телефон *
+                    Telefon *
                   </label>
                   <Input
                     required
@@ -202,7 +202,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="sm:col-span-2">
                   <label className="block text-sm font-medium mb-2">
-                    Email (опционально)
+                    Email (opcjonalnie)
                   </label>
                   <Input
                     type="email"
@@ -238,12 +238,12 @@ export default function CheckoutPage() {
             >
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <MapPin className="w-5 h-5 text-primary" />
-                Адрес доставки
+                Adres dostawy
               </h2>
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Улица и номер дома *
+                    Ulica i numer domu *
                   </label>
                   <Input
                     required
@@ -255,7 +255,7 @@ export default function CheckoutPage() {
                 <div className="grid grid-cols-2 sm:grid-cols-4 gap-4">
                   <div>
                     <label className="block text-sm font-medium mb-2">
-                      Квартира
+                      Mieszkanie
                     </label>
                     <Input
                       value={formData.apartment}
@@ -265,7 +265,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">
-                      Подъезд
+                      Klatka
                     </label>
                     <Input
                       value={formData.entrance}
@@ -275,7 +275,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">
-                      Этаж
+                      Piętro
                     </label>
                     <Input
                       value={formData.floor}
@@ -285,7 +285,7 @@ export default function CheckoutPage() {
                   </div>
                   <div>
                     <label className="block text-sm font-medium mb-2">
-                      Домофон
+                      Domofon
                     </label>
                     <Input
                       value={formData.intercom}
@@ -296,7 +296,7 @@ export default function CheckoutPage() {
                 </div>
                 <div>
                   <label className="block text-sm font-medium mb-2">
-                    Комментарий к заказу
+                    Komentarz do zamówienia
                   </label>
                   <textarea
                     value={formData.comment}
@@ -318,7 +318,7 @@ export default function CheckoutPage() {
             >
               <h2 className="text-xl font-bold mb-4 flex items-center gap-2">
                 <CreditCard className="w-5 h-5 text-primary" />
-                Способ оплаты
+                Metoda płatności
               </h2>
               <div className="grid sm:grid-cols-3 gap-4">
                 <button
@@ -345,7 +345,7 @@ export default function CheckoutPage() {
                   }`}
                 >
                   <CreditCard className="w-8 h-8 mx-auto mb-2 text-primary" />
-                  <p className="font-semibold text-sm">Картой</p>
+                  <p className="font-semibold text-sm">Kartą</p>
                   <p className="text-xs text-muted-foreground">При получении</p>
                 </button>
 
@@ -374,7 +374,7 @@ export default function CheckoutPage() {
               transition={{ delay: 0.3 }}
               className="bg-card rounded-2xl p-6 border border-border/50 sticky top-24"
             >
-              <h2 className="text-xl font-bold mb-4">Ваш заказ</h2>
+              <h2 className="text-xl font-bold mb-4">Twoje zamówienie</h2>
               
               {/* Items */}
               <div className="space-y-3 mb-4 max-h-64 overflow-y-auto">
@@ -418,7 +418,7 @@ export default function CheckoutPage() {
                   <span className="font-semibold">{totalPrice.toFixed(2)} zł</span>
                 </div>
                 <div className="flex items-center justify-between text-sm">
-                  <span className="text-muted-foreground">Доставка</span>
+                  <span className="text-muted-foreground">Dostawa</span>
                   <span className="font-semibold">
                     {deliveryFee === 0 ? (
                       <span className="text-green-600">Бесплатно</span>
@@ -429,7 +429,7 @@ export default function CheckoutPage() {
                 </div>
                 <div className="h-px bg-border my-2" />
                 <div className="flex items-center justify-between">
-                  <span className="font-bold text-lg">Итого</span>
+                  <span className="font-bold text-lg">Razem</span>
                   <span className="font-bold text-lg text-primary">
                     {totalWithDelivery.toFixed(2)} zł
                   </span>
@@ -443,11 +443,11 @@ export default function CheckoutPage() {
                 className="w-full gap-2"
               >
                 {isSubmitting ? (
-                  <>Оформление...</>
+                  <>Przetwarzanie...</>
                 ) : (
                   <>
                     <Check className="w-5 h-5" />
-                    Оформить заказ
+                    Złóż zamówienie
                   </>
                 )}
               </Button>

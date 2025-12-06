@@ -73,7 +73,7 @@ export default function MenuPage() {
         setMenuItems(itemsData);
       } catch (error) {
         console.error('Failed to load menu:', error);
-        toast.error('Ошибка загрузки меню');
+        toast.error('Błąd ładowania menu');
       } finally {
         setLoading(false);
       }
@@ -110,7 +110,7 @@ export default function MenuPage() {
       isAvailable: true,
       isNew: false,
     });
-    toast.success(`${item.name} добавлен в корзину`);
+    toast.success(`${item.name} dodano do koszyka`);
   };
 
   const filteredCategories = selectedCategory === 'all' 
@@ -124,7 +124,7 @@ export default function MenuPage() {
         <main className="py-20 px-4 flex items-center justify-center">
           <div className="text-center">
             <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto mb-4"></div>
-            <p className="text-muted-foreground">Загрузка меню...</p>
+            <p className="text-muted-foreground">Ładowanie menu...</p>
           </div>
         </main>
       </div>
@@ -143,9 +143,9 @@ export default function MenuPage() {
             animate={{ opacity: 1, y: 0 }}
             className="text-center mb-12"
           >
-            <h1 className="text-5xl font-bold mb-4">Наше меню</h1>
+            <h1 className="text-5xl font-bold mb-4">Nasze menu</h1>
             <p className="text-xl text-muted-foreground mb-8">
-              Выберите категорию и найдите свое любимое блюдо
+              Wybierz kategorię i znajdź swoje ulubione danie
             </p>
 
             {/* Search */}
@@ -154,7 +154,7 @@ export default function MenuPage() {
                 <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-muted-foreground w-5 h-5" />
                 <Input
                   type="text"
-                  placeholder="Поиск блюд..."
+                  placeholder="Szukaj dań..."
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   className="pl-10"
@@ -168,7 +168,7 @@ export default function MenuPage() {
                 variant={selectedCategory === 'all' ? 'default' : 'outline'}
                 onClick={() => setSelectedCategory('all')}
               >
-                Все
+                Wszystkie
               </Button>
               {categories.map((cat) => (
                 <Button
@@ -202,7 +202,7 @@ export default function MenuPage() {
                 <h2 className="text-3xl font-bold mb-8 pb-4 border-b">
                   {category.name}
                   <span className="text-muted-foreground text-lg ml-2">
-                    ({items.length} блюд)
+                    ({items.length})
                   </span>
                 </h2>
 
@@ -262,7 +262,7 @@ export default function MenuPage() {
                             onClick={() => handleAddToCart(item)}
                           >
                             <ShoppingCart className="w-4 h-4" />
-                            В корзину
+                            Do koszyka
                           </Button>
                         </div>
                       </div>
