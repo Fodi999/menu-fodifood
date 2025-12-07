@@ -3,7 +3,7 @@
 import { useState } from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Menu, X, Home, UtensilsCrossed, ShoppingBag, User, LogIn, LogOut } from 'lucide-react';
+import { Menu, X, Home, UtensilsCrossed, ShoppingBag, User, LogIn, LogOut, Truck, Phone, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Sheet, SheetContent, SheetHeader, SheetTitle, SheetDescription, SheetTrigger } from '@/components/ui/sheet';
 
@@ -16,9 +16,11 @@ interface MobileNavProps {
 
 const navItems = [
   { href: '/', label: 'Główna', icon: Home },
-  { href: '/menu', label: 'Menu', icon: UtensilsCrossed },
-  { href: '/orders', label: 'Moje zamówienia', icon: ShoppingBag },
-  { href: '/profile', label: 'Profil', icon: User },
+  { href: '/#menu', label: 'Menu', icon: UtensilsCrossed },
+  { href: '/#about', label: 'O nas', icon: User },
+  { href: '/#reservation', label: 'Rezerwacja', icon: Calendar },
+  { href: '/#delivery', label: 'Dostawa', icon: Truck },
+  { href: '/#contact', label: 'Kontakt', icon: Phone },
 ];
 
 export function MobileNav({ isAuthenticated = false, onLogin, onLogout, userName }: MobileNavProps) {
@@ -49,7 +51,7 @@ export function MobileNav({ isAuthenticated = false, onLogin, onLogout, userName
             </Link>
           </SheetTitle>
           <SheetDescription className="text-left">
-            Навигация по сайту
+            Nawigacja po stronie
           </SheetDescription>
         </SheetHeader>
         
@@ -79,19 +81,25 @@ export function MobileNav({ isAuthenticated = false, onLogin, onLogout, userName
             {isAuthenticated ? (
               <>
                 <div className="px-4 py-2 mb-2">
-                  <p className="text-sm text-muted-foreground">Вы вошли как</p>
-                  <p className="font-medium">{userName || 'Пользователь'}</p>
+                  <p className="text-sm text-muted-foreground">Zalogowany jako</p>
+                  <p className="font-medium">{userName || 'Użytkownik'}</p>
                 </div>
+                <Link href="/dashboard" onClick={handleNavClick} className="block mb-2">
+                  <Button variant="outline" className="w-full justify-start gap-3">
+                    <User className="h-5 w-5" />
+                    Moje konto
+                  </Button>
+                </Link>
                 <Button
                   variant="outline"
-                  className="w-full justify-start gap-3"
+                  className="w-full justify-start gap-3 text-red-600"
                   onClick={() => {
                     handleNavClick();
                     onLogout?.();
                   }}
                 >
                   <LogOut className="h-5 w-5" />
-                  Выйти
+                  Wyloguj się
                 </Button>
               </>
             ) : (
@@ -104,7 +112,7 @@ export function MobileNav({ isAuthenticated = false, onLogin, onLogout, userName
                 }}
               >
                 <LogIn className="h-5 w-5" />
-                Войти
+                Zaloguj się
               </Button>
             )}
           </div>

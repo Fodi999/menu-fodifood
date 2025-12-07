@@ -189,7 +189,7 @@ export default function AdminDashboardPage() {
             <div className="flex items-center gap-2">
               <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`} />
               <span className="text-xs sm:text-sm text-muted-foreground">
-                {isConnected ? '🟢 Онлайн' : '⚪ Офлайн'}
+                {isConnected ? '🟢 Online' : '⚪ Offline'}
               </span>
             </div>
           </div>
@@ -377,7 +377,7 @@ export default function AdminDashboardPage() {
                         {order.customer_name} • {order.customer_phone}
                       </p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        {new Date(order.created_at).toLocaleString('ru-RU')}
+                        {new Date(order.created_at).toLocaleString('pl-PL')}
                       </p>
                     </div>
                     <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
@@ -444,7 +444,7 @@ export default function AdminDashboardPage() {
               <Button asChild className="w-full">
                 <Link href="/">
                   <Eye className="w-4 h-4 mr-2" />
-                  Przejdź do strony głównej
+                  Edytuj menu
                 </Link>
               </Button>
             </CardContent>

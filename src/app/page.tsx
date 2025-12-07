@@ -40,13 +40,23 @@ export default function HomePage() {
       <Navigation />
       <main className="pt-14 sm:pt-16 lg:pt-20">
         <RestaurantHero />
-        <MenuWithCategories />
-        <AboutRestaurant />
+        <section id="menu">
+          <MenuWithCategories />
+        </section>
+        <section id="about">
+          <AboutRestaurant />
+        </section>
         <OurTeam />
-        <TableReservation />
-        <Delivery />
+        <section id="reservation">
+          <TableReservation />
+        </section>
+        <section id="delivery">
+          <Delivery />
+        </section>
       </main>
-      <RestaurantFooter />
+      <section id="contact">
+        <RestaurantFooter />
+      </section>
       <ScrollToTop />
     </div>
   );

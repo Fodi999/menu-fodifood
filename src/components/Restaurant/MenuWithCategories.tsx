@@ -10,6 +10,7 @@ import { toast } from 'sonner';
 import { useRestaurant } from '@/contexts/RestaurantContext';
 import { EditableText } from '@/components/EditableText';
 import { EditableImage } from '@/components/EditableImage';
+import { MenuItemDialog } from './MenuItemDialog';
 
 // Типы данных
 interface MenuItem {
@@ -20,6 +21,12 @@ interface MenuItem {
   image_url?: string;
   category_id: number;
   weight?: string;
+  calories?: number;
+  cookingTime?: number;
+  allergens?: string[];
+  ingredients?: string[];
+  isVegetarian?: boolean;
+  isSpicy?: boolean;
 }
 
 interface Category {
@@ -36,6 +43,8 @@ export function MenuWithCategories() {
   const [activeCategory, setActiveCategory] = useState<number>(1);
   const [menuByCategories, setMenuByCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
+  const [selectedMenuItem, setSelectedMenuItem] = useState<MenuItem | null>(null);
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const { addItem } = useCart();
   const { isEditMode } = useRestaurant();
   
@@ -327,7 +336,15 @@ export function MenuWithCategories() {
                   transition={{ delay: itemIndex * 0.05 }}
                   className="group relative"
                 >
-                  <div className="bg-card rounded-xl sm:rounded-2xl overflow-hidden border border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10">
+                  <div 
+                    className="bg-card rounded-xl sm:rounded-2xl overflow-hidden border border-border/50 hover:border-primary/50 transition-all duration-300 hover:shadow-xl hover:shadow-primary/10 cursor-pointer"
+                    onClick={() => {
+                      if (!isEditMode) {
+                        setSelectedMenuItem(item);
+                        setIsDialogOpen(true);
+                      }
+                    }}
+                  >
                     {/* Image */}
                     <div className="relative aspect-[4/3] overflow-hidden bg-gradient-to-br from-muted to-muted/50">
                       <EditableImage
@@ -422,7 +439,7 @@ export function MenuWithCategories() {
                         onClick={() => handleAddToCart(item)}
                       >
                         <ShoppingCart className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
-                        В корзину
+                        Do koszyka
                       </Button>
                     </div>
                   </div>
@@ -445,7 +462,7 @@ export function MenuWithCategories() {
                     <Plus className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
                   </div>
                   <span className="text-base sm:text-lg font-semibold text-primary">
-                    Создать блюдо
+                    Utwórz danie
                   </span>
                 </button>
               </motion.div>
@@ -453,6 +470,16 @@ export function MenuWithCategories() {
           </div>
         </motion.div>
       </div>
+
+      {/* Dish Detail Dialog */}
+      <MenuItemDialog
+        item={selectedMenuItem}
+        isOpen={isDialogOpen}
+        onClose={() => {
+          setIsDialogOpen(false);
+          setSelectedMenuItem(null);
+        }}
+      />
     </section>
   );
 }

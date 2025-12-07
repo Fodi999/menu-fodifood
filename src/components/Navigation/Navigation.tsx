@@ -6,7 +6,7 @@ import { usePathname } from 'next/navigation';
 import { motion } from 'framer-motion';
 import { 
   Menu, Home, UtensilsCrossed, ShoppingBag, User, 
-  LogIn, LogOut, Lock, Unlock, Save, Phone, X, LayoutDashboard 
+  LogIn, LogOut, Lock, Unlock, Save, Phone, X, LayoutDashboard, Truck, Calendar 
 } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -35,10 +35,11 @@ import { toast } from 'sonner';
 
 const navItems = [
   { label: 'Główna', href: '/', icon: Home },
-  { label: 'Menu', href: '/menu', icon: UtensilsCrossed },
-  { label: 'O nas', href: '#about', icon: User },
-  { label: 'Dostawa', href: '#delivery', icon: ShoppingBag },
-  { label: 'Kontakt', href: '#contacts', icon: Phone },
+  { label: 'Menu', href: '/#menu', icon: UtensilsCrossed },
+  { label: 'O nas', href: '/#about', icon: User },
+  { label: 'Rezerwacja', href: '/#reservation', icon: Calendar },
+  { label: 'Dostawa', href: '/#delivery', icon: Truck },
+  { label: 'Kontakt', href: '/#contact', icon: Phone },
 ];
 
 interface NavigationProps {
@@ -211,7 +212,7 @@ export function Navigation({ showEditMode = true }: NavigationProps) {
                           handleMobileNavClick();
                         }}
                       >
-                        {isEditMode ? 'Просмотр' : 'Редактировать'}
+                        {isEditMode ? 'Podgląd' : 'Edytuj'}
                       </Button>
 
                       {hasChanges && (
@@ -255,7 +256,7 @@ export function Navigation({ showEditMode = true }: NavigationProps) {
                         }}
                       >
                         <LogOut className="h-5 w-5" />
-                        Wyloguj
+                        Wyloguj się
                       </Button>
                     )}
                   </div>
@@ -319,7 +320,7 @@ export function Navigation({ showEditMode = true }: NavigationProps) {
                     onClick={toggleEditMode}
                     className="hidden lg:flex"
                   >
-                    {isEditMode ? 'Просмотр' : 'Редактировать'}
+                    {isEditMode ? 'Podgląd' : 'Edytuj'}
                   </Button>
 
                   {hasChanges && (
@@ -369,7 +370,7 @@ export function Navigation({ showEditMode = true }: NavigationProps) {
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={handleLogout} className="cursor-pointer text-red-600">
                       <LogOut className="mr-2 h-4 w-4" />
-                      Wyloguj
+                      Wyloguj się
                     </DropdownMenuItem>
                   </DropdownMenuContent>
                 </DropdownMenu>

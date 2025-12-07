@@ -2,7 +2,7 @@
 
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
-import { Home, UtensilsCrossed, ShoppingBag, User, LogIn, LogOut } from 'lucide-react';
+import { Home, UtensilsCrossed, ShoppingBag, User, LogIn, LogOut, Truck, Phone, Calendar } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
 import {
@@ -25,8 +25,11 @@ interface DesktopNavProps {
 
 const navItems = [
   { href: '/', label: 'Główna', icon: Home },
-  { href: '/menu', label: 'Menu', icon: UtensilsCrossed },
-  { href: '/orders', label: 'Moje zamówienia', icon: ShoppingBag },
+  { href: '/#menu', label: 'Menu', icon: UtensilsCrossed },
+  { href: '/#about', label: 'O nas', icon: User },
+  { href: '/#reservation', label: 'Rezerwacja', icon: Calendar },
+  { href: '/#delivery', label: 'Dostawa', icon: Truck },
+  { href: '/#contact', label: 'Kontakt', icon: Phone },
 ];
 
 export function DesktopNav({ 
@@ -94,28 +97,22 @@ export function DesktopNav({
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
               <DropdownMenuItem asChild>
-                <Link href="/profile" className="cursor-pointer">
+                <Link href="/dashboard" className="cursor-pointer">
                   <User className="mr-2 h-4 w-4" />
-                  Profil
-                </Link>
-              </DropdownMenuItem>
-              <DropdownMenuItem asChild>
-                <Link href="/orders" className="cursor-pointer">
-                  <ShoppingBag className="mr-2 h-4 w-4" />
-                  Moje zamówienia
+                  Moje konto
                 </Link>
               </DropdownMenuItem>
               <DropdownMenuSeparator />
               <DropdownMenuItem onClick={onLogout} className="cursor-pointer text-red-600">
                 <LogOut className="mr-2 h-4 w-4" />
-                Выйти
+                Wyloguj się
               </DropdownMenuItem>
             </DropdownMenuContent>
           </DropdownMenu>
         ) : (
           <Button onClick={onLogin} variant="default" className="gap-2">
             <LogIn className="h-4 w-4" />
-            Войти
+            Zaloguj się
           </Button>
         )}
       </div>

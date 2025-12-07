@@ -1,14 +1,19 @@
 'use client';
 
+import { useState } from 'react';
 import { useCart } from '@/contexts/CartContext';
 import { motion, AnimatePresence } from 'framer-motion';
-import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight } from 'lucide-react';
+import { X, Minus, Plus, Trash2, ShoppingBag, ArrowRight, ChevronDown, ChevronUp } from 'lucide-react';
 import { Button } from '@/components/ui/button';
 import Image from 'next/image';
 import Link from 'next/link';
+import { CartUpsell } from '@/components/Cart/CartUpsell';
 
 export function Cart() {
   const { items, removeItem, updateQuantity, totalItems, totalPrice, isOpen, closeCart } = useCart();
+  
+  // Collapsible sections state
+  const [showUpsell, setShowUpsell] = useState(false);
 
   return (
     <>
@@ -40,9 +45,9 @@ export function Cart() {
               <div className="flex items-center gap-2 sm:gap-3">
                 <ShoppingBag className="w-5 h-5 sm:w-6 sm:h-6 text-primary" />
                 <div>
-                  <h2 className="text-lg sm:text-xl font-bold">Корзина</h2>
+                  <h2 className="text-lg sm:text-xl font-bold">Koszyk</h2>
                   <p className="text-xs sm:text-sm text-muted-foreground">
-                    {totalItems} {totalItems === 1 ? 'товар' : totalItems < 5 ? 'товара' : 'товаров'}
+                    {totalItems} {totalItems === 1 ? 'produkt' : totalItems < 5 ? 'produkty' : 'produktów'}
                   </p>
                 </div>
               </div>
@@ -60,19 +65,21 @@ export function Cart() {
                 <div className="text-center py-12">
                   <ShoppingBag className="w-12 h-12 sm:w-16 sm:h-16 mx-auto text-muted-foreground/50 mb-4" />
                   <p className="text-base sm:text-lg font-medium text-muted-foreground mb-2">
-                    Корзина пуста
+                    Koszyk pusty
                   </p>
                   <p className="text-sm text-muted-foreground mb-6">
-                    Добавьте блюда из меню
+                    Dodaj dania z menu
                   </p>
                   <Button onClick={closeCart} asChild className="h-11 sm:h-12">
-                    <Link href="/menu">
-                      Посмотреть меню
+                    <Link href="/#menu">
+                      Zobacz menu
                     </Link>
                   </Button>
                 </div>
               ) : (
-                <div className="space-y-3 sm:space-y-4">
+                <div className="space-y-4 sm:space-y-5">
+                  {/* Товары в корзине */}
+                  <div className="space-y-3 sm:space-y-4">
                   {items.map((item) => (
                     <motion.div
                       key={item.id}
@@ -112,7 +119,7 @@ export function Cart() {
                             {item.weight}
                           </p>
 
-                          <div className="flex items-center justify-between">
+                          <div className="flex items-center justify-between mt-2">
                             {/* Quantity Controls */}
                             <div className="flex items-center gap-1.5 sm:gap-2 bg-muted rounded-lg p-1">
                               <button
@@ -142,39 +149,64 @@ export function Cart() {
                     </motion.div>
                   ))}
                 </div>
+
+                {/* Upsell секция - COLLAPSIBLE */}
+                <div className="border-t border-border pt-3">
+                  <button
+                    onClick={() => setShowUpsell(!showUpsell)}
+                    className="w-full flex items-center justify-between p-3 rounded-lg hover:bg-muted/50 transition-colors"
+                  >
+                    <span className="text-sm font-medium">
+                      ✨ Najczęściej kupowane razem {!showUpsell && '(+4)'}
+                    </span>
+                    {showUpsell ? <ChevronUp className="w-4 h-4" /> : <ChevronDown className="w-4 h-4" />}
+                  </button>
+                  
+                  <AnimatePresence>
+                    {showUpsell && (
+                      <motion.div
+                        initial={{ height: 0, opacity: 0 }}
+                        animate={{ height: 'auto', opacity: 1 }}
+                        exit={{ height: 0, opacity: 0 }}
+                        transition={{ duration: 0.2 }}
+                        className="overflow-hidden"
+                      >
+                        <CartUpsell currentItems={items} />
+                      </motion.div>
+                    )}
+                  </AnimatePresence>
+                </div>
+              </div>
               )}
             </div>
 
             {/* Footer */}
             {items.length > 0 && (
-              <div className="p-4 sm:p-6 border-t border-border bg-muted/30">
-                <div className="space-y-2 sm:space-y-3 mb-4">
+              <div className="p-4 sm:p-6 border-t border-border bg-muted/30 space-y-3">
+                {/* Price Summary - SIMPLIFIED */}
+                <div className="space-y-2">
                   <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Товары ({totalItems})</span>
+                    <span className="text-muted-foreground">Produkty ({totalItems})</span>
                     <span className="font-semibold">{totalPrice.toFixed(2)} zł</span>
                   </div>
-                  <div className="flex items-center justify-between text-sm">
-                    <span className="text-muted-foreground">Доставка</span>
-                    <span className="font-semibold">
-                      {totalPrice >= 100 ? (
-                        <span className="text-green-600">Бесплатно</span>
-                      ) : (
-                        '10.00 zł'
-                      )}
-                    </span>
-                  </div>
+
                   <div className="h-px bg-border" />
+                  
                   <div className="flex items-center justify-between">
-                    <span className="font-bold text-base sm:text-lg">Итого</span>
+                    <span className="font-bold text-base sm:text-lg">Razem</span>
                     <span className="font-bold text-base sm:text-lg text-primary">
-                      {(totalPrice + (totalPrice >= 100 ? 0 : 10)).toFixed(2)} zł
+                      {totalPrice.toFixed(2)} zł
                     </span>
                   </div>
+                  
+                  <p className="text-xs text-muted-foreground text-center pt-2">
+                    💡 Dostawa, kupony i płatność - na następnej stronie
+                  </p>
                 </div>
 
                 {totalPrice < 30 && (
                   <p className="text-xs text-muted-foreground mb-3 text-center">
-                    Минимальная сумма заказа - 30 zł
+                    Minimalna kwota zamówienia - 30 zł
                   </p>
                 )}
 
@@ -187,12 +219,12 @@ export function Cart() {
                 >
                   {totalPrice >= 30 ? (
                     <Link href="/checkout">
-                      Оформить заказ
+                      Złóż zamówienie
                       <ArrowRight className="w-4 h-4 sm:w-5 sm:h-5" />
                     </Link>
                   ) : (
                     <>
-                      Минимальный заказ 30 zł
+                      Minimalne zamówienie 30 zł
                     </>
                   )}
                 </Button>
