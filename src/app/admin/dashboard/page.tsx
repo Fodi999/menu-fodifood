@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useState, useCallback, useRef } from 'react';
 import { useRouter } from 'next/navigation';
 import { Navigation } from '@/components/Navigation/Navigation';
 import { Button } from '@/components/ui/button';
@@ -34,6 +34,7 @@ import { ordersAPI, categoriesAPI, menuAPI } from '@/lib/restaurant-api';
 import { toast } from 'sonner';
 import { analytics, type AnalyticsData } from '@/lib/analytics';
 import { useWebSocket } from '@/hooks/useWebSocket';
+import { OrderDetailsSidebar } from '@/components/Admin/OrderDetailsSidebar';
 
 export default function AdminDashboardPage() {
   const router = useRouter();
@@ -54,31 +55,7 @@ export default function AdminDashboardPage() {
     recentOrders: [] as any[],
   });
 
-  useEffect(() => {
-    loadDashboardData();
-  }, []);
-
-  // Update stats when WebSocket data changes
-  useEffect(() => {
-    if (isConnected && wsStats) {
-      setStats(prev => ({
-        ...prev,
-        totalOrders: wsStats.totalOrders,
-        totalRevenue: wsStats.totalRevenue,
-      }));
-    }
-  }, [isConnected, wsStats]);
-
-  // Show toast notification for new orders
-  useEffect(() => {
-    if (latestOrder && latestOrder.type === 'new_order') {
-      toast.success(`🛒 Новый заказ #${latestOrder.order_number} от ${latestOrder.customer_name}`);
-      // Reload data to show new order
-      loadDashboardData();
-    }
-  }, [latestOrder]);
-
-  const loadDashboardData = async () => {
+  const loadDashboardData = useCallback(async () => {
     try {
       setIsLoading(true);
 
@@ -100,32 +77,63 @@ export default function AdminDashboardPage() {
 
       setStats(prev => ({
         ...prev,
-        totalOrders: orders.length || wsStats.totalOrders, 
-        totalRevenue: orders.reduce((sum: number, order: any) => sum + parseFloat(order.total || 0), 0) || wsStats.totalRevenue,
+        totalOrders: orders.length || wsStats?.totalOrders || 0, 
+        totalRevenue: orders.reduce((sum: number, order: any) => sum + parseFloat(order.total || 0), 0) || wsStats?.totalRevenue || 0,
         totalCategories: categories.length,
         totalMenuItems: menuItems.length,
         recentOrders: orders.slice(0, 5), // Show last 5 orders
       }));
     } catch (error) {
       console.error('Failed to load dashboard data:', error);
-      toast.error('Ошибка загрузки данных');
+      toast.error('Błąd ładowania danych');
     } finally {
       setIsLoading(false);
     }
-  };
+  }, [wsStats]);
 
-  const loadOrderDetails = async (orderId: number) => {
+  useEffect(() => {
+    loadDashboardData();
+  }, [loadDashboardData]);
+
+  // Update stats when WebSocket data changes
+  useEffect(() => {
+    if (isConnected && wsStats) {
+      setStats(prev => ({
+        ...prev,
+        totalOrders: wsStats.totalOrders || prev.totalOrders,
+        totalRevenue: wsStats.totalRevenue || prev.totalRevenue,
+      }));
+    }
+  }, [isConnected, wsStats]);
+
+  // Show toast notification for new orders with debounce
+  const lastOrderRef = useRef<string | null>(null);
+  useEffect(() => {
+    if (latestOrder && latestOrder.type === 'new_order' && latestOrder.order_number && latestOrder.order_number !== lastOrderRef.current) {
+      lastOrderRef.current = latestOrder.order_number;
+      toast.success(`🛒 Nowe zamówienie #${latestOrder.order_number} od ${latestOrder.customer_name}`);
+      
+      // Debounce reload - wait 500ms before reloading
+      const timeoutId = setTimeout(() => {
+        loadDashboardData();
+      }, 500);
+      
+      return () => clearTimeout(timeoutId);
+    }
+  }, [latestOrder, loadDashboardData]);
+
+  const loadOrderDetails = useCallback(async (orderId: number) => {
     setIsLoadingDetails(true);
     try {
       const details = await ordersAPI.getByIdAdmin(orderId);
       setOrderDetails(details);
     } catch (error) {
       console.error('Failed to load order details:', error);
-      toast.error('Ошибка загрузки деталей заказа');
+      toast.error('Błąd ładowania szczegółów zamówienia');
     } finally {
       setIsLoadingDetails(false);
     }
-  };
+  }, []);
 
   const handleOrderClick = (order: any) => {
     setSelectedOrder(order);
@@ -154,7 +162,7 @@ export default function AdminDashboardPage() {
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-center">
           <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-primary mx-auto"></div>
-          <p className="mt-4 text-muted-foreground">Загрузка...</p>
+          <p className="mt-4 text-muted-foreground">Ładowanie...</p>
         </div>
       </div>
     );
@@ -171,10 +179,10 @@ export default function AdminDashboardPage() {
             <div>
               <h1 className="text-2xl sm:text-3xl lg:text-4xl font-bold mb-2 flex items-center gap-2 sm:gap-3">
                 <LayoutDashboard className="w-8 h-8 sm:w-10 sm:h-10 text-primary" />
-                Дашборд администратора
+                Panel administracyjny
               </h1>
               <p className="text-sm sm:text-base text-muted-foreground">
-                Управление рестораном FodiFood
+                Zarządzanie restauracją FodiFood
               </p>
             </div>
             {/* WebSocket Status Indicator */}
@@ -278,19 +286,19 @@ export default function AdminDashboardPage() {
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{analyticsData.totalCartItems}</div>
-                  <p className="text-xs text-muted-foreground">Текущее количество</p>
+                  <p className="text-xs text-muted-foreground">Aktualna liczba</p>
                 </CardContent>
               </Card>
 
               {/* Menu Views */}
               <Card>
                 <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                  <CardTitle className="text-sm font-medium">Просмотры меню</CardTitle>
+                  <CardTitle className="text-sm font-medium">Wyświetlenia menu</CardTitle>
                   <UtensilsCrossed className="h-4 w-4 text-muted-foreground" />
                 </CardHeader>
                 <CardContent>
                   <div className="text-2xl font-bold">{analyticsData.totalMenuViews}</div>
-                  <p className="text-xs text-muted-foreground">Переходов на меню</p>
+                  <p className="text-xs text-muted-foreground">Przejść do menu</p>
                 </CardContent>
               </Card>
             </div>
@@ -298,25 +306,25 @@ export default function AdminDashboardPage() {
             {/* Analytics Details */}
             <Card className="mt-6">
               <CardHeader>
-                <CardTitle>Детали аналитики</CardTitle>
-                <CardDescription>Информация о посещениях сайта</CardDescription>
+                <CardTitle>Szczegóły analityki</CardTitle>
+                <CardDescription>Informacje o odwiedzinach strony</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="space-y-2 text-sm">
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Первое посещение:</span>
+                    <span className="text-muted-foreground">Pierwsza wizyta:</span>
                     <span className="font-medium">
-                      {new Date(analyticsData.firstVisit).toLocaleString('ru-RU')}
+                      {new Date(analyticsData.firstVisit).toLocaleString('pl-PL')}
                     </span>
                   </div>
                   <div className="flex justify-between">
-                    <span className="text-muted-foreground">Последнее посещение:</span>
+                    <span className="text-muted-foreground">Ostatnia wizyta:</span>
                     <span className="font-medium">
-                      {new Date(analyticsData.lastVisit).toLocaleString('ru-RU')}
+                      {new Date(analyticsData.lastVisit).toLocaleString('pl-PL')}
                     </span>
                   </div>
                   <div className="flex justify-between pt-2 border-t">
-                    <span className="text-muted-foreground">Конверсия в заказ:</span>
+                    <span className="text-muted-foreground">Konwersja na zamówienie:</span>
                     <span className="font-medium text-primary">
                       {analyticsData.totalVisits > 0
                         ? ((analyticsData.totalOrders / analyticsData.totalVisits) * 100).toFixed(1)
@@ -332,8 +340,8 @@ export default function AdminDashboardPage() {
         {/* Recent Orders */}
         <Card className="mb-6 sm:mb-8">
           <CardHeader>
-            <CardTitle className="text-lg sm:text-xl">Последние заказы</CardTitle>
-            <CardDescription className="text-xs sm:text-sm">Недавние заказы клиентов</CardDescription>
+            <CardTitle className="text-lg sm:text-xl">Ostatnie zamówienia</CardTitle>
+            <CardDescription className="text-xs sm:text-sm">Najnowsze zamówienia klientów</CardDescription>
           </CardHeader>
           <CardContent>
             {stats.recentOrders.length > 0 ? (
@@ -374,7 +382,7 @@ export default function AdminDashboardPage() {
                     </div>
                     <div className="flex items-center gap-3 w-full sm:w-auto justify-between sm:justify-end">
                       <div className="text-left sm:text-right">
-                        <p className="text-base sm:text-lg font-bold text-primary">${order.total}</p>
+                        <p className="text-base sm:text-lg font-bold text-primary">{parseFloat(order.total).toFixed(2)} zł</p>
                         <p className="text-xs text-muted-foreground flex items-center gap-1">
                           {order.delivery_type === 'delivery' ? (
                             <><TruckIcon className="w-3 h-3" /> Dostawa</>
@@ -412,14 +420,14 @@ export default function AdminDashboardPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                 <ShoppingCart className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                Заказы
+                Zamówienia
               </CardTitle>
-              <CardDescription className="text-xs sm:text-sm">Просмотр и управление заказами</CardDescription>
+              <CardDescription className="text-xs sm:text-sm">Przeglądanie i zarządzanie zamówieniami</CardDescription>
             </CardHeader>
             <CardContent>
               <Button variant="outline" className="w-full" disabled>
                 <Eye className="w-4 h-4 mr-2" />
-                Скоро доступно
+                Wkrótce dostępne
               </Button>
             </CardContent>
           </Card>
@@ -428,15 +436,15 @@ export default function AdminDashboardPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                 <UtensilsCrossed className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                Меню
+                Menu
               </CardTitle>
-              <CardDescription className="text-xs sm:text-sm">Редактирование меню и категорий</CardDescription>
+              <CardDescription className="text-xs sm:text-sm">Edycja menu i kategorii</CardDescription>
             </CardHeader>
             <CardContent>
               <Button asChild className="w-full">
                 <Link href="/">
                   <Eye className="w-4 h-4 mr-2" />
-                  Перейти на главную
+                  Przejdź do strony głównej
                 </Link>
               </Button>
             </CardContent>
@@ -446,201 +454,26 @@ export default function AdminDashboardPage() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2 text-base sm:text-lg">
                 <TrendingUp className="w-4 h-4 sm:w-5 sm:h-5 text-primary" />
-                Аналитика
+                Analityka
               </CardTitle>
-              <CardDescription className="text-xs sm:text-sm">Статистика и отчеты</CardDescription>
+              <CardDescription className="text-xs sm:text-sm">Statystyki i raporty</CardDescription>
             </CardHeader>
             <CardContent>
               <Button variant="outline" className="w-full" disabled>
-                Скоро доступно
+                Wkrótce dostępne
               </Button>
             </CardContent>
           </Card>
         </div>
 
         {/* Order Details Sidebar */}
-        <div 
-          className={`fixed inset-y-0 right-0 z-50 w-full sm:w-[500px] lg:w-[600px] bg-background/95 backdrop-blur-sm shadow-2xl border-l transform transition-transform duration-300 ease-in-out ${
-            selectedOrder ? 'translate-x-0' : 'translate-x-full'
-          }`}
-        >
-          <div className="h-full flex flex-col">
-            {/* Sidebar Header */}
-            <div className="flex items-center justify-between p-4 sm:p-6 border-b bg-primary/5">
-              <div>
-                <h2 className="text-xl sm:text-2xl font-bold">Заказ #{selectedOrder?.order_number}</h2>
-                <p className="text-xs sm:text-sm text-muted-foreground">
-                  {selectedOrder && new Date(selectedOrder.created_at).toLocaleString('ru-RU')}
-                </p>
-              </div>
-              <Button 
-                variant="ghost" 
-                size="icon" 
-                onClick={closeOrderModal}
-                className="hover:bg-destructive/10"
-              >
-                <X className="w-5 h-5" />
-              </Button>
-            </div>
-
-            {/* Sidebar Content */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6">
-              {isLoadingDetails ? (
-                  <div className="text-center py-12">
-                    <div className="animate-spin rounded-full h-10 w-10 sm:h-12 sm:w-12 border-b-2 border-primary mx-auto"></div>
-                    <p className="mt-4 text-sm text-muted-foreground">Ładowanie szczegółów...</p>
-                  </div>
-                ) : orderDetails ? (
-                  <div className="space-y-4 sm:space-y-6">
-                    {/* Order Status */}
-                    <div>
-                      <h3 className="font-semibold mb-2 text-sm sm:text-base">Status zamówienia</h3>
-                      <span className={`inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs sm:text-sm font-medium ${
-                        orderDetails.status === 'pending' ? 'bg-green-100 text-green-800' :
-                        orderDetails.status === 'preparing' ? 'bg-blue-100 text-blue-800' :
-                        orderDetails.status === 'ready' ? 'bg-emerald-100 text-emerald-800' :
-                        orderDetails.status === 'delivered' ? 'bg-gray-100 text-gray-800' :
-                        'bg-red-100 text-red-800'
-                      }`}>
-                        {orderDetails.status === 'pending' && <Clock className="w-3.5 h-3.5" />}
-                        {orderDetails.status === 'preparing' && <ChefHat className="w-3.5 h-3.5" />}
-                        {orderDetails.status === 'ready' && <CheckCircle2 className="w-3.5 h-3.5" />}
-                        {orderDetails.status === 'delivered' && <TruckIcon className="w-3.5 h-3.5" />}
-                        {orderDetails.status === 'cancelled' && <XCircle className="w-3.5 h-3.5" />}
-                        {orderDetails.status === 'pending' ? 'Oczekuje na potwierdzenie' :
-                         orderDetails.status === 'preparing' ? 'Przygotowywane' :
-                         orderDetails.status === 'ready' ? 'Gotowe do odbioru' :
-                         orderDetails.status === 'delivered' ? 'Dostarczone' :
-                         'Anulowane'}
-                      </span>
-                    </div>
-
-                    {/* Customer Info */}
-                    <div>
-                      <h3 className="font-semibold mb-2 text-sm sm:text-base">Dane klienta</h3>
-                      <div className="space-y-1 text-xs sm:text-sm">
-                        <p><strong>Imię:</strong> {orderDetails.customer_name}</p>
-                        <p><strong>Telefon:</strong> {orderDetails.customer_phone}</p>
-                        {orderDetails.customer_email && (
-                          <p><strong>Email:</strong> {orderDetails.customer_email}</p>
-                        )}
-                      </div>
-                    </div>
-
-                    {/* Delivery Address */}
-                    {orderDetails.delivery_street && (
-                      <div>
-                        <h3 className="font-semibold mb-2 text-sm sm:text-base">Адрес доставки</h3>
-                        <div className="text-xs sm:text-sm space-y-1">
-                          <p>{orderDetails.delivery_street}, {orderDetails.delivery_building}</p>
-                          {orderDetails.delivery_apartment && (
-                            <p>Квартира: {orderDetails.delivery_apartment}</p>
-                          )}
-                          {orderDetails.delivery_floor && (
-                            <p>Piętro: {orderDetails.delivery_floor}</p>
-                          )}
-                          {orderDetails.delivery_entrance && (
-                            <p>Klatka: {orderDetails.delivery_entrance}</p>
-                          )}
-                          {orderDetails.delivery_intercom && (
-                            <p>Domofon: {orderDetails.delivery_intercom}</p>
-                          )}
-                          <p>{orderDetails.delivery_city}, {orderDetails.delivery_postal_code}</p>
-                        </div>
-                      </div>
-                    )}
-
-                    {/* Order Items */}
-                    <div>
-                      <h3 className="font-semibold mb-3 text-sm sm:text-base">Zawartość zamówienia</h3>
-                      <div className="space-y-2 sm:space-y-3">
-                        {orderDetails.items.map((item: any) => (
-                          <div key={item.id} className="flex items-center justify-between p-2 sm:p-3 bg-muted rounded-lg">
-                            <div className="flex-1">
-                              <p className="font-medium text-sm sm:text-base">{item.menu_item_name}</p>
-                              <p className="text-xs sm:text-sm text-muted-foreground">
-                                {item.quantity} x ${item.menu_item_price}
-                              </p>
-                              {item.special_instructions && (
-                                <p className="text-xs text-muted-foreground mt-1">
-                                  Uwaga: {item.special_instructions}
-                                </p>
-                              )}
-                            </div>
-                            <div className="text-right">
-                              <p className="font-semibold text-sm sm:text-base">
-                                ${(parseFloat(item.menu_item_price) * item.quantity).toFixed(2)}
-                              </p>
-                            </div>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-
-                    {/* Special Instructions */}
-                    {orderDetails.special_instructions && (
-                      <div>
-                        <h3 className="font-semibold mb-2 text-sm sm:text-base">Uwagi specjalne</h3>
-                        <p className="text-sm text-muted-foreground whitespace-pre-wrap">
-                          {orderDetails.special_instructions}
-                        </p>
-                      </div>
-                    )}
-
-                    {/* Order Summary */}
-                    <div className="border-t pt-4">
-                      <h3 className="font-semibold mb-3 text-sm sm:text-base">Razem</h3>
-                      <div className="space-y-2 text-xs sm:text-sm">
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Suma częściowa:</span>
-                          <span>${orderDetails.subtotal}</span>
-                        </div>
-                        <div className="flex justify-between">
-                          <span className="text-muted-foreground">Dostawa:</span>
-                          <span>${orderDetails.delivery_fee}</span>
-                        </div>
-                        {parseFloat(orderDetails.tax) > 0 && (
-                          <div className="flex justify-between">
-                            <span className="text-muted-foreground">Podatek:</span>
-                            <span>${orderDetails.tax}</span>
-                          </div>
-                        )}
-                        <div className="flex justify-between text-base sm:text-lg font-bold border-t pt-2">
-                          <span>Razem:</span>
-                          <span className="text-primary">${orderDetails.total}</span>
-                        </div>
-                        <div className="flex justify-between text-xs sm:text-sm">
-                          <span className="text-muted-foreground">Metoda płatności:</span>
-                          <span className="font-medium flex items-center gap-1.5">
-                            {orderDetails.payment_method === 'card' ? (
-                              <><CreditCard className="w-3.5 h-3.5" /> Karta</>
-                            ) : orderDetails.payment_method === 'cash' ? (
-                              <><Banknote className="w-3.5 h-3.5" /> Gotówka</>
-                            ) : (
-                              orderDetails.payment_method
-                            )}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                ) : (
-                  <div className="text-center py-12 text-muted-foreground">
-                    <p>Nie udało się załadować szczegółów zamówienia</p>
-                  </div>
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Overlay */}
-          {selectedOrder && (
-            <div 
-              className="fixed inset-0 bg-black/50 backdrop-blur-sm z-40 transition-opacity duration-300"
-              onClick={closeOrderModal}
-            />
-          )}
-        </main>
-      </div>
-    );
-  }
+        <OrderDetailsSidebar
+          selectedOrder={selectedOrder}
+          orderDetails={orderDetails}
+          isLoadingDetails={isLoadingDetails}
+          onClose={closeOrderModal}
+        />
+      </main>
+    </div>
+  );
+}
