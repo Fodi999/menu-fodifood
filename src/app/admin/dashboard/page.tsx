@@ -186,11 +186,20 @@ export default function AdminDashboardPage() {
               </p>
             </div>
             {/* WebSocket Status Indicator */}
-            <div className="flex items-center gap-2">
-              <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`} />
-              <span className="text-xs sm:text-sm text-muted-foreground">
-                {isConnected ? '🟢 Online' : '⚪ Offline'}
-              </span>
+            <div className="flex items-center gap-4">
+              <Link href="/admin/kitchen">
+                <Button size="lg" className="bg-gradient-to-r from-orange-500 to-red-500 hover:from-orange-600 hover:to-red-600 text-white font-bold gap-2">
+                  <ChefHat className="w-5 h-5" />
+                  <span className="hidden sm:inline">Monitor Kuchni</span>
+                  <span className="sm:hidden">Kuchnia</span>
+                </Button>
+              </Link>
+              <div className="flex items-center gap-2">
+                <div className={`w-2 h-2 sm:w-3 sm:h-3 rounded-full ${isConnected ? 'bg-green-500 animate-pulse' : 'bg-gray-400'}`} />
+                <span className="text-xs sm:text-sm text-muted-foreground">
+                  {isConnected ? '🟢 Online' : '⚪ Offline'}
+                </span>
+              </div>
             </div>
           </div>
         </div>

@@ -13,6 +13,12 @@
   // Линтинг
   "css.lint.unknownAtRules": "ignore",
   
+  // Rust-analyzer настройки для sqlx offline mode
+  "rust-analyzer.check.extraArgs": [
+    "--offline"
+  ],
+  "rust-analyzer.procMacro.attributes.enable": false,
+  
   // Файловые ассоциации
   "files.associations": {
     ".vercelignore": "ignore",

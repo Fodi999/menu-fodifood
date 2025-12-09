@@ -51,12 +51,18 @@ class WebSocketService {
       return;
     }
 
+    // Check if WebSocket is available
+    if (typeof WebSocket === 'undefined') {
+      console.warn('⚠️ WebSocket not available in this environment');
+      return;
+    }
+
     try {
-      console.log('🔌 Connecting to WebSocket:', this.url);
+      console.log('🔌 Attempting to connect to WebSocket:', this.url);
       this.ws = new WebSocket(this.url);
 
       this.ws.onopen = () => {
-        console.log('✅ WebSocket connected');
+        console.log('✅ WebSocket connected successfully');
         this.reconnectAttempts = 0;
         this.startPingInterval();
         this.connectCallbacks.forEach(cb => cb());
@@ -65,7 +71,7 @@ class WebSocketService {
       this.ws.onmessage = (event) => {
         try {
           const message: WsMessage = JSON.parse(event.data);
-          console.log('📨 WebSocket message:', message);
+          console.log('📨 WebSocket message received:', message);
           this.messageCallbacks.forEach(cb => cb(message));
         } catch (error) {
           console.error('❌ Failed to parse WebSocket message:', error);
@@ -73,17 +79,22 @@ class WebSocketService {
       };
 
       this.ws.onerror = (error) => {
-        console.error('❌ WebSocket error:', error);
+        // WebSocket error event doesn't contain much info, just log it
+        console.warn('⚠️ WebSocket connection error - this is normal if backend WebSocket is not available');
       };
 
-      this.ws.onclose = () => {
-        console.log('🔌 WebSocket disconnected');
+      this.ws.onclose = (event) => {
+        console.log('🔌 WebSocket disconnected', event.code, event.reason);
         this.stopPingInterval();
         this.disconnectCallbacks.forEach(cb => cb());
-        this.attemptReconnect();
+        
+        // Only attempt reconnect if it was an abnormal closure
+        if (event.code !== 1000 && event.code !== 1001) {
+          this.attemptReconnect();
+        }
       };
     } catch (error) {
-      console.error('❌ Failed to create WebSocket:', error);
+      console.error('❌ Failed to create WebSocket connection:', error);
       this.attemptReconnect();
     }
   }
@@ -112,16 +123,17 @@ class WebSocketService {
    */
   private attemptReconnect(): void {
     if (this.reconnectAttempts >= this.maxReconnectAttempts) {
-      console.log('❌ Max reconnect attempts reached');
+      console.warn(`⚠️ WebSocket max reconnect attempts (${this.maxReconnectAttempts}) reached - giving up`);
       return;
     }
 
     this.reconnectAttempts++;
     const delay = this.reconnectDelay * this.reconnectAttempts;
 
-    console.log(`🔄 Reconnecting in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
+    console.log(`🔄 WebSocket reconnecting in ${delay}ms (attempt ${this.reconnectAttempts}/${this.maxReconnectAttempts})`);
 
     this.reconnectTimeout = setTimeout(() => {
+      console.log('🔄 Attempting WebSocket reconnection...');
       this.connect();
     }, delay);
   }

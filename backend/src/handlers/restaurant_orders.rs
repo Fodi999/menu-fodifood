@@ -233,7 +233,8 @@ pub async fn get_order(
 // Get all orders - Admin only
 pub async fn get_all_orders(
     State(pool): State<PgPool>,
-) -> Result<Json<Vec<Order>>, AppError> {
+) -> Result<Json<Vec<OrderWithItems>>, AppError> {
+    // Fetch all orders
     let orders = sqlx::query_as!(
         Order,
         r#"
@@ -250,7 +251,26 @@ pub async fn get_all_orders(
     .fetch_all(&pool)
     .await?;
 
-    Ok(Json(orders))
+    // Fetch items for each order
+    let mut orders_with_items = Vec::new();
+    for order in orders {
+        let items = sqlx::query_as!(
+            OrderItem,
+            r#"
+            SELECT id, order_id, menu_item_id, menu_item_name, menu_item_price,
+                   quantity, special_instructions, created_at
+            FROM order_items
+            WHERE order_id = $1
+            "#,
+            order.id
+        )
+        .fetch_all(&pool)
+        .await?;
+
+        orders_with_items.push(OrderWithItems { order, items });
+    }
+
+    Ok(Json(orders_with_items))
 }
 
 // Get order by ID with items - Admin only
