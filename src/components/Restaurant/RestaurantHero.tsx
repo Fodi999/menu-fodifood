@@ -16,33 +16,42 @@ export function RestaurantHero() {
   const { isEditMode, restaurantInfo, updateRestaurantInfo } = useRestaurant();
   const { addItem } = useCart();
   
-  // Local state for hero content
+  // Local state for hero content - инициализируем из restaurantInfo
   const [heroData, setHeroData] = useState({
     badge: 'Najlepsze sushi w mieście',
-    title: 'Świeże sushi',
+    title: restaurantInfo?.heroTitle || 'Świeże sushi',
     titleHighlight: 'sushi',
-    subtitle: 'z dostawą',
-    description: 'Autentyczna kuchnia japońska od profesjonalnego szefa kuchni. Tylko świeże składniki i tradycyjne przepisy.',
+    subtitle: restaurantInfo?.heroSubtitle || 'z dostawą',
+    description: restaurantInfo?.heroDescription || 'Autentyczna kuchnia japońska od profesjonalnego szefa kuchni. Tylko świeże składniki i tradycyjne przepisy.',
     deliveryTime: '30-45 min',
     dishCount: '100+ dań',
     rating: '4.9/5',
   });
 
-  // Featured dish card data
+  // Featured dish card data - инициализируем из restaurantInfo
   const [featuredDish, setFeaturedDish] = useState({
-    image: 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=1200&h=1200&fit=crop',
+    image: restaurantInfo?.featuredDishImage || 'https://images.unsplash.com/photo-1579584425555-c3ce17fd4351?w=1200&h=1200&fit=crop',
     imageAlt: 'Fresh Sushi',
-    title: 'Popularny zestaw',
-    description: '24 szt. • California, Philadelphia',
-    price: '85 zł',
+    title: restaurantInfo?.featuredDishTitle || 'Popularny zestaw',
+    description: restaurantInfo?.featuredDishDescription || '24 szt. • California, Philadelphia',
+    price: restaurantInfo?.featuredDishPrice || '85 zł',
   });
 
   const handleUpdate = (field: string, value: string) => {
     setHeroData(prev => ({ ...prev, [field]: value }));
+    // Сохраняем в restaurantInfo для персистентности
+    if (field === 'title') updateRestaurantInfo({ heroTitle: value });
+    if (field === 'subtitle') updateRestaurantInfo({ heroSubtitle: value });
+    if (field === 'description') updateRestaurantInfo({ heroDescription: value });
   };
 
   const handleFeaturedDishUpdate = (field: string, value: string) => {
     setFeaturedDish(prev => ({ ...prev, [field]: value }));
+    // Сохраняем в restaurantInfo для персистентности
+    if (field === 'image') updateRestaurantInfo({ featuredDishImage: value });
+    if (field === 'title') updateRestaurantInfo({ featuredDishTitle: value });
+    if (field === 'description') updateRestaurantInfo({ featuredDishDescription: value });
+    if (field === 'price') updateRestaurantInfo({ featuredDishPrice: value });
   };
 
   const handleAddToCart = () => {

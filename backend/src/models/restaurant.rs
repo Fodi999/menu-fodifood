@@ -229,6 +229,16 @@ pub struct RestaurantInfo {
     pub free_delivery_from: Option<BigDecimal>,
     pub average_delivery_time: Option<i32>,
     pub social_media: Option<serde_json::Value>,
+    // Hero section fields
+    pub hero_image: Option<String>,
+    pub hero_title: Option<String>,
+    pub hero_subtitle: Option<String>,
+    pub hero_description: Option<String>,
+    // Featured dish fields
+    pub featured_dish_image: Option<String>,
+    pub featured_dish_title: Option<String>,
+    pub featured_dish_description: Option<String>,
+    pub featured_dish_price: Option<String>,
     pub updated_at: DateTime<Utc>,
 }
 
@@ -253,4 +263,14 @@ pub struct UpdateRestaurantInfo {
     pub free_delivery_from: Option<BigDecimal>,
     pub average_delivery_time: Option<i32>,
     pub social_media: Option<serde_json::Value>,
+    // Hero section fields
+    pub hero_image: Option<String>,
+    pub hero_title: Option<String>,
+    pub hero_subtitle: Option<String>,
+    pub hero_description: Option<String>,
+    // Featured dish fields
+    pub featured_dish_image: Option<String>,
+    pub featured_dish_title: Option<String>,
+    pub featured_dish_description: Option<String>,
+    pub featured_dish_price: Option<String>,
 }

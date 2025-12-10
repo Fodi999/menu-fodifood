@@ -210,6 +210,14 @@ export interface RestaurantInfo {
   free_delivery_from?: string;
   average_delivery_time?: number;
   social_media?: any;
+  hero_image?: string;
+  hero_title?: string;
+  hero_subtitle?: string;
+  hero_description?: string;
+  featured_dish_image?: string;
+  featured_dish_title?: string;
+  featured_dish_description?: string;
+  featured_dish_price?: string;
   updated_at: string;
 }
 
@@ -233,6 +241,14 @@ export interface UpdateRestaurantInfo {
   free_delivery_from?: string;
   average_delivery_time?: number;
   social_media?: any;
+  hero_image?: string;
+  hero_title?: string;
+  hero_subtitle?: string;
+  hero_description?: string;
+  featured_dish_image?: string;
+  featured_dish_title?: string;
+  featured_dish_description?: string;
+  featured_dish_price?: string;
 }
 
 // ===== HELPER FUNCTIONS =====

@@ -18,7 +18,10 @@ pub async fn get_restaurant_info(
         SELECT id, name, name_ru, name_pl, description, description_ru, description_pl,
                logo, phone, email, address, city, postal_code, opening_hours,
                delivery_radius, minimum_order, delivery_fee, free_delivery_from,
-               average_delivery_time, social_media, updated_at
+               average_delivery_time, social_media,
+               hero_image, hero_title, hero_subtitle, hero_description,
+               featured_dish_image, featured_dish_title, featured_dish_description,
+               featured_dish_price, updated_at
         FROM restaurant_info
         WHERE id = 1
         "#
@@ -41,7 +44,10 @@ pub async fn update_restaurant_info(
         SELECT id, name, name_ru, name_pl, description, description_ru, description_pl,
                logo, phone, email, address, city, postal_code, opening_hours,
                delivery_radius, minimum_order, delivery_fee, free_delivery_from,
-               average_delivery_time, social_media, updated_at
+               average_delivery_time, social_media,
+               hero_image, hero_title, hero_subtitle, hero_description,
+               featured_dish_image, featured_dish_title, featured_dish_description,
+               featured_dish_price, updated_at
         FROM restaurant_info
         WHERE id = 1
         "#
@@ -107,6 +113,32 @@ pub async fn update_restaurant_info(
     if let Some(social_media) = info_data.social_media {
         info.social_media = Some(social_media);
     }
+    // Hero section fields
+    if let Some(hero_image) = info_data.hero_image {
+        info.hero_image = Some(hero_image);
+    }
+    if let Some(hero_title) = info_data.hero_title {
+        info.hero_title = Some(hero_title);
+    }
+    if let Some(hero_subtitle) = info_data.hero_subtitle {
+        info.hero_subtitle = Some(hero_subtitle);
+    }
+    if let Some(hero_description) = info_data.hero_description {
+        info.hero_description = Some(hero_description);
+    }
+    // Featured dish fields
+    if let Some(featured_dish_image) = info_data.featured_dish_image {
+        info.featured_dish_image = Some(featured_dish_image);
+    }
+    if let Some(featured_dish_title) = info_data.featured_dish_title {
+        info.featured_dish_title = Some(featured_dish_title);
+    }
+    if let Some(featured_dish_description) = info_data.featured_dish_description {
+        info.featured_dish_description = Some(featured_dish_description);
+    }
+    if let Some(featured_dish_price) = info_data.featured_dish_price {
+        info.featured_dish_price = Some(featured_dish_price);
+    }
 
     // Save to database
     let updated_info = sqlx::query_as!(
@@ -118,12 +150,18 @@ pub async fn update_restaurant_info(
             logo = $7, phone = $8, email = $9, address = $10, city = $11, postal_code = $12,
             opening_hours = $13, delivery_radius = $14, minimum_order = $15,
             delivery_fee = $16, free_delivery_from = $17, average_delivery_time = $18,
-            social_media = $19
+            social_media = $19,
+            hero_image = $20, hero_title = $21, hero_subtitle = $22, hero_description = $23,
+            featured_dish_image = $24, featured_dish_title = $25,
+            featured_dish_description = $26, featured_dish_price = $27
         WHERE id = 1
         RETURNING id, name, name_ru, name_pl, description, description_ru, description_pl,
                   logo, phone, email, address, city, postal_code, opening_hours,
                   delivery_radius, minimum_order, delivery_fee, free_delivery_from,
-                  average_delivery_time, social_media, updated_at
+                  average_delivery_time, social_media,
+                  hero_image, hero_title, hero_subtitle, hero_description,
+                  featured_dish_image, featured_dish_title, featured_dish_description,
+                  featured_dish_price, updated_at
         "#,
         info.name,
         info.name_ru,
@@ -143,7 +181,15 @@ pub async fn update_restaurant_info(
         info.delivery_fee,
         info.free_delivery_from,
         info.average_delivery_time,
-        info.social_media
+        info.social_media,
+        info.hero_image,
+        info.hero_title,
+        info.hero_subtitle,
+        info.hero_description,
+        info.featured_dish_image,
+        info.featured_dish_title,
+        info.featured_dish_description,
+        info.featured_dish_price
     )
     .fetch_one(&pool)
     .await?;

@@ -138,6 +138,16 @@ export interface RestaurantInfo {
     instagram?: string;
     twitter?: string;
   };
+  // Hero section data
+  heroImage?: string;
+  heroTitle?: string;
+  heroSubtitle?: string;
+  heroDescription?: string;
+  // Featured dish data
+  featuredDishImage?: string;
+  featuredDishTitle?: string;
+  featuredDishDescription?: string;
+  featuredDishPrice?: string;
 }
 
 export interface CreateOrderDTO {

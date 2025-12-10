@@ -48,8 +48,8 @@ tracing-subscriber = { version = "0.3", features = ["env-filter"] }
 
 # Image Upload (Cloudinary)
 reqwest = { version = "0.11", features = ["json", "multipart"] }
-base64 = "0.21"
 sha1 = "0.10"
+base64 = "0.21"
 
 # Random number generation for order numbers
 rand = "0.8"

@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        UPDATE restaurant_info\n        SET name = $1, name_ru = $2, name_pl = $3,\n            description = $4, description_ru = $5, description_pl = $6,\n            logo = $7, phone = $8, email = $9, address = $10, city = $11, postal_code = $12,\n            opening_hours = $13, delivery_radius = $14, minimum_order = $15,\n            delivery_fee = $16, free_delivery_from = $17, average_delivery_time = $18,\n            social_media = $19\n        WHERE id = 1\n        RETURNING id, name, name_ru, name_pl, description, description_ru, description_pl,\n                  logo, phone, email, address, city, postal_code, opening_hours,\n                  delivery_radius, minimum_order, delivery_fee, free_delivery_from,\n                  average_delivery_time, social_media, updated_at\n        ",
+  "query": "\n        UPDATE restaurant_info\n        SET name = $1, name_ru = $2, name_pl = $3,\n            description = $4, description_ru = $5, description_pl = $6,\n            logo = $7, phone = $8, email = $9, address = $10, city = $11, postal_code = $12,\n            opening_hours = $13, delivery_radius = $14, minimum_order = $15,\n            delivery_fee = $16, free_delivery_from = $17, average_delivery_time = $18,\n            social_media = $19,\n            hero_image = $20, hero_title = $21, hero_subtitle = $22, hero_description = $23,\n            featured_dish_image = $24, featured_dish_title = $25,\n            featured_dish_description = $26, featured_dish_price = $27\n        WHERE id = 1\n        RETURNING id, name, name_ru, name_pl, description, description_ru, description_pl,\n                  logo, phone, email, address, city, postal_code, opening_hours,\n                  delivery_radius, minimum_order, delivery_fee, free_delivery_from,\n                  average_delivery_time, social_media,\n                  hero_image, hero_title, hero_subtitle, hero_description,\n                  featured_dish_image, featured_dish_title, featured_dish_description,\n                  featured_dish_price, updated_at\n        ",
   "describe": {
     "columns": [
       {
@@ -105,6 +105,46 @@
       },
       {
         "ordinal": 20,
+        "name": "hero_image",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 21,
+        "name": "hero_title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 22,
+        "name": "hero_subtitle",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 23,
+        "name": "hero_description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 24,
+        "name": "featured_dish_image",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 25,
+        "name": "featured_dish_title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 26,
+        "name": "featured_dish_description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 27,
+        "name": "featured_dish_price",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 28,
         "name": "updated_at",
         "type_info": "Timestamptz"
       }
@@ -129,7 +169,15 @@
         "Numeric",
         "Numeric",
         "Int4",
-        "Jsonb"
+        "Jsonb",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Text",
+        "Text"
       ]
     },
     "nullable": [
@@ -153,8 +201,16 @@
       true,
       true,
       true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
       false
     ]
   },
-  "hash": "4c40e48f2db095a610a9be2e57a885a7c414c9ed85b08b1ebed321991f74a94a"
+  "hash": "8512699cc5b5ea60767049c86035614784f8bde195172d124f7e94df01df8ed7"
 }

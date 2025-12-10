@@ -203,6 +203,16 @@ export function RestaurantProvider({ children }: { children: ReactNode }) {
           address: restaurantInfo.address,
           city: restaurantInfo.city,
           postal_code: restaurantInfo.postalCode,
+          // Hero section
+          hero_image: restaurantInfo.heroImage,
+          hero_title: restaurantInfo.heroTitle,
+          hero_subtitle: restaurantInfo.heroSubtitle,
+          hero_description: restaurantInfo.heroDescription,
+          // Featured dish
+          featured_dish_image: restaurantInfo.featuredDishImage,
+          featured_dish_title: restaurantInfo.featuredDishTitle,
+          featured_dish_description: restaurantInfo.featuredDishDescription,
+          featured_dish_price: restaurantInfo.featuredDishPrice,
         });
       }
       

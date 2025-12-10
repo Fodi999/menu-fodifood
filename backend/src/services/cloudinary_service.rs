@@ -2,6 +2,8 @@ use anyhow::{Result, anyhow};
 use reqwest::multipart::{Form, Part};
 use serde::{Deserialize, Serialize};
 use std::time::Duration;
+use sha1::{Sha1, Digest};
+use std::time::{SystemTime, UNIX_EPOCH};
 
 #[derive(Debug, Clone)]
 pub struct CloudinaryConfig {
@@ -42,7 +44,7 @@ impl CloudinaryService {
         }
     }
 
-    /// Upload image to Cloudinary
+    /// Upload image to Cloudinary using SIGNED upload
     pub async fn upload_image(
         &self,
         file_data: Vec<u8>,
@@ -60,13 +62,35 @@ impl CloudinaryService {
         );
 
         let folder_name = folder.unwrap_or_else(|| "portfolio".to_string());
-        let filename_clone = filename.clone(); // Клонируем для логов
+        let filename_clone = filename.clone();
+        
+        // Generate timestamp for signature
+        let timestamp = SystemTime::now()
+            .duration_since(UNIX_EPOCH)
+            .unwrap()
+            .as_secs()
+            .to_string();
+        
+        // Create signature string (alphabetically ordered params + api_secret)
+        let sig_string = format!(
+            "folder={}&timestamp={}{}",
+            folder_name, timestamp, self.config.api_secret
+        );
+        
+        // Generate SHA1 signature
+        let mut hasher = Sha1::new();
+        hasher.update(sig_string.as_bytes());
+        let signature = format!("{:x}", hasher.finalize());
+        
+        tracing::info!("🔐 Generated signature for timestamp: {}", timestamp);
 
-        // Use unsigned upload with preset
+        // Use signed upload
         let form = Form::new()
             .part("file", Part::bytes(file_data).file_name(filename))
-            .text("upload_preset", self.config.upload_preset.clone())
-            .text("folder", folder_name);
+            .text("folder", folder_name)
+            .text("timestamp", timestamp)
+            .text("api_key", self.config.api_key.clone())
+            .text("signature", signature);
 
         let response = self.client
             .post(&upload_url)

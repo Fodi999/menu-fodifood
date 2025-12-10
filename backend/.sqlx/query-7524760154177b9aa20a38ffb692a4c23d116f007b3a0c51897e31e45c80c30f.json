@@ -1,6 +1,6 @@
 {
   "db_name": "PostgreSQL",
-  "query": "\n        SELECT id, name, name_ru, name_pl, description, description_ru, description_pl,\n               logo, phone, email, address, city, postal_code, opening_hours,\n               delivery_radius, minimum_order, delivery_fee, free_delivery_from,\n               average_delivery_time, social_media, updated_at\n        FROM restaurant_info\n        WHERE id = 1\n        ",
+  "query": "\n        SELECT id, name, name_ru, name_pl, description, description_ru, description_pl,\n               logo, phone, email, address, city, postal_code, opening_hours,\n               delivery_radius, minimum_order, delivery_fee, free_delivery_from,\n               average_delivery_time, social_media,\n               hero_image, hero_title, hero_subtitle, hero_description,\n               featured_dish_image, featured_dish_title, featured_dish_description,\n               featured_dish_price, updated_at\n        FROM restaurant_info\n        WHERE id = 1\n        ",
   "describe": {
     "columns": [
       {
@@ -105,6 +105,46 @@
       },
       {
         "ordinal": 20,
+        "name": "hero_image",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 21,
+        "name": "hero_title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 22,
+        "name": "hero_subtitle",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 23,
+        "name": "hero_description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 24,
+        "name": "featured_dish_image",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 25,
+        "name": "featured_dish_title",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 26,
+        "name": "featured_dish_description",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 27,
+        "name": "featured_dish_price",
+        "type_info": "Text"
+      },
+      {
+        "ordinal": 28,
         "name": "updated_at",
         "type_info": "Timestamptz"
       }
@@ -133,8 +173,16 @@
       true,
       true,
       true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
+      true,
       false
     ]
   },
-  "hash": "399f590ac1523c3957328e21742559c39043984bb24370e2782f1ca4cfec7d5c"
+  "hash": "7524760154177b9aa20a38ffb692a4c23d116f007b3a0c51897e31e45c80c30f"
 }
