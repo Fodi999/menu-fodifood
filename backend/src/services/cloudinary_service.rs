@@ -1,6 +1,7 @@
 use anyhow::{Result, anyhow};
 use reqwest::multipart::{Form, Part};
 use serde::{Deserialize, Serialize};
+use std::time::Duration;
 
 #[derive(Debug, Clone)]
 pub struct CloudinaryConfig {
@@ -27,9 +28,17 @@ pub struct CloudinaryService {
 
 impl CloudinaryService {
     pub fn new(config: CloudinaryConfig) -> Self {
+        // Создаем клиент с оптимизированными настройками
+        let client = reqwest::Client::builder()
+            .timeout(Duration::from_secs(30)) // Timeout 30 секунд
+            .connect_timeout(Duration::from_secs(10)) // Timeout подключения 10 секунд
+            .pool_max_idle_per_host(10) // Пул соединений
+            .build()
+            .expect("Failed to create HTTP client");
+
         Self {
             config,
-            client: reqwest::Client::new(),
+            client,
         }
     }
 
@@ -40,12 +49,18 @@ impl CloudinaryService {
         filename: String,
         folder: Option<String>,
     ) -> Result<CloudinaryResponse> {
+        let start_time = std::time::Instant::now();
+        let file_size_kb = file_data.len() as f64 / 1024.0;
+        
+        tracing::info!("📤 Starting Cloudinary upload: {} ({:.2} KB)", filename, file_size_kb);
+
         let upload_url = format!(
             "https://api.cloudinary.com/v1_1/{}/image/upload",
             self.config.cloud_name
         );
 
         let folder_name = folder.unwrap_or_else(|| "portfolio".to_string());
+        let filename_clone = filename.clone(); // Клонируем для логов
 
         // Use unsigned upload with preset
         let form = Form::new()
@@ -59,12 +74,24 @@ impl CloudinaryService {
             .send()
             .await?;
 
+        let elapsed = start_time.elapsed();
+        tracing::info!("⏱️ Cloudinary response received in {:.2}s", elapsed.as_secs_f64());
+
         if !response.status().is_success() {
             let error_text = response.text().await?;
+            tracing::error!("❌ Cloudinary upload failed: {}", error_text);
             return Err(anyhow!("Cloudinary upload failed: {}", error_text));
         }
 
         let cloudinary_response: CloudinaryResponse = response.json().await?;
+        
+        tracing::info!(
+            "✅ Upload successful: {} → {} (total time: {:.2}s)",
+            filename_clone,
+            cloudinary_response.secure_url,
+            elapsed.as_secs_f64()
+        );
+        
         Ok(cloudinary_response)
     }
 

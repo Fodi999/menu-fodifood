@@ -76,10 +76,15 @@ export function EditableImage({
 
     try {
       setIsUploading(true);
+      toast.loading("Kompresja i przesyłanie...", { id: "upload" });
+
+      // ОПТИМИЗАЦИЯ: Сжимаем изображение перед загрузкой
+      const compressedFile = await compressImage(file);
+      
       toast.loading("Przesyłanie do Cloudinary...", { id: "upload" });
 
       // Загружаем в Cloudinary
-      const result = await uploadAPI.uploadFile(file, 'portfolio');
+      const result = await uploadAPI.uploadFile(compressedFile, 'portfolio');
       
       console.log('🔍 Cloudinary response:', result);
       console.log('🔍 result.url:', result.url);
@@ -90,7 +95,7 @@ export function EditableImage({
       
       toast.success("Zdjęcie zostało przesłane!", {
         id: "upload",
-        description: `Załadowano: ${file.name}`
+        description: `Załadowano: ${file.name} (${(compressedFile.size / 1024).toFixed(0)} KB)`
       });
     } catch (error) {
       console.error("Upload error:", error);
@@ -101,6 +106,67 @@ export function EditableImage({
     } finally {
       setIsUploading(false);
     }
+  };
+
+  // Функция сжатия изображения
+  const compressImage = (file: File): Promise<File> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.readAsDataURL(file);
+      reader.onload = (event) => {
+        const img = new window.Image();
+        img.src = event.target?.result as string;
+        img.onload = () => {
+          const canvas = document.createElement('canvas');
+          let width = img.width;
+          let height = img.height;
+
+          // Масштабируем до макс 1920px по большей стороне
+          const maxSize = 1920;
+          if (width > height) {
+            if (width > maxSize) {
+              height = (height * maxSize) / width;
+              width = maxSize;
+            }
+          } else {
+            if (height > maxSize) {
+              width = (width * maxSize) / height;
+              height = maxSize;
+            }
+          }
+
+          canvas.width = width;
+          canvas.height = height;
+
+          const ctx = canvas.getContext('2d');
+          if (!ctx) {
+            reject(new Error('Failed to get canvas context'));
+            return;
+          }
+
+          ctx.drawImage(img, 0, 0, width, height);
+
+          canvas.toBlob(
+            (blob) => {
+              if (!blob) {
+                reject(new Error('Failed to compress image'));
+                return;
+              }
+              const compressedFile = new File([blob], file.name, {
+                type: 'image/jpeg',
+                lastModified: Date.now(),
+              });
+              console.log(`📦 Original: ${(file.size / 1024).toFixed(0)} KB → Compressed: ${(compressedFile.size / 1024).toFixed(0)} KB`);
+              resolve(compressedFile);
+            },
+            'image/jpeg',
+            0.85 // Качество 85%
+          );
+        };
+        img.onerror = () => reject(new Error('Failed to load image'));
+      };
+      reader.onerror = () => reject(new Error('Failed to read file'));
+    });
   };
 
   const handleDragEnter = (e: React.DragEvent) => {

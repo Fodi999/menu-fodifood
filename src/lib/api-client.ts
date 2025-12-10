@@ -175,31 +175,46 @@ export const uploadAPI = {
       formData.append('folder', folder);
     }
 
-    const response = await fetch(`${API_BASE_URL}/api/upload`, {
-      method: 'POST',
-      headers: {
-        Authorization: `Bearer ${token}`,
-      },
-      body: formData,
-    });
+    // Создаем контроллер для timeout (30 секунд)
+    const controller = new AbortController();
+    const timeoutId = setTimeout(() => controller.abort(), 30000);
 
-    console.log('📤 Upload response status:', response.status);
-    console.log('📤 Upload response ok:', response.ok);
+    try {
+      const response = await fetch(`${API_BASE_URL}/api/upload`, {
+        method: 'POST',
+        headers: {
+          Authorization: `Bearer ${token}`,
+        },
+        body: formData,
+        signal: controller.signal,
+      });
 
-    if (!response.ok) {
-      const errorText = await response.text();
-      console.error('❌ Upload error response:', errorText);
-      try {
-        const error = JSON.parse(errorText);
-        throw new Error(error.error || 'Upload failed');
-      } catch {
-        throw new Error(`Upload failed: ${errorText}`);
+      clearTimeout(timeoutId);
+
+      console.log('📤 Upload response status:', response.status);
+      console.log('📤 Upload response ok:', response.ok);
+
+      if (!response.ok) {
+        const errorText = await response.text();
+        console.error('❌ Upload error response:', errorText);
+        try {
+          const error = JSON.parse(errorText);
+          throw new Error(error.error || 'Upload failed');
+        } catch {
+          throw new Error(`Upload failed: ${errorText}`);
+        }
       }
-    }
 
-    const result = await response.json();
-    console.log('✅ Upload result:', result);
-    return result;
+      const result = await response.json();
+      console.log('✅ Upload result:', result);
+      return result;
+    } catch (error) {
+      clearTimeout(timeoutId);
+      if (error instanceof Error && error.name === 'AbortError') {
+        throw new Error('Upload timeout - plik może być za duży lub połączenie zbyt wolne');
+      }
+      throw error;
+    }
   },
 
   /**
